@@ -1,0 +1,397 @@
+<!-- src/app/seproc/pages/seproc-page/seproc-page.component.html -->
+
+<div class="container">
+  <nav class="navbar">
+    <a (click)="switchView('home')" class="logo cursor-pointer" title="Ir al Inicio">
+      <div
+        class="logo-mask mask-seproc-icono"
+        role="img"
+        aria-label="Logo SEPROC">
+      </div>
+
+      <div
+        class="logo-mask mask-seproc-letras"
+        role="img"
+        aria-label="Letras SeProc">
+      </div>
+    </a>
+
+    <div class="nav-links">
+      <a
+        id="nav-home"
+        (click)="switchView('home')"
+        [class.active]="activeView === 'home'">
+        Inicio
+      </a>
+
+      <div class="dropdown">
+        <a class="dropdown-toggle">
+          Recursos
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7">
+            </path>
+          </svg>
+        </a>
+
+        <div class="dropdown-menu">
+          <a href="#">Documentación</a>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <a (click)="switchView('dependencias')" class="btn-outline">
+        Portal de acceso
+      </a>
+    </div>
+  </nav>
+</div>
+
+<main class="main-content container">
+
+  <!-- Vista inicio -->
+  <div
+    id="view-home"
+    class="view-section hero-grid"
+    [class.hidden]="activeView !== 'home'">
+
+    <div class="hero-text">
+      <h1>
+        La plataforma centralizada para transformar el <br />
+        <span>proceso constructivo</span>
+      </h1>
+
+      <p class="lead">
+        El sistema web diseñado para visualizar el avance por etapas del proceso,
+        controlar el flujo de trabajo y mejorar la correcta aplicación de la
+        normatividad vigente.
+      </p>
+
+      <p class="small-desc">
+        SeProc es una plataforma flexible, escalable y confiable capaz de adaptarse
+        tanto a contratistas independientes como a grandes supervisiones estatales.
+      </p>
+
+      <a (click)="switchView('solicitar')" class="btn-primary cursor-pointer">
+        Solicitar acceso
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M14 5l7 7m0 0l-7 7m7-7H3">
+          </path>
+        </svg>
+      </a>
+    </div>
+
+    <div class="features-container">
+      <div class="features-grid">
+
+        <div class="feat-card">
+          <div class="feat-icon icon-blue">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+              </path>
+            </svg>
+          </div>
+
+          <h4>Seguimiento del proceso constructivo de infraestructura</h4>
+          <p>
+            Gestiona el proceso <strong>constructivo de infraestructura</strong>.
+          </p>
+        </div>
+
+        <div class="feat-card">
+          <div class="feat-icon icon-green">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+              </path>
+            </svg>
+          </div>
+
+          <h4>Gestión por roles</h4>
+          <p>
+            Vistas y permisos específicos para Constructores, Supervisores,
+            Dirección y Central.
+          </p>
+        </div>
+
+        <div class="feat-card">
+          <div class="feat-icon icon-yellow">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+              </path>
+            </svg>
+          </div>
+
+          <h4>Historial trazable</h4>
+          <p>
+            Registro de entregas, observaciones, rechazos y validaciones en campo.
+          </p>
+        </div>
+
+        <div class="feat-card">
+          <div class="feat-icon icon-dark">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z">
+              </path>
+            </svg>
+          </div>
+
+          <h4>Flujo de aprobaciones</h4>
+          <p>
+            Valida y autoriza cada etapa constructiva, desbloqueando los siguientes
+            procesos de forma segura y estructurada.
+          </p>
+        </div>
+
+        <div class="feat-card feat-card-dark">
+          <div class="feat-icon icon-dark">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4">
+              </path>
+            </svg>
+          </div>
+
+          <h4>Centralización de obra</h4>
+          <p>
+            Consolida toda la información, evidencias y avances de la
+            infraestructura educativa en un solo entorno seguro.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista dependencias -->
+  <div
+    id="view-dependencias"
+    class="view-section dependencias-section"
+    [class.hidden]="activeView !== 'dependencias'">
+
+    <div class="dependencias-header">
+      <h2>Acceso a la plataforma</h2>
+      <p>
+        Elige la dependencia correspondiente para iniciar sesión y gestionar tus proyectos.
+      </p>
+    </div>
+
+    <div class="dependencias-grid">
+      <a
+        *ngFor="let inst of instituciones"
+        [href]="obtenerLoginUrl(inst)"
+        class="dependencia-card">
+
+        <img
+          [src]="obtenerLogo(inst)"
+          [alt]="'Logo ' + inst.abreviacion"
+          class="dependencia-logo" />
+
+        <span class="dependencia-name">
+          {{ inst.nombreOficial }}
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Vista solicitar acceso -->
+  <div
+    id="view-solicitar"
+    class="view-section"
+    [class.hidden]="activeView !== 'solicitar'">
+
+    <div class="auth-card" style="margin: 0 auto">
+      <div class="auth-header">
+        <h2>Solicitud de acceso</h2>
+        <p>Ingresa los datos de tu dependencia para iniciar el proceso de afiliación.</p>
+      </div>
+
+      <form #solicitudForm="ngForm" (ngSubmit)="enviarSolicitud(solicitudForm)">
+
+        <div class="form-group">
+          <label for="nombreDependencia" class="form-label">
+            Nombre oficial de la dependencia *
+          </label>
+
+          <input
+            type="text"
+            id="nombreDependencia"
+            name="nombreDependencia"
+            [(ngModel)]="solicitud.nombreDependencia"
+            class="form-control"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label for="abreviacion" class="form-label">
+            Siglas o abreviación *
+          </label>
+
+          <input
+            type="text"
+            id="abreviacion"
+            name="abreviacion"
+            [(ngModel)]="solicitud.abreviacion"
+            class="form-control"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label for="nombreContacto" class="form-label">
+            Nombre del contacto *
+          </label>
+
+          <input
+            type="text"
+            id="nombreContacto"
+            name="nombreContacto"
+            [(ngModel)]="solicitud.nombreContacto"
+            class="form-control"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label for="emailContacto" class="form-label">
+            Correo electrónico del contacto *
+          </label>
+
+          <input
+            type="email"
+            id="emailContacto"
+            name="emailContacto"
+            [(ngModel)]="solicitud.emailContacto"
+            class="form-control"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label for="telefonoContacto" class="form-label">
+            Teléfono del contacto *
+          </label>
+
+          <input
+            type="tel"
+            id="telefonoContacto"
+            name="telefonoContacto"
+            [(ngModel)]="solicitud.telefonoContacto"
+            class="form-control"
+            required />
+        </div>
+
+        <button type="submit" class="btn-primary btn-block cursor-pointer">
+          Enviar solicitud
+        </button>
+      </form>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer-content">
+
+    <div class="footer-brand">
+      <a
+        (click)="switchView('home')"
+        class="logo cursor-pointer"
+        title="Ir al Inicio">
+
+        <div
+          class="logo-mask mask-seproc-icono"
+          role="img"
+          aria-label="Logo SEPROC">
+        </div>
+
+        <div
+          class="logo-mask mask-seproc-letras"
+          role="img"
+          aria-label="Letras SeProc">
+        </div>
+      </a>
+
+      <p>
+        El sistema web especializado en la gestión, control y seguimiento del
+        proceso constructivo de infraestructura educativa.
+      </p>
+    </div>
+
+    <div class="footer-links">
+      <h4>Navegación</h4>
+      <ul>
+        <li><a (click)="switchView('home')">Inicio</a></li>
+        <li><a (click)="switchView('dependencias')">Portal de acceso</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links">
+      <h4>Soporte</h4>
+      <ul>
+        <li><a href="#">Documentación</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="container">
+    <div class="footer-bottom">
+      <p>&copy; 2026 SeProc. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Modal de éxito -->
+<div *ngIf="showSuccessModal" id="successModal" class="modal-overlay">
+  <div class="modal-card">
+
+    <div class="modal-icon">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 13l4 4L19 7">
+        </path>
+      </svg>
+    </div>
+
+    <h3>¡Solicitud enviada!</h3>
+
+    <p>{{ mensajeExito }}</p>
+
+    <button
+      type="button"
+      (click)="cerrarModal()"
+      class="btn-primary cursor-pointer"
+      style="margin-top: 1.5rem; width: 100%; justify-content: center; border: none">
+      Entendido
+    </button>
+
+  </div>
+</div>
