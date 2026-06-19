@@ -314,6 +314,12 @@ a {
 	color: #d4a017;
 }
 
+.feat-card:not(.feat-card-dark) .icon-dark {
+	background-color: rgba(0, 0, 0, 0.08);
+	color: var(--text);
+	border: 1px solid rgba(0, 0, 0, 0.10);
+}
+
 /* Un amarillo ligeramente más oscuro para contraste */
 
 /* Estilo especial para la 4ta tarjeta (Azul oscura para anclar el diseño) */
@@ -468,6 +474,16 @@ a {
 	z-index: 100;
 }
 
+.dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -15px; /* Cubre el espacio vacío generado por el translateY */
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background: transparent; /* Totalmente invisible */
+}
+
 /* Mostrar el menú cuando pasas el mouse sobre .dropdown */
 .dropdown:hover .dropdown-menu {
 	opacity: 1;
@@ -548,14 +564,18 @@ a {
 }
 
 .dependencia-card {
-	display: flex;
-	align-items: center;
-	gap: 1.25rem;
-	padding: 0.75rem;
-	border-radius: var(--radius-md);
-	background-color: transparent;
-	transition: background-color 0.2s ease, transform 0.2s ease;
-	text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+
+  padding: 1rem 1.5rem;
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 25px rgba(15, 58, 102, 0.08);
+
+  text-decoration: none;
+  transition: all 0.25s ease;
 }
 
 /* Efecto hover sutil */
@@ -948,31 +968,44 @@ textarea.form-control {
 
 /* === Fondo degradado general === */
 :host {
-	display: flex;
-	flex-direction: column;
-	min-height: 100vh;
-	position: relative;
-	overflow-x: hidden;
-	isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+
+    background: url('../../../../assets/seproc/fondo-seproc.png') no-repeat;
+    background-size: 65%; 
+    background-position: bottom right; 
+    background-attachment: fixed;
 }
 
-/* Capa suave encima del fondo */
+/* Capa suave y manchas de color encima de la imagen */
 :host::before {
     content: "";
     position: fixed;
     inset: 0;
-    pointer-events: none;
-    z-index: -1;
+    pointer-events: none; 
+    z-index: 0; 
 
     background:
+        /* Degradado blanco semitransparente general */
         linear-gradient(
             120deg,
             rgba(255, 255, 255, 0.88) 0%,
             rgba(255, 255, 255, 0.68) 48%,
             rgba(255, 255, 255, 0.42) 100%
         ),
-        radial-gradient(circle at 15% 20%, rgba(21, 80, 147, 0.20), transparent 32%),
+        /* Manchas azules para dar el toque moderno */
+        radial-gradient(circle at 15% 20%, rgba(21, 80, 147, 0.20), transparent 35%),
         radial-gradient(circle at 85% 15%, rgba(107, 150, 244, 0.18), transparent 30%),
-        radial-gradient(circle at 70% 80%, rgba(21, 80, 147, 0.12), transparent 35%),
-        linear-gradient(135deg, #f8fbff 0%, #edf4fb 45%, #dfeaf5 100%);
+        radial-gradient(circle at 70% 80%, rgba(21, 80, 147, 0.12), transparent 40%),
+        /* Base ligeramente azulada/grisácea para fusionar con la imagen */
+        linear-gradient(135deg, rgba(248, 251, 255, 0.8) 0%, rgba(237, 244, 251, 0.8) 45%, rgba(223, 234, 245, 0.8) 100%);
+}
+.container,
+.main-content,
+.footer {
+    position: relative;
+    z-index: 1; 
 }
