@@ -2,6 +2,10 @@
 
 /* === VARIABLES CSS === */
 :host {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+
 	--primary: #155093;
 	--primary-dark: #103f74;
 	--primary-soft: rgba(21, 80, 147, .14);
@@ -61,36 +65,6 @@ a {
 	padding: 0 1.5rem;
 }
 
-/* === PERSONALIZACIÓN DEL SCROLLBAR === */
-
-/* 1. Para navegadores basados en WebKit (Chrome, Edge, Safari, Opera) */
-::-webkit-scrollbar {
-	width: 8px; 
-	height: 8px; 
-}
-
-/* El fondo (track) por donde se mueve la barra */
-::-webkit-scrollbar-track {
-	background: transparent; /* Transparente para que se vea limpio */
-}
-
-/* La barrita (thumb) que arrastras con el mouse */
-::-webkit-scrollbar-thumb {
-	background-color: #cbd5e1; 
-	border-radius: 10px;       
-}
-
-/* Efecto al pasar el mouse por encima de la barrita */
-::-webkit-scrollbar-thumb:hover {
-	background-color: #94a3b8; /* Se oscurece un poco para indicar que puedes hacer clic */
-}
-
-/* 2. Para Firefox (usa un estándar diferente) */
-html {
-	scrollbar-width: thin; /* Hace la barra delgada */
-	scrollbar-color: #cbd5e1 transparent; /* Color del thumb y color del track */
-}
-
 /* === NAVBAR === */
 .navbar {
 	display: flex;
@@ -120,11 +94,12 @@ html {
 .nav-links {
 	display: none;
 	gap: 2rem;
-	margin-left: auto; /* Empuja el contenedor hacia la derecha */
+	margin-left: auto;
+	/* Empuja el contenedor hacia la derecha */
 	margin-right: 1rem;
 }
 
-@media ( min-width : 768px) {
+@media (min-width : 768px) {
 	.nav-links {
 		display: flex;
 		align-items: center;
@@ -170,7 +145,7 @@ html {
 
 /* === HERO SECTION === */
 .main-content {
-	flex-grow: 1;
+	flex: 1;
 	align-items: flex-start;
 	padding: 4rem 1.5rem 2rem 1.5rem;
 }
@@ -182,7 +157,7 @@ html {
 	align-items: center;
 }
 
-@media ( min-width : 1024px) {
+@media (min-width : 1024px) {
 	.hero-grid {
 		grid-template-columns: 1fr 1fr;
 	}
@@ -192,7 +167,7 @@ html {
 	padding-right: 0;
 }
 
-@media ( min-width : 1024px) {
+@media (min-width : 1024px) {
 	.hero-text {
 		padding-right: 2rem;
 	}
@@ -204,7 +179,7 @@ html {
 	margin-bottom: 2rem;
 }
 
-@media ( min-width : 1024px) {
+@media (min-width : 1024px) {
 	.hero-text h1 {
 		font-size: 3.75rem;
 	}
@@ -260,13 +235,14 @@ html {
 
 .features-grid {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr); /* 2 Columnas */
+	grid-template-columns: repeat(2, 1fr);
+	/* 2 Columnas */
 	gap: 1.5rem;
 	width: 100%;
 }
 
 /* En móviles se apilan en 1 columna */
-@media ( max-width : 1023px) {
+@media (max-width : 1023px) {
 	.features-grid {
 		grid-template-columns: 1fr;
 	}
@@ -279,8 +255,7 @@ html {
 	border-radius: var(--radius-xl);
 	padding: 2rem 1.5rem;
 	box-shadow: var(--shadow-panel);
-	transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s
-		ease;
+	transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
@@ -337,7 +312,9 @@ html {
 .icon-yellow {
 	background-color: rgba(246, 198, 74, 0.15);
 	color: #d4a017;
-} /* Un amarillo ligeramente más oscuro para contraste */
+}
+
+/* Un amarillo ligeramente más oscuro para contraste */
 
 /* Estilo especial para la 4ta tarjeta (Azul oscura para anclar el diseño) */
 .feat-card-dark {
@@ -360,7 +337,8 @@ html {
 }
 
 .logo-mask {
-	height: 40px; /* Altura general para los logos */
+	height: 40px;
+	/* Altura general para los logos */
 	/* El color de fondo pintará la zona no transparente */
 	background-color: var(--primary);
 	/* Configuración para que la imagen actúe como un molde */
@@ -374,16 +352,16 @@ html {
 
 /* Para el logo/icono */
 .mask-seproc-icono {
-  -webkit-mask-image: url('../../../../assets/seproc/logoSeproc.png');
-  mask-image: url('../../../../assets/seproc/logoSeproc.png');
-  width: 40px;
+	-webkit-mask-image: url('../../../../assets/seproc/logoSeproc.png');
+	mask-image: url('../../../../assets/seproc/logoSeproc.png');
+	width: 40px;
 }
 
 /* Para las letras */
 .mask-seproc-letras {
-    -webkit-mask-image: url('../../../../assets/seproc/letrasSeproc.png');
-    mask-image: url('../../../../assets/seproc/letrasSeproc.png');
-    width: 130px;
+	-webkit-mask-image: url('../../../../assets/seproc/letrasSeproc.png');
+	mask-image: url('../../../../assets/seproc/letrasSeproc.png');
+	width: 130px;
 }
 
 /* === VIEW: ACERCA DE (EQUIPO) === */
@@ -473,7 +451,8 @@ html {
 /* Estado inicial del menú (Oculto) */
 .dropdown-menu {
 	position: absolute;
-	top: 100%; /* Se coloca justo debajo del texto 'Recursos' */
+	top: 100%;
+	/* Se coloca justo debajo del texto 'Recursos' */
 	left: 50%;
 	background-color: var(--bg);
 	min-width: 240px;
@@ -511,7 +490,8 @@ html {
 .nav-links .dropdown-menu a:hover {
 	background-color: var(--panel);
 	color: var(--primary);
-	font-weight: 400; /* Evitamos que el texto se ponga en negrita aquí */
+	font-weight: 400;
+	/* Evitamos que el texto se ponga en negrita aquí */
 }
 
 /* Animación extra: Voltear la flechita cuando se abre el menú */
@@ -547,20 +527,21 @@ html {
 
 .dependencias-grid {
 	display: grid;
-	grid-template-columns: 1fr; /* Móvil: 1 columna */
+	grid-template-columns: 1fr;
+	/* Móvil: 1 columna */
 	gap: 2.5rem 3rem;
 	max-width: 1200px;
 	margin: 0 auto;
 }
 
 /* Tablet: 2 columnas */
-@media ( min-width : 768px) {
+@media (min-width : 768px) {
 	.dependencias-grid {
 		grid-template-columns: repeat(2, 1fr);
 	}
 }
 
-@media ( min-width : 1024px) {
+@media (min-width : 1024px) {
 	.dependencias-grid {
 		grid-template-columns: repeat(3, 1fr);
 	}
@@ -587,7 +568,8 @@ html {
 	width: 50px;
 	height: 50px;
 	object-fit: contain;
-	border-radius: 8px; /* Un pequeño borde redondeado a la imagen */
+	border-radius: 8px;
+	/* Un pequeño borde redondeado a la imagen */
 }
 
 .dependencia-name {
@@ -605,10 +587,11 @@ html {
 
 /* === FOOTER === */
 .footer {
-	background-color: var(--bg);
-	border-top: 1px solid var(--line);
+	background: rgba(255, 255, 255, 0.65);
+	backdrop-filter: blur(18px);
+	-webkit-backdrop-filter: blur(18px);
+	border-top: 1px solid rgba(255, 255, 255, 0.55);
 	padding: 4rem 0 2rem 0;
-	margin-top: auto; /* Empuja el footer siempre al fondo de la pantalla */
 }
 
 .footer-content {
@@ -703,19 +686,23 @@ html {
 @keyframes fadeSlideUp {
 	0% {
 		opacity: 0;
-		transform: translateY(40px); /* Empieza 40px más abajo */
+		transform: translateY(40px);
+		/* Empieza 40px más abajo */
 	}
+
 	100% {
 		opacity: 1;
-		transform: translateY(0); /* Sube a su posición original */
+		transform: translateY(0);
+		/* Sube a su posición original */
 	}
 }
 
 /* Animamos el texto principal de inicio */
 .hero-text {
-	opacity: 0; /* Inicia invisible */
+	opacity: 0;
+	/* Inicia invisible */
 	/* Usamos cubic-bezier para que el movimiento sea mantequilla pura (estilo Apple/Stripe) */
-	animation: fadeSlideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
+	animation: fadeSlideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 /* Animamos las tarjetas de características */
@@ -725,11 +712,25 @@ html {
 }
 
 /* EFECTO CASCADA: Le damos un pequeño retraso a cada tarjeta para que entren una tras otra */
-.feat-card:nth-child(1) { animation-delay: 0.1s; }
-.feat-card:nth-child(2) { animation-delay: 0.2s; }
-.feat-card:nth-child(3) { animation-delay: 0.3s; }
-.feat-card:nth-child(4) { animation-delay: 0.4s; }
-.feat-card:nth-child(5) { animation-delay: 0.5s; }
+.feat-card:nth-child(1) {
+	animation-delay: 0.1s;
+}
+
+.feat-card:nth-child(2) {
+	animation-delay: 0.2s;
+}
+
+.feat-card:nth-child(3) {
+	animation-delay: 0.3s;
+}
+
+.feat-card:nth-child(4) {
+	animation-delay: 0.4s;
+}
+
+.feat-card:nth-child(5) {
+	animation-delay: 0.5s;
+}
 
 /* Animamos la vista de Portal de Acceso (Dependencias) */
 .dependencias-header {
@@ -743,85 +744,101 @@ html {
 }
 
 /* Efecto cascada para las dependencias */
-.dependencia-card:nth-child(1) { animation-delay: 0.1s; }
-.dependencia-card:nth-child(2) { animation-delay: 0.2s; }
-.dependencia-card:nth-child(3) { animation-delay: 0.3s; }
+.dependencia-card:nth-child(1) {
+	animation-delay: 0.1s;
+}
+
+.dependencia-card:nth-child(2) {
+	animation-delay: 0.2s;
+}
+
+.dependencia-card:nth-child(3) {
+	animation-delay: 0.3s;
+}
 
 /* === ESTILOS DEL MODAL === */
 
 /* La capa oscura que cubre toda la pantalla */
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px); /* Desenfoque del fondo */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999; /* Asegura que esté por encima de todo */
-    animation: fadeIn 0.3s ease forwards;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.4);
+	backdrop-filter: blur(4px);
+	/* Desenfoque del fondo */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+	/* Asegura que esté por encima de todo */
+	animation: fadeIn 0.3s ease forwards;
 }
 
 /* La tarjeta blanca en el centro */
 .modal-card {
-    background-color: var(--bg);
-    border-radius: var(--radius-xl);
-    padding: 2.5rem 2rem;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    box-shadow: var(--shadow-main);
-    /* Animación de rebote */
-    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+	background-color: var(--bg);
+	border-radius: var(--radius-xl);
+	padding: 2.5rem 2rem;
+	max-width: 400px;
+	width: 90%;
+	text-align: center;
+	box-shadow: var(--shadow-main);
+	/* Animación de rebote */
+	animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 .modal-icon {
-    width: 60px;
-    height: 60px;
-    background-color: #d1fae5;
-    color: #059669;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem auto;
+	width: 60px;
+	height: 60px;
+	background-color: #d1fae5;
+	color: #059669;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto 1.5rem auto;
 }
 
 .modal-icon svg {
-    width: 30px;
-    height: 30px;
+	width: 30px;
+	height: 30px;
 }
 
 .modal-card h3 {
-    color: var(--primary-dark);
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+	color: var(--primary-dark);
+	font-size: 1.5rem;
+	margin-bottom: 0.5rem;
 }
 
 .modal-card p {
-    color: var(--muted);
-    font-size: 1rem;
-    line-height: 1.5;
+	color: var(--muted);
+	font-size: 1rem;
+	line-height: 1.5;
 }
 
 /* Animaciones específicas del modal */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
 }
 
 @keyframes popIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+	from {
+		opacity: 0;
+		transform: scale(0.8);
+	}
+
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
 }
 
 /* Estilos específicos para el formulario, centrados en pantalla */
@@ -901,7 +918,7 @@ textarea.form-control {
 	margin-top: 1.5rem;
 	padding: 1rem;
 	font-size: 1rem;
-	border: none;	
+	border: none;
 }
 
 .back-link {
@@ -919,12 +936,43 @@ textarea.form-control {
 }
 
 .auth-header {
-    opacity: 0;
-    animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+	opacity: 0;
+	animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .auth-card {
-    opacity: 0;
-    /* Le damos 0.15s de retraso para que entre justo después del título */
-    animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s forwards;
+	opacity: 0;
+	/* Le damos 0.15s de retraso para que entre justo después del título */
+	animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s forwards;
+}
+
+/* === Fondo degradado general === */
+:host {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	position: relative;
+	overflow-x: hidden;
+	isolation: isolate;
+}
+
+/* Capa suave encima del fondo */
+:host::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+
+    background:
+        linear-gradient(
+            120deg,
+            rgba(255, 255, 255, 0.88) 0%,
+            rgba(255, 255, 255, 0.68) 48%,
+            rgba(255, 255, 255, 0.42) 100%
+        ),
+        radial-gradient(circle at 15% 20%, rgba(21, 80, 147, 0.20), transparent 32%),
+        radial-gradient(circle at 85% 15%, rgba(107, 150, 244, 0.18), transparent 30%),
+        radial-gradient(circle at 70% 80%, rgba(21, 80, 147, 0.12), transparent 35%),
+        linear-gradient(135deg, #f8fbff 0%, #edf4fb 45%, #dfeaf5 100%);
 }
