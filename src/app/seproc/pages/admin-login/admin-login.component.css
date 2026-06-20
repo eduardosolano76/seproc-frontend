@@ -1,0 +1,296 @@
+/* src/app/seproc/pages/admin-login/admin-login.component.css */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+
+  --primary: #155093;
+  --primary-dark: #103f74;
+  --primary-soft: rgba(21, 80, 147, .14);
+  --bg: #ffffff;
+  --text: #111111;
+  --muted: #6c6c6c;
+  --line: rgba(0, 0, 0, .10);
+
+  --radius-md: 18px;
+  --radius-xl: 26px;
+  --radius-pill: 999px;
+
+  --shadow-panel: 0 18px 40px rgba(0, 0, 0, .08);
+  --shadow-main: 0 20px 50px rgba(0, 0, 0, .14);
+
+  color: var(--text);
+
+  background: url('../../../../assets/seproc/fondo-seproc.png') no-repeat;
+  background-size: 65%;
+  background-position: bottom right;
+  background-attachment: fixed;
+}
+
+/* Capa suave del fondo, igual a la página principal */
+:host::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.88) 0%,
+      rgba(255, 255, 255, 0.68) 48%,
+      rgba(255, 255, 255, 0.42) 100%
+    ),
+    radial-gradient(circle at 15% 20%, rgba(21, 80, 147, 0.20), transparent 35%),
+    radial-gradient(circle at 85% 15%, rgba(107, 150, 244, 0.18), transparent 30%),
+    radial-gradient(circle at 70% 80%, rgba(21, 80, 147, 0.12), transparent 40%),
+    linear-gradient(
+      135deg,
+      rgba(248, 251, 255, 0.8) 0%,
+      rgba(237, 244, 251, 0.8) 45%,
+      rgba(223, 234, 245, 0.8) 100%
+    );
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* === CONTENEDOR GENERAL === */
+
+.login-shell {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  width: 100%;
+  padding: 2rem 1.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-mask {
+  height: 40px;
+  background-color: var(--primary);
+
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+.mask-seproc-icono {
+  -webkit-mask-image: url('../../../../assets/seproc/logoSeproc.png');
+  mask-image: url('../../../../assets/seproc/logoSeproc.png');
+  width: 40px;
+}
+
+.mask-seproc-letras {
+  -webkit-mask-image: url('../../../../assets/seproc/letrasSeproc.png');
+  mask-image: url('../../../../assets/seproc/letrasSeproc.png');
+  width: 130px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 470px;
+
+  background-color: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem 2.3rem;
+
+  box-shadow: var(--shadow-panel);
+
+  animation: fadeSlideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s forwards;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.auth-header h2 {
+  color: var(--primary-dark);
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.auth-header p {
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  width: 100%;
+
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+
+  color: var(--text);
+  background-color: #fafafa;
+
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.form-control::placeholder {
+  color: rgba(108, 108, 108, 0.72);
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+  background-color: var(--bg);
+}
+
+/* === BOTÓN === */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.95rem 2rem;
+
+  background-color: var(--primary);
+  color: var(--bg);
+
+  border: none;
+  border-radius: var(--radius-pill);
+
+  font-weight: 600;
+  box-shadow: var(--shadow-main);
+
+  transition: background-color 0.3s ease, transform 0.15s ease, opacity 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-block {
+  width: 100%;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* === MENSAJES === */
+
+.form-message {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.form-message.error {
+  color: #c62828;
+}
+
+/* === ANIMACIÓN === */
+
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === RESPONSIVE === */
+
+@media (max-width: 720px) {
+  :host {
+    background-size: 95%;
+    background-position: bottom right;
+  }
+
+  .login-shell {
+    padding: 1rem;
+  }
+
+  .auth-card {
+    padding: 2rem 1.4rem;
+    border-radius: 22px;
+  }
+
+  .auth-header h2 {
+    font-size: 1.55rem;
+  }
+
+  .form-control {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .mask-seproc-letras {
+    width: 115px;
+  }
+}

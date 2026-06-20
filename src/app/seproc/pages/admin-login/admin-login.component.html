@@ -1,0 +1,54 @@
+<!-- src/app/seproc/pages/admin-login/admin-login.component.html -->
+
+<main class="login-shell">
+  <div class="auth-card">
+
+    <div class="auth-header">
+      <div class="auth-logo">
+        <div class="logo-mask mask-seproc-icono" role="img" aria-label="Logo SEPROC">
+        </div>
+
+        <div class="logo-mask mask-seproc-letras" role="img" aria-label="Letras SeProc">
+        </div>
+      </div>
+
+      <h2>Iniciar sesión</h2>
+
+      <p>
+        Accede a la plataforma con tu nombre de usuario y contraseña.
+      </p>
+    </div>
+
+    <form class="login-form" (ngSubmit)="iniciarSesion()">
+
+      <div class="form-group">
+        <label for="username" class="form-label">
+          Nombre de usuario
+        </label>
+
+        <input id="username" name="username" type="text" autocomplete="username" [(ngModel)]="username"
+          class="form-control" placeholder="Ingresa tu usuario" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">
+          Contraseña
+        </label>
+
+        <input id="password" name="password" type="password" autocomplete="current-password" [(ngModel)]="password"
+          class="form-control" placeholder="Ingresa tu contraseña" required />
+      </div>
+
+      <p class="form-message error" *ngIf="mensajeError">
+        {{ mensajeError }}
+      </p>
+
+      <button class="btn-primary btn-block cursor-pointer" type="submit" [disabled]="loading">
+
+        {{ loading ? 'Iniciando sesión...' : 'Iniciar sesión' }}
+
+      </button>
+
+    </form>
+  </div>
+</main>

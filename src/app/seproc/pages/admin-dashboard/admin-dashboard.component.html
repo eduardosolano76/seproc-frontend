@@ -1,0 +1,159 @@
+<!-- src/app/seproc/pages/admin-dashboard/admin-dashboard.component.html -->
+
+<div class="layout">
+
+  <aside class="sidebar" [class.menu-open]="menuOpen">
+
+    <div class="brand">
+      <div class="logo">
+        <div class="logo-azul"></div>
+      </div>
+    </div>
+
+    <div class="mobile-top">
+      <button
+        class="hamburger"
+        type="button"
+        aria-label="Abrir menú"
+        (click)="menuOpen = !menuOpen">
+        ☰
+      </button>
+    </div>
+
+    <nav class="nav" aria-label="Menú Súper Administrador">
+
+      <a class="nav-item active">
+        <span class="nav-left">
+          <span class="icon">⏳</span>
+          <span class="label">Solicitudes de acceso</span>
+        </span>
+      </a>
+
+      <button class="nav-item" type="button" (click)="logout()">
+        <span class="nav-left">
+          <span class="icon">↪</span>
+          <span class="label">Cerrar sesión</span>
+        </span>
+      </button>
+
+    </nav>
+  </aside>
+
+  <main class="content">
+
+    <header class="topbar">
+
+      <div class="search" role="search">
+        <span class="s-icon" aria-hidden="true">🔎</span>
+
+        <input
+          type="search"
+          placeholder="Buscar institución..."
+          autocomplete="off"
+          [(ngModel)]="busqueda"
+        />
+      </div>
+
+      <div class="userbox">
+        <div class="hello">
+          <div class="hello-name">
+            Hola, <span>{{ nombreUsuario }}</span>!
+          </div>
+
+          <div class="hello-role">
+            <span>{{ rolUsuario }}</span>
+          </div>
+        </div>
+
+        <button class="profile" type="button" title="Perfil">
+          <span>SA</span>
+        </button>
+      </div>
+
+    </header>
+
+    <section class="panel panel-scroll" aria-label="Sección principal">
+
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title">Nuevas solicitudes</h2>
+
+          <div class="panel-sub">
+            Escuelas o dependencias que han solicitado utilizar el sistema SeProc.
+          </div>
+        </div>
+      </div>
+
+      <div id="panelContent">
+
+        <div class="tabs" role="tablist" aria-label="Filtros de solicitudes">
+          <button class="tab active" type="button">Pendientes</button>
+        </div>
+
+        <div class="success-alert" *ngIf="mensajeExito">
+          ✅ {{ mensajeExito }}
+        </div>
+
+        <div class="cards">
+
+          <div class="empty" *ngIf="!cargando && pendientesFiltradas.length === 0">
+            No hay nuevas solicitudes pendientes por el momento.
+          </div>
+
+          <div class="empty" *ngIf="cargando">
+            Cargando solicitudes...
+          </div>
+
+          <div class="card-sol" *ngFor="let sol of pendientesFiltradas">
+
+            <div class="left">
+              <span class="school">
+                {{ sol.nombreDependencia }}
+              </span>
+
+              <div class="meta">
+                <span class="state-dot dot-pendiente"></span>
+                <span>PENDIENTE</span>
+                <span class="separator">|</span>
+
+                <strong>Contacto:</strong>
+                <span>{{ sol.nombreContacto }}</span>
+
+                <span class="separator">|</span>
+
+                <strong>Email:</strong>
+                <span>{{ sol.emailContacto }}</span>
+
+                <span class="separator">|</span>
+
+                <strong>Tel:</strong>
+                <span>{{ sol.telefonoContacto }}</span>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button
+                type="button"
+                class="approve-btn"
+                (click)="aprobar(sol.idSolicitud)">
+                Aprobar
+              </button>
+
+              <button
+                type="button"
+                class="reject-btn"
+                (click)="rechazar(sol.idSolicitud)">
+                Rechazar
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
