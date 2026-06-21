@@ -67,15 +67,19 @@ export class AdminSeprocService {
     body.set('username', username);
     body.set('password', password);
 
-    return this.http.post<{ mensaje: string }>(
-      `${this.apiUrl}/admin-seproc/login`,
-      body.toString(),
-      {
-        headers: this.crearHeaders({
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }),
-        withCredentials: true
-      }
+    return this.asegurarCsrf().pipe(
+      switchMap(() =>
+        this.http.post<{ mensaje: string }>(
+          `${this.apiUrl}/admin-seproc/login`,
+          body.toString(),
+          {
+            headers: this.crearHeaders({
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }),
+            withCredentials: true
+          }
+        )
+      )
     );
   }
 

@@ -71,6 +71,11 @@ a {
   text-decoration: none;
 }
 
+::ng-deep html, ::ng-deep body {
+    height: 100% !important;
+    margin: 0 !important;
+    overflow: hidden !important; /* Mata el scroll global por completo */
+}
 /* === CONTENEDOR GENERAL === */
 
 .login-shell {

@@ -1,7 +1,7 @@
 // src/app/seproc/pages/admin-dashboard/admin-dashboard.component.ts
 
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AdminSeprocService } from '../../../core/services/admin-seproc.service';
@@ -25,11 +25,17 @@ export class AdminDashboardComponent implements OnInit {
   mensajeExito = '';
   menuOpen = false;
   cargando = true;
+  sidebarCollapsed = false;
 
   constructor(
     private adminService: AdminSeprocService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) { }
+
+  toggleSidebar(): void {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
 
   ngOnInit(): void {
     this.cargarUsuario();
@@ -55,6 +61,7 @@ export class AdminDashboardComponent implements OnInit {
       next: (usuario) => {
         this.nombreUsuario = usuario.nombreUsuario;
         this.rolUsuario = usuario.rolUsuario;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.router.navigate(['/admin-seproc/login-seproc']);
@@ -69,9 +76,11 @@ export class AdminDashboardComponent implements OnInit {
       next: (data) => {
         this.pendientes = data;
         this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.cargando = false;
+        this.cdr.detectChanges();
         this.router.navigate(['/admin-seproc/login-seproc']);
       }
     });
