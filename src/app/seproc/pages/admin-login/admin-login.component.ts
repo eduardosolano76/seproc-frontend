@@ -26,53 +26,51 @@ export class AdminLoginComponent {
     private adminService: AdminSeprocService,
     private router: Router,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
-iniciarSesion(): void {
-  this.mensajeError = '';
+  iniciarSesion(): void {
+    this.mensajeError = '';
 
-  if (!this.username.trim() && !this.password.trim()) {
-    this.mensajeError = 'Ingresa tu usuario y contraseña.';
+    if (!this.username.trim() && !this.password.trim()) {
+      this.mensajeError = 'Ingresa tu usuario y contraseña.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (!this.username.trim()) {
+      this.mensajeError = 'Ingresa tu usuario.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (!this.password.trim()) {
+      this.mensajeError = 'Ingresa tu contraseña.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (this.loading) {
+      return;
+    }
+
+    this.loading = true;
     this.cdr.detectChanges();
-    return;
-  }
 
-  if (!this.username.trim()) {
-    this.mensajeError = 'Ingresa tu usuario.';
-    this.cdr.detectChanges();
-    return;
-  }
-
-  if (!this.password.trim()) {
-    this.mensajeError = 'Ingresa tu contraseña.';
-    this.cdr.detectChanges();
-    return;
-  }
-
-  if (this.loading) {
-    return;
-  }
-
-  this.loading = true;
-  this.cdr.detectChanges();
-
-    this.adminService.obtenerCsrf()
+    this.adminService.login(this.username, this.password)
       .pipe(
-        switchMap(() => this.adminService.login(this.username, this.password)),
-
         switchMap(() => this.adminService.obtenerCsrf()),
-
         timeout(8000),
-
         finalize(() => {
           this.loading = false;
           this.cdr.detectChanges();
         })
       )
-    .subscribe({
-      next: () => {
-        this.router.navigate(['/admin-seproc/dashboard-seproc']);
-      },
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/admin-seproc/dashboard-seproc'], {
+            replaceUrl: true
+          });
+        },
         error: (err) => {
           console.log('Error de login:', err);
 
@@ -92,5 +90,5 @@ iniciarSesion(): void {
           this.cdr.detectChanges();
         }
       });
-}
+  }
 }

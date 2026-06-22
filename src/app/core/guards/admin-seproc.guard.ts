@@ -9,22 +9,15 @@ export const adminGuard: CanActivateFn = (route, state) => {
   const adminService = inject(AdminSeprocService);
   const router = inject(Router);
 
-  // Llamamos al endpoint /me del backend
   return adminService.obtenerUsuario().pipe(
     map(usuario => {
-      // Si el backend responde con los datos del usuario, la sesión existe
       if (usuario && usuario.nombreUsuario) {
-        return true; 
+        return true;
       }
-      // Si responde bien pero viene vacío (raro, pero por si acaso)
-      router.navigate(['/admin-seproc/login-seproc']);
-      return false;
+      return router.createUrlTree(['/admin-seproc/login-seproc']);
     }),
-    catchError((error) => {
-      // Si el backend devuelve un 401 Unauthorized (la sesión expiró o no existe)
-      // redirigimos al login
-      router.navigate(['/admin-seproc/login-seproc']);
-      return of(false); // Bloqueamos la navegación
+    catchError(() => {
+      return of(router.createUrlTree(['/admin-seproc/login-seproc']));
     })
   );
 };

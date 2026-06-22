@@ -117,10 +117,18 @@ export class AdminDashboardComponent implements OnInit {
   logout(): void {
     this.adminService.logout().subscribe({
       next: () => {
-        this.router.navigate(['/admin-seproc/login-seproc']);
+        this.adminService.limpiarCsrf();
+
+        this.router.navigate(['/admin-seproc/login-seproc'], {
+          replaceUrl: true
+        });
       },
       error: () => {
-        this.router.navigate(['/admin-seproc/login-seproc']);
+        this.adminService.limpiarCsrf();
+
+        this.router.navigate(['/admin-seproc/login-seproc'], {
+          replaceUrl: true
+        });
       }
     });
   }

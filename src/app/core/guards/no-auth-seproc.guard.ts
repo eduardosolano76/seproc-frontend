@@ -11,12 +11,12 @@ export const noAuthGuard: CanActivateFn = (route, state) => {
 
   return adminService.obtenerUsuario().pipe(
     map(usuario => {
-      // Si ya hay sesión, lo sacamos del login y lo mandamos al dashboard
-      router.navigate(['/admin-seproc/dashboard-seproc']);
-      return false; 
+      if (usuario && usuario.nombreUsuario) {
+        return router.createUrlTree(['/admin-seproc/dashboard-seproc']);
+      }
+      return true;
     }),
     catchError(() => {
-      // Si da error (401), significa que NO hay sesión, por lo tanto SÍ lo dejamos ver el login
       return of(true);
     })
   );

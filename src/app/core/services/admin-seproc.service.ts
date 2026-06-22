@@ -124,6 +124,11 @@ export class AdminSeprocService {
       )
     );
   }
+  
+  limpiarCsrf(): void {
+    this.csrfToken = '';
+    this.csrfHeaderName = 'X-XSRF-TOKEN';
+  }
 
   logout(): Observable<{ mensaje: string }> {
     return this.asegurarCsrf().pipe(
