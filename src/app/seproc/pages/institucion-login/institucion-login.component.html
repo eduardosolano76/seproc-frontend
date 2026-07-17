@@ -1,0 +1,107 @@
+<!-- src/app/seproc/pages/institucion-login/institucion-login.component.html -->
+
+<main class="login-shell">
+  <div class="auth-card">
+
+    <div class="auth-header">
+
+      <!-- Logos de SEPROC y de la institución -->
+      <div class="auth-logos">
+
+        <div class="seproc-logo" aria-label="Logo SEPROC">
+          <div class="logo-mask mask-seproc-icono" role="img" aria-label="Icono SEPROC">
+          </div>
+
+          <div class="logo-mask mask-seproc-letras" role="img" aria-label="Letras SEPROC">
+          </div>
+        </div>
+
+        <div *ngIf="institucion" class="logos-divider" aria-hidden="true">
+        </div>
+
+        <div *ngIf="institucion" class="institution-logo-container">
+
+          <img [src]="logoInstitucion" [alt]="'Logo ' + institucion.abreviacion" class="institution-logo"
+            (error)="usarLogoAlternativo($event)" />
+        </div>
+
+      </div>
+
+      <h2>Iniciar sesión</h2>
+
+      <p *ngIf="institucion">
+        Accede a la plataforma de
+        <strong>{{ institucion.abreviacion }}</strong>
+        con tu nombre de usuario y contraseña.
+      </p>
+
+      <p *ngIf="!institucion && !cargando">
+        Accede a la plataforma con tu nombre de usuario y contraseña.
+      </p>
+
+    </div>
+
+    <!-- Mensaje de carga -->
+    <div *ngIf="cargando" class="loading-container">
+      <span class="loading-spinner"></span>
+
+      <p class="loading-message">
+        Cargando información de la dependencia...
+      </p>
+    </div>
+
+    <!-- Formulario -->
+    <form *ngIf="!cargando" class="login-form" [formGroup]="loginForm" (ngSubmit)="iniciarSesion()">
+
+      <div class="form-group">
+        <label for="username" class="form-label">
+          Nombre de usuario
+        </label>
+
+        <input id="username" type="text" formControlName="username" autocomplete="username" class="form-control"
+          placeholder="Ingresa tu usuario" [class.input-error]="campoInvalido('username')" />
+
+        <small *ngIf="campoInvalido('username')" class="field-error">
+          Escribe tu nombre de usuario.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">
+          Contraseña
+        </label>
+
+        <input id="password" type="password" formControlName="password" autocomplete="current-password"
+          class="form-control" placeholder="Ingresa tu contraseña" [class.input-error]="campoInvalido('password')" />
+
+        <small *ngIf="campoInvalido('password')" class="field-error">
+          Escribe tu contraseña.
+        </small>
+      </div>
+
+      <p *ngIf="mensajeError" class="form-message error">
+        {{ mensajeError }}
+      </p>
+
+      <p *ngIf="mensajeExito" class="form-message success">
+        {{ mensajeExito }}
+      </p>
+
+      <button class="btn-primary btn-block" type="submit" [disabled]="enviando">
+
+        {{ enviando ? 'Iniciando sesión...' : 'Iniciar sesión' }}
+      </button>
+
+      <p *ngIf="institucion" class="register-prompt">
+
+        ¿No tienes cuenta?
+
+        <a class="btn-register-link" [href]="registroUrl">
+          Regístrate en {{ institucion.abreviacion }}
+        </a>
+      </p>
+
+    </form>
+
+  </div>
+</main>

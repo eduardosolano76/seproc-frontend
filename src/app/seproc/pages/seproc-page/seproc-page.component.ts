@@ -6,13 +6,14 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Institucion } from '../../../core/models/institucion.model';
 import { SolicitudInstitucion } from '../../../core/models/solicitud-institucion.model';
 import { SeprocService } from '../../../core/services/seproc.service';
+import { RouterLink } from '@angular/router';
 
 type SeprocView = 'home' | 'dependencias' | 'solicitar';
 
 @Component({
   selector: 'app-seproc-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './seproc-page.component.html',
   styleUrl: './seproc-page.component.css'
 })
@@ -34,7 +35,7 @@ export class SeprocPageComponent implements OnInit {
     telefonoContacto: ''
   };
 
-  constructor(private seprocService: SeprocService) {}
+  constructor(private seprocService: SeprocService) { }
 
   ngOnInit(): void {
     this.cargarInstituciones();

@@ -3,24 +3,15 @@
 <div class="container">
   <nav class="navbar">
     <a (click)="switchView('home')" class="logo cursor-pointer" title="Ir al Inicio">
-      <div
-        class="logo-mask mask-seproc-icono"
-        role="img"
-        aria-label="Logo SEPROC">
+      <div class="logo-mask mask-seproc-icono" role="img" aria-label="Logo SEPROC">
       </div>
 
-      <div
-        class="logo-mask mask-seproc-letras"
-        role="img"
-        aria-label="Letras SeProc">
+      <div class="logo-mask mask-seproc-letras" role="img" aria-label="Letras SeProc">
       </div>
     </a>
 
     <div class="nav-links">
-      <a
-        id="nav-home"
-        (click)="switchView('home')"
-        [class.active]="activeView === 'home'">
+      <a id="nav-home" (click)="switchView('home')" [class.active]="activeView === 'home'">
         Inicio
       </a>
 
@@ -28,11 +19,7 @@
         <a class="dropdown-toggle">
           Recursos
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
             </path>
           </svg>
         </a>
@@ -54,10 +41,7 @@
 <main class="main-content container">
 
   <!-- Vista inicio -->
-  <div
-    id="view-home"
-    class="view-section hero-grid"
-    [class.hidden]="activeView !== 'home'">
+  <div id="view-home" class="view-section hero-grid" [class.hidden]="activeView !== 'home'">
 
     <div class="hero-text">
       <h1>
@@ -78,11 +62,7 @@
       <a (click)="switchView('solicitar')" class="btn-primary cursor-pointer">
         Solicitar acceso
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M14 5l7 7m0 0l-7 7m7-7H3">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
           </path>
         </svg>
       </a>
@@ -94,10 +74,7 @@
         <div class="feat-card">
           <div class="feat-icon icon-blue">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
               </path>
             </svg>
@@ -112,10 +89,7 @@
         <div class="feat-card">
           <div class="feat-icon icon-green">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
               </path>
             </svg>
@@ -131,10 +105,7 @@
         <div class="feat-card">
           <div class="feat-icon icon-yellow">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
               </path>
             </svg>
@@ -149,10 +120,7 @@
         <div class="feat-card">
           <div class="feat-icon icon-dark">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z">
               </path>
             </svg>
@@ -168,10 +136,7 @@
         <div class="feat-card feat-card-dark">
           <div class="feat-icon icon-dark">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4">
               </path>
             </svg>
@@ -189,10 +154,7 @@
   </div>
 
   <!-- Vista dependencias -->
-  <div
-    id="view-dependencias"
-    class="view-section dependencias-section"
-    [class.hidden]="activeView !== 'dependencias'">
+  <div id="view-dependencias" class="view-section dependencias-section" [class.hidden]="activeView !== 'dependencias'">
 
     <div class="dependencias-header">
       <h2>Acceso a la plataforma</h2>
@@ -202,15 +164,10 @@
     </div>
 
     <div class="dependencias-grid">
-      <a
-        *ngFor="let inst of instituciones"
-        [href]="obtenerLoginUrl(inst)"
+      <a *ngFor="let inst of instituciones" [routerLink]="['/login', inst.abreviacion.toLowerCase()]"
         class="dependencia-card">
 
-        <img
-          [src]="obtenerLogo(inst)"
-          [alt]="'Logo ' + inst.abreviacion"
-          class="dependencia-logo" />
+        <img [src]="obtenerLogo(inst)" [alt]="'Logo ' + inst.abreviacion" class="dependencia-logo" />
 
         <span class="dependencia-name">
           {{ inst.nombreOficial }}
@@ -220,10 +177,7 @@
   </div>
 
   <!-- Vista solicitar acceso -->
-  <div
-    id="view-solicitar"
-    class="view-section"
-    [class.hidden]="activeView !== 'solicitar'">
+  <div id="view-solicitar" class="view-section" [class.hidden]="activeView !== 'solicitar'">
 
     <div class="auth-card" style="margin: 0 auto">
       <div class="auth-header">
@@ -238,13 +192,8 @@
             Nombre oficial de la dependencia *
           </label>
 
-          <input
-            type="text"
-            id="nombreDependencia"
-            name="nombreDependencia"
-            [(ngModel)]="solicitud.nombreDependencia"
-            class="form-control"
-            required />
+          <input type="text" id="nombreDependencia" name="nombreDependencia" [(ngModel)]="solicitud.nombreDependencia"
+            class="form-control" required />
         </div>
 
         <div class="form-group">
@@ -252,13 +201,8 @@
             Siglas o abreviación *
           </label>
 
-          <input
-            type="text"
-            id="abreviacion"
-            name="abreviacion"
-            [(ngModel)]="solicitud.abreviacion"
-            class="form-control"
-            required />
+          <input type="text" id="abreviacion" name="abreviacion" [(ngModel)]="solicitud.abreviacion"
+            class="form-control" required />
         </div>
 
         <div class="form-group">
@@ -266,13 +210,8 @@
             Nombre del contacto *
           </label>
 
-          <input
-            type="text"
-            id="nombreContacto"
-            name="nombreContacto"
-            [(ngModel)]="solicitud.nombreContacto"
-            class="form-control"
-            required />
+          <input type="text" id="nombreContacto" name="nombreContacto" [(ngModel)]="solicitud.nombreContacto"
+            class="form-control" required />
         </div>
 
         <div class="form-group">
@@ -280,13 +219,8 @@
             Correo electrónico del contacto *
           </label>
 
-          <input
-            type="email"
-            id="emailContacto"
-            name="emailContacto"
-            [(ngModel)]="solicitud.emailContacto"
-            class="form-control"
-            required />
+          <input type="email" id="emailContacto" name="emailContacto" [(ngModel)]="solicitud.emailContacto"
+            class="form-control" required />
         </div>
 
         <div class="form-group">
@@ -294,13 +228,8 @@
             Teléfono del contacto *
           </label>
 
-          <input
-            type="tel"
-            id="telefonoContacto"
-            name="telefonoContacto"
-            [(ngModel)]="solicitud.telefonoContacto"
-            class="form-control"
-            required />
+          <input type="tel" id="telefonoContacto" name="telefonoContacto" [(ngModel)]="solicitud.telefonoContacto"
+            class="form-control" required />
         </div>
 
         <button type="submit" class="btn-primary btn-block cursor-pointer">
@@ -316,21 +245,12 @@
   <div class="container footer-content">
 
     <div class="footer-brand">
-      <a
-        (click)="switchView('home')"
-        class="logo cursor-pointer"
-        title="Ir al Inicio">
+      <a (click)="switchView('home')" class="logo cursor-pointer" title="Ir al Inicio">
 
-        <div
-          class="logo-mask mask-seproc-icono"
-          role="img"
-          aria-label="Logo SEPROC">
+        <div class="logo-mask mask-seproc-icono" role="img" aria-label="Logo SEPROC">
         </div>
 
-        <div
-          class="logo-mask mask-seproc-letras"
-          role="img"
-          aria-label="Letras SeProc">
+        <div class="logo-mask mask-seproc-letras" role="img" aria-label="Letras SeProc">
         </div>
       </a>
 
@@ -371,11 +291,7 @@
 
     <div class="modal-icon">
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M5 13l4 4L19 7">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
         </path>
       </svg>
     </div>
@@ -384,10 +300,7 @@
 
     <p>{{ mensajeExito }}</p>
 
-    <button
-      type="button"
-      (click)="cerrarModal()"
-      class="btn-primary cursor-pointer"
+    <button type="button" (click)="cerrarModal()" class="btn-primary cursor-pointer"
       style="margin-top: 1.5rem; width: 100%; justify-content: center; border: none">
       Entendido
     </button>

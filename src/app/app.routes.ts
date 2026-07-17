@@ -6,6 +6,7 @@ import { AdminLoginComponent } from './seproc/pages/admin-login/admin-login.comp
 import { AdminDashboardComponent } from './seproc/pages/admin-dashboard/admin-dashboard.component';
 import { noAuthGuard } from './core/guards/no-auth-seproc.guard';
 import { adminGuard } from './core/guards/admin-seproc.guard';
+import { InstitucionLoginComponent } from './seproc/pages/institucion-login/institucion-login.component';
 
 export const routes: Routes = [
   {
@@ -18,6 +19,15 @@ export const routes: Routes = [
     component: SeprocPageComponent,
     title: 'SeProc Guerrero'
   },
+
+  // Login dinámico por institución
+  {
+    path: 'login/:abreviacion',
+    component: InstitucionLoginComponent,
+    title: 'SEPROC | Iniciar sesión'
+  },
+
+  // Login del super administrador de SeProc
     {
     path: 'admin-seproc/login-seproc',
     component: AdminLoginComponent,
