@@ -7,7 +7,7 @@ import {
     ReactiveFormsModule,
     Validators
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { finalize } from 'rxjs';
 
@@ -20,7 +20,8 @@ import { AuthInstitucionService } from '../../../core/services/auth-institucion.
     standalone: true,
     imports: [
         CommonModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        RouterLink
     ],
     templateUrl: './institucion-login.component.html',
     styleUrl: './institucion-login.component.css'
@@ -42,6 +43,7 @@ export class InstitucionLoginComponent implements OnInit {
     enviando = false;
     mensajeError = '';
     mensajeExito = '';
+    formularioEnviado = false;
 
     readonly loginForm = this.fb.group({
         username: ['', Validators.required],
@@ -97,11 +99,11 @@ export class InstitucionLoginComponent implements OnInit {
     }
 
     iniciarSesion(): void {
+        this.formularioEnviado = true;
         this.mensajeError = '';
         this.mensajeExito = '';
 
         if (this.loginForm.invalid) {
-            this.loginForm.markAllAsTouched();
             return;
         }
 
@@ -169,20 +171,10 @@ export class InstitucionLoginComponent implements OnInit {
         imagen.onerror = null;
         imagen.src = this.obtenerLogoAlternativo();
     }
-
-    get registroUrl(): string {
-        if (!this.abreviacion) {
-            return '#';
-        }
-
-        return this.authService.obtenerUrlBackend(
-            `/registro/${encodeURIComponent(this.abreviacion)}`
-        );
-    }
-
+    
     campoInvalido(campo: 'username' | 'password'): boolean {
         const control = this.loginForm.controls[campo];
 
-        return control.invalid && control.touched;
+        return control.invalid && this.formularioEnviado;
     }
 }

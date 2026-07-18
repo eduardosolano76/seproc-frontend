@@ -16,6 +16,18 @@ export interface LoginInstitucionResponse {
   redirectUrl: string;
 }
 
+export interface RegistroInstitucionRequest {
+  nombre: string;
+  apellido: string;
+  email: string;
+  username: string;
+  password: string;
+}
+
+export interface RegistroInstitucionResponse {
+  mensaje: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -43,6 +55,20 @@ export class AuthInstitucionService {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
+      }
+    );
+  }
+
+    registrar(
+    abreviacion: string,
+    datos: RegistroInstitucionRequest
+  ): Observable<RegistroInstitucionResponse> {
+
+    return this.http.post<RegistroInstitucionResponse>(
+      `${this.apiUrl}/seproc/registro/${encodeURIComponent(abreviacion)}`,
+      datos,
+      {
+        withCredentials: true
       }
     );
   }

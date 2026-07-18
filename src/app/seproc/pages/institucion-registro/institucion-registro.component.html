@@ -1,0 +1,213 @@
+<!-- src/app/seproc/pages/institucion-registro/institucion-registro.component.html -->
+
+<main class="login-shell">
+    <div class="auth-card register-auth-card">
+
+        <div class="auth-header">
+
+            <div class="auth-logos">
+
+                <div class="seproc-logo" aria-label="Logo SEPROC">
+                    <div class="logo-mask mask-seproc-icono" role="img" aria-label="Icono SEPROC">
+                    </div>
+
+                    <div class="logo-mask mask-seproc-letras" role="img" aria-label="Letras SEPROC">
+                    </div>
+                </div>
+
+                <div *ngIf="institucion" class="logos-divider" aria-hidden="true">
+                </div>
+
+                <div *ngIf="institucion" class="institution-logo-container">
+
+                    <img [src]="logoInstitucion" [alt]="'Logo ' + institucion.abreviacion" class="institution-logo"
+                        (error)="usarLogoAlternativo($event)" />
+                </div>
+
+            </div>
+
+            <ng-container *ngIf="!registroExitoso">
+
+                <h2>
+                    Crear cuenta
+                </h2>
+
+                <p *ngIf="institucion">
+                    Envía tu solicitud para registrarte en
+                    <strong>{{ institucion.abreviacion }}</strong>.
+                </p>
+
+            </ng-container>
+
+        </div>
+
+        <!-- Cargando institución -->
+        <div *ngIf="cargando" class="loading-container">
+
+            <span class="loading-spinner"></span>
+
+            <p class="loading-message">
+                Cargando información de la dependencia...
+            </p>
+
+        </div>
+
+        <!-- Formulario -->
+        <form *ngIf="!cargando && !registroExitoso" class="login-form" [formGroup]="registroForm"
+            (ngSubmit)="registrar()">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="nombre" class="form-label">
+                        Nombre(s)
+                    </label>
+
+                    <input id="nombre" type="text" formControlName="nombre" autocomplete="given-name"
+                        class="form-control" placeholder="Ingresa tu nombre"
+                        [class.input-error]="campoInvalido('nombre')" (input)="limpiarErrorCampo('nombre')" />
+
+                    <small *ngIf="campoInvalido('nombre')" class="field-error">
+                        {{ mensajeCampo('nombre') }}
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="apellido" class="form-label">
+                        Apellidos
+                    </label>
+
+                    <input id="apellido" type="text" formControlName="apellido" autocomplete="family-name"
+                        class="form-control" placeholder="Ingresa tus apellidos"
+                        [class.input-error]="campoInvalido('apellido')" (input)="limpiarErrorCampo('apellido')" />
+
+                    <small *ngIf="campoInvalido('apellido')" class="field-error">
+                        {{ mensajeCampo('apellido') }}
+                    </small>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">
+                    Correo electrónico
+                </label>
+
+                <input id="email" type="email" formControlName="email" autocomplete="email" class="form-control"
+                    placeholder="correo@ejemplo.com" [class.input-error]="campoInvalido('email')"
+                    (input)="limpiarErrorCampo('email')" />
+
+                <small *ngIf="campoInvalido('email')" class="field-error">
+                    {{ mensajeCampo('email') }}
+                </small>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="username" class="form-label">
+                        Nombre de usuario
+                    </label>
+
+                    <input id="username" type="text" formControlName="username" autocomplete="username"
+                        class="form-control" placeholder="Elige un usuario"
+                        [class.input-error]="campoInvalido('username')" (input)="limpiarErrorCampo('username')" />
+
+                    <small *ngIf="campoInvalido('username')" class="field-error">
+                        {{ mensajeCampo('username') }}
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        Contraseña
+                    </label>
+
+                    <input id="password" type="password" formControlName="password" autocomplete="new-password"
+                        class="form-control" placeholder="Mínimo 8 caracteres"
+                        [class.input-error]="campoInvalido('password')" (input)="limpiarErrorCampo('password')" />
+
+                    <small *ngIf="campoInvalido('password')" class="field-error">
+                        {{ mensajeCampo('password') }}
+                    </small>
+                </div>
+
+            </div>
+
+            <p *ngIf="mensajeError" class="form-message error">
+                {{ mensajeError }}
+            </p>
+
+            <button class="btn-primary btn-block" type="submit" [disabled]="enviando">
+
+                {{
+                enviando
+                ? 'Enviando solicitud...'
+                : 'Enviar solicitud de registro'
+                }}
+
+            </button>
+
+            <p *ngIf="institucion" class="register-prompt">
+
+                ¿Ya tienes cuenta?
+
+                <a class="btn-register-link" [routerLink]="[
+            '/login',
+            institucion.abreviacion.toLowerCase()
+          ]">
+                    Inicia sesión
+                </a>
+
+            </p>
+
+        </form>
+    </div>
+</main>
+
+<!-- Modal de registro exitoso -->
+<div
+    *ngIf="registroExitoso"
+    class="modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="registroExitosoTitulo">
+
+    <div class="modal-card">
+
+        <div class="modal-icon">
+            <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true">
+
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7">
+                </path>
+            </svg>
+        </div>
+
+        <h3 id="registroExitosoTitulo">
+            ¡Solicitud enviada!
+        </h3>
+
+        <p>
+            {{ mensajeExito }}
+        </p>
+
+        <a
+            class="btn-primary modal-button"
+            [routerLink]="[
+                '/login',
+                abreviacion
+            ]">
+
+            Volver al inicio de sesión
+        </a>
+
+    </div>
+</div>

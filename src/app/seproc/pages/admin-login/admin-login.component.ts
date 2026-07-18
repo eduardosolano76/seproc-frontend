@@ -21,42 +21,35 @@ export class AdminLoginComponent {
 
   mensajeError = '';
   loading = false;
+  formularioEnviado = false;
 
   constructor(
     private adminService: AdminSeprocService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) { }
-
   iniciarSesion(): void {
+    if (this.loading) {
+      return;
+    }
+
+    this.formularioEnviado = true;
     this.mensajeError = '';
 
-    if (!this.username.trim() && !this.password.trim()) {
-      this.mensajeError = 'Ingresa tu usuario y contraseña.';
+    /*
+     * Si alguno de los campos está vacío, no se muestra una
+     * tarjeta general. Los mensajes aparecerán debajo de cada campo.
+     */
+    if (!this.username.trim() || !this.password.trim()) {
       this.cdr.detectChanges();
-      return;
-    }
-
-    if (!this.username.trim()) {
-      this.mensajeError = 'Ingresa tu usuario.';
-      this.cdr.detectChanges();
-      return;
-    }
-
-    if (!this.password.trim()) {
-      this.mensajeError = 'Ingresa tu contraseña.';
-      this.cdr.detectChanges();
-      return;
-    }
-
-    if (this.loading) {
       return;
     }
 
     this.loading = true;
     this.cdr.detectChanges();
 
-    this.adminService.login(this.username, this.password)
+    this.adminService
+      .login(this.username.trim(), this.password)
       .pipe(
         switchMap(() => this.adminService.obtenerCsrf()),
         timeout(8000),
@@ -67,28 +60,41 @@ export class AdminLoginComponent {
       )
       .subscribe({
         next: () => {
-          this.router.navigate(['/admin-seproc/dashboard-seproc'], {
-            replaceUrl: true
-          });
+          this.router.navigate(
+            ['/admin-seproc/dashboard-seproc'],
+            {
+              replaceUrl: true
+            }
+          );
         },
         error: (err) => {
-          console.log('Error de login:', err);
+          console.error('Error de login:', err);
 
           if (err.status === 401) {
-            this.mensajeError = 'Usuario o contraseña incorrectos.';
-            this.username = '';
-            this.password = '';
+            this.mensajeError =
+              'Usuario o contraseña incorrectos.';
           } else if (err.status === 403) {
-            this.mensajeError = 'No se pudo validar la seguridad de la solicitud. Intenta nuevamente.';
-            this.password = '';
+            this.mensajeError =
+              'No se pudo validar la seguridad de la solicitud. Intenta nuevamente.';
           } else if (err.name === 'TimeoutError') {
-            this.mensajeError = 'El servidor tardó demasiado en responder. Intenta nuevamente.';
+            this.mensajeError =
+              'El servidor tardó demasiado en responder. Intenta nuevamente.';
           } else {
-            this.mensajeError = 'Ocurrió un error al iniciar sesión.';
+            this.mensajeError =
+              err.error?.mensaje ??
+              'Ocurrió un error al iniciar sesión.';
           }
-
           this.cdr.detectChanges();
         }
       });
+  }
+
+    campoInvalido(campo: 'username' | 'password'): boolean {
+    const valor =
+      campo === 'username'
+        ? this.username
+        : this.password;
+
+    return this.formularioEnviado && !valor.trim();
   }
 }

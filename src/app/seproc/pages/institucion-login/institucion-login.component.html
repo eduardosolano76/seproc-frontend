@@ -5,7 +5,7 @@
 
     <div class="auth-header">
 
-      <!-- Logos de SEPROC y de la institución -->
+      <!-- Logos de SeProc y de la institución -->
       <div class="auth-logos">
 
         <div class="seproc-logo" aria-label="Logo SEPROC">
@@ -93,10 +93,10 @@
       </button>
 
       <p *ngIf="institucion" class="register-prompt">
-
         ¿No tienes cuenta?
-
-        <a class="btn-register-link" [href]="registroUrl">
+        <a class="btn-register-link" [routerLink]="[
+          '/registro',
+          institucion.abreviacion.toLowerCase()]">
           Regístrate en {{ institucion.abreviacion }}
         </a>
       </p>

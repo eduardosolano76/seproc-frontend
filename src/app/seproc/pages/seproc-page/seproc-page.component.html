@@ -185,55 +185,97 @@
         <p>Ingresa los datos de tu dependencia para iniciar el proceso de afiliación.</p>
       </div>
 
-      <form #solicitudForm="ngForm" (ngSubmit)="enviarSolicitud(solicitudForm)">
+      <!-- Formulario de solicitud -->
+      <form [formGroup]="solicitudForm" (ngSubmit)="enviarSolicitud()" novalidate>
 
+        <!-- Nombre oficial de la dependencia -->
         <div class="form-group">
           <label for="nombreDependencia" class="form-label">
-            Nombre oficial de la dependencia *
+            Nombre oficial de la dependencia
           </label>
 
-          <input type="text" id="nombreDependencia" name="nombreDependencia" [(ngModel)]="solicitud.nombreDependencia"
-            class="form-control" required />
+          <input type="text" id="nombreDependencia" formControlName="nombreDependencia" autocomplete="organization"
+            maxlength="200" class="form-control" placeholder="Ej. Instituto Tecnológico de Chilpancingo"
+            [class.input-error]="campoInvalido('nombreDependencia')" (input)="limpiarErrorCampo('nombreDependencia')" />
+          <small *ngIf="campoInvalido('nombreDependencia')" class="field-error">
+            {{ mensajeCampo('nombreDependencia') }}
+          </small>
         </div>
 
+        <!-- Abreviación de la dependencia -->
         <div class="form-group">
           <label for="abreviacion" class="form-label">
-            Siglas o abreviación *
+            Siglas o abreviación
           </label>
 
-          <input type="text" id="abreviacion" name="abreviacion" [(ngModel)]="solicitud.abreviacion"
-            class="form-control" required />
+          <input type="text" id="abreviacion" formControlName="abreviacion" maxlength="50" autocapitalize="characters"
+            class="form-control" placeholder="Ej. ITCH" [class.input-error]="campoInvalido('abreviacion')"
+            (input)="convertirAbreviacionMayusculas($event)" />
+
+          <small *ngIf="campoInvalido('abreviacion')" class="field-error">
+            {{ mensajeCampo('abreviacion') }}
+          </small>
         </div>
 
+        <!-- Nombre del contacto -->
         <div class="form-group">
           <label for="nombreContacto" class="form-label">
-            Nombre del contacto *
+            Nombre del contacto
           </label>
 
-          <input type="text" id="nombreContacto" name="nombreContacto" [(ngModel)]="solicitud.nombreContacto"
-            class="form-control" required />
+          <input type="text" id="nombreContacto" formControlName="nombreContacto" autocomplete="name" maxlength="250"
+            class="form-control" placeholder="Ej. Juan Pérez Hernández"
+            [class.input-error]="campoInvalido('nombreContacto')" (input)="limpiarErrorCampo('nombreContacto')" />
+
+          <small *ngIf="campoInvalido('nombreContacto')" class="field-error">
+            {{ mensajeCampo('nombreContacto') }}
+          </small>
+
         </div>
 
+        <!-- Correo electrónico del contacto -->
         <div class="form-group">
           <label for="emailContacto" class="form-label">
-            Correo electrónico del contacto *
+            Correo electrónico del contacto
           </label>
 
-          <input type="email" id="emailContacto" name="emailContacto" [(ngModel)]="solicitud.emailContacto"
-            class="form-control" required />
+          <input type="email" id="emailContacto" formControlName="emailContacto" autocomplete="email" maxlength="100"
+            class="form-control" placeholder="correo@dependencia.gob.mx"
+            [class.input-error]="campoInvalido('emailContacto')" (input)="limpiarErrorCampo('emailContacto')" />
+
+          <small *ngIf="campoInvalido('emailContacto')" class="field-error">
+            {{ mensajeCampo('emailContacto') }}
+          </small>
         </div>
 
+        <!-- Teléfono del contacto -->
         <div class="form-group">
           <label for="telefonoContacto" class="form-label">
-            Teléfono del contacto *
+            Teléfono del contacto
           </label>
 
-          <input type="tel" id="telefonoContacto" name="telefonoContacto" [(ngModel)]="solicitud.telefonoContacto"
-            class="form-control" required />
+          <input type="tel" id="telefonoContacto" formControlName="telefonoContacto" autocomplete="tel" inputmode="tel"
+            maxlength="20" class="form-control" placeholder="Ej. 7471234567"
+            [class.input-error]="campoInvalido('telefonoContacto')" (input)="limpiarErrorCampo('telefonoContacto')" />
+
+          <small *ngIf="campoInvalido('telefonoContacto')" class="field-error">
+            {{ mensajeCampo('telefonoContacto') }}
+          </small>
         </div>
 
-        <button type="submit" class="btn-primary btn-block cursor-pointer">
-          Enviar solicitud
+        <!-- Mensaje de error general -->
+        <p *ngIf="mensajeError" class="form-message error">
+          {{ mensajeError }}
+        </p>
+
+        <!-- Botón de envío -->
+        <button type="submit" class="btn-primary btn-block cursor-pointer" [disabled]="enviando">
+
+          {{
+          enviando
+          ? 'Enviando solicitud...'
+          : 'Enviar solicitud'
+          }}
         </button>
       </form>
     </div>
@@ -241,6 +283,7 @@
 
 </main>
 
+<!-- Footer -->
 <footer class="footer">
   <div class="container footer-content">
 

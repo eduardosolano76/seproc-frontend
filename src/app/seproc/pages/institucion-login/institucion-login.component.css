@@ -35,6 +35,14 @@
   background-size: 65%;
 }
 
+::ng-deep html,
+::ng-deep body {
+  min-height: 100%;
+  margin: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
 /* Capa decorativa del fondo */
 :host::before {
   content: "";
@@ -340,7 +348,7 @@ a {
 
   text-align: center;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   line-height: 1.5;
 }
 
@@ -484,4 +492,11 @@ a {
   .auth-card {
     padding: 1.7rem 1.1rem;
   }
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
