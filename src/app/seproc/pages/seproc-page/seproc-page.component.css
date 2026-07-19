@@ -942,7 +942,7 @@ textarea.form-control {
 .btn-block {
 	width: 100%;
 	justify-content: center;
-	margin-top: 1.5rem;
+	margin-top: 0;
 	padding: 1rem;
 	font-size: 1rem;
 	border: none;
