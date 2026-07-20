@@ -14,10 +14,10 @@ export const adminGuard: CanActivateFn = (route, state) => {
       if (usuario && usuario.nombreUsuario) {
         return true;
       }
-      return router.createUrlTree(['/admin-seproc/login-seproc']);
+      return router.createUrlTree(['/seproc/admin-seproc/login-seproc']);
     }),
     catchError(() => {
-      return of(router.createUrlTree(['/admin-seproc/login-seproc']));
+      return of(router.createUrlTree(['/seproc/admin-seproc/login-seproc']));
     })
   );
 };

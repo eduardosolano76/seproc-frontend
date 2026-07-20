@@ -307,8 +307,4 @@ export class SeprocPageComponent implements OnInit {
 
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(inst.abreviacion)}&background=155093&color=fff`;
   }
-
-  obtenerLoginUrl(inst: Institucion): string {
-    return `/login/${inst.abreviacion.toLowerCase()}`;
-  }
 }

@@ -12,7 +12,7 @@ export const noAuthGuard: CanActivateFn = (route, state) => {
   return adminService.obtenerUsuario().pipe(
     map(usuario => {
       if (usuario && usuario.nombreUsuario) {
-        return router.createUrlTree(['/admin-seproc/dashboard-seproc']);
+        return router.createUrlTree(['/seproc/admin-seproc/dashboard-seproc']);
       }
       return true;
     }),

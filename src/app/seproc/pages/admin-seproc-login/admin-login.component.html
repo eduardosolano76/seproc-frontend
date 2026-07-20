@@ -1,0 +1,65 @@
+<!-- src/app/seproc/pages/admin-login/admin-login.component.html -->
+
+<main class="login-shell">
+  <div class="auth-card">
+
+    <div class="auth-header">
+      <div class="auth-logo">
+        <div class="logo-mask mask-seproc-icono" role="img" aria-label="Logo SEPROC">
+        </div>
+
+        <div class="logo-mask mask-seproc-letras" role="img" aria-label="Letras SeProc">
+        </div>
+      </div>
+
+      <h2>Iniciar sesión</h2>
+
+      <p>
+        Accede a la plataforma con tu nombre de usuario y contraseña.
+      </p>
+    </div>
+
+    <form class="login-form" (ngSubmit)="iniciarSesion()" noValidate>
+
+      <div class="form-group">
+        <label for="username" class="form-label">
+          Nombre de usuario
+        </label>
+
+        <input id="username" name="username" type="text" autocomplete="username" [(ngModel)]="username"
+          class="form-control" placeholder="Ingresa tu usuario" [class.input-error]="campoInvalido('username')"
+          [attr.aria-invalid]="campoInvalido('username')" required />
+
+        <small *ngIf="campoInvalido('username')" class="field-error">
+          Escribe tu nombre de usuario.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">
+          Contraseña
+        </label>
+
+        <input id="password" name="password" type="password" autocomplete="current-password" [(ngModel)]="password"
+          class="form-control" placeholder="Ingresa tu contraseña" [class.input-error]="campoInvalido('password')"
+          [attr.aria-invalid]="campoInvalido('password')" required />
+
+        <small *ngIf="campoInvalido('password')" class="field-error">
+          Escribe tu contraseña.
+        </small>
+      </div>
+      
+      <!-- Tarjeta para credenciales incorrectas o errores del servidor -->
+      <p *ngIf="mensajeError" class="form-message error" role="alert">
+        {{ mensajeError }}
+      </p>
+
+      <button class="btn-primary btn-block cursor-pointer" type="submit" [disabled]="loading">
+
+        {{ loading ? 'Iniciando sesión...' : 'Iniciar sesión' }}
+
+      </button>
+
+    </form>
+  </div>
+</main>

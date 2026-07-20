@@ -1041,7 +1041,7 @@ textarea.form-control {
 .form-message {
   margin-top: 1rem;
   padding: 0.85rem 1rem;
-
+  margin-bottom: 1.25rem;
   font-size: 0.88rem;
   line-height: 1.4;
   border-radius: 12px;

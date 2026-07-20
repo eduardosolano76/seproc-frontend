@@ -61,7 +61,7 @@ export class AdminLoginComponent {
       .subscribe({
         next: () => {
           this.router.navigate(
-            ['/admin-seproc/dashboard-seproc'],
+            ['/seproc/admin-seproc/dashboard-seproc'],
             {
               replaceUrl: true
             }

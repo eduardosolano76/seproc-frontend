@@ -64,7 +64,7 @@ export class AdminDashboardComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: () => {
-        this.router.navigate(['/admin-seproc/login-seproc']);
+        this.router.navigate(['/seproc/admin-seproc/login-seproc']);
       }
     });
   }
@@ -81,7 +81,7 @@ export class AdminDashboardComponent implements OnInit {
       error: () => {
         this.cargando = false;
         this.cdr.detectChanges();
-        this.router.navigate(['/admin-seproc/login-seproc']);
+        this.router.navigate(['/seproc/admin-seproc/login-seproc']);
       }
     });
   }
@@ -119,14 +119,14 @@ export class AdminDashboardComponent implements OnInit {
       next: () => {
         this.adminService.limpiarCsrf();
 
-        this.router.navigate(['/admin-seproc/login-seproc'], {
+        this.router.navigate(['/seproc/admin-seproc/login-seproc'], {
           replaceUrl: true
         });
       },
       error: () => {
         this.adminService.limpiarCsrf();
 
-        this.router.navigate(['/admin-seproc/login-seproc'], {
+        this.router.navigate(['/seproc/admin-seproc/login-seproc'], {
           replaceUrl: true
         });
       }

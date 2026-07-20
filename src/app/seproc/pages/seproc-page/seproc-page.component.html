@@ -164,7 +164,7 @@
     </div>
 
     <div class="dependencias-grid">
-      <a *ngFor="let inst of instituciones" [routerLink]="['/login', inst.abreviacion.toLowerCase()]"
+      <a *ngFor="let inst of instituciones" [routerLink]="['/seproc/login', inst.abreviacion.toLowerCase()]"
         class="dependencia-card">
 
         <img [src]="obtenerLogo(inst)" [alt]="'Logo ' + inst.abreviacion" class="dependencia-logo" />
