@@ -17,7 +17,7 @@
     background-color: #94a3b8;
 }
 
-html {
+* {
     scrollbar-width: thin;
     scrollbar-color: #cbd5e1 transparent;
 }

@@ -126,11 +126,21 @@ export class InstitucionLoginComponent implements OnInit {
                 next: (respuesta) => {
                     this.mensajeExito = respuesta.mensaje;
 
-                    window.location.assign(
-                        this.authService.obtenerUrlBackend(
-                            respuesta.redirectUrl
-                        )
-                    );
+                    if (this.abreviacion) {
+                        sessionStorage.setItem(
+                            'institucionAbreviacion',
+                            this.abreviacion
+                        );
+                    }
+
+                    const ruta =
+                        respuesta.redirectUrl === '/admin'
+                            ? '/seproc/admin-institucion/dashboard'
+                            : respuesta.redirectUrl;
+
+                    this.router.navigateByUrl(ruta, {
+                        replaceUrl: true
+                    });
                 },
                 error: (error) => {
                     this.mensajeError =
@@ -171,7 +181,7 @@ export class InstitucionLoginComponent implements OnInit {
         imagen.onerror = null;
         imagen.src = this.obtenerLogoAlternativo();
     }
-    
+
     campoInvalido(campo: 'username' | 'password'): boolean {
         const control = this.loginForm.controls[campo];
 
