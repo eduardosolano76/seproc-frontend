@@ -275,6 +275,7 @@ export class AdminInstitucionDashboardComponent implements OnInit {
       relativeTo: this.route,
       queryParams: { view },
       queryParamsHandling: 'merge',
+      replaceUrl: true,
     });
   }
 
@@ -1648,15 +1649,40 @@ export class AdminInstitucionDashboardComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          const abreviacion =
-            this.perfil?.abreviacion || sessionStorage.getItem('institucionAbreviacion');
+          const abreviacion = (
+            this.perfil?.abreviacion ||
+            sessionStorage.getItem('institucionAbreviacion') ||
+            ''
+          )
+            .trim()
+            .toLowerCase();
 
-          sessionStorage.removeItem('institucionAbreviacion');
+          sessionStorage.removeItem(
+            'institucionAbreviacion'
+          );
 
           if (abreviacion) {
-            this.router.navigate(['/seproc/login', abreviacion.toLowerCase()]);
+            this.titleService.setTitle(
+              `${abreviacion.toUpperCase()} | Iniciar sesión`
+            );
+
+            this.router.navigate(
+              ['/login', abreviacion],
+              {
+                replaceUrl: true,
+              }
+            );
           } else {
-            this.router.navigate(['/seproc']);
+            this.titleService.setTitle(
+              'SEPROC | Iniciar sesión'
+            );
+
+            this.router.navigate(
+              ['/inicio'],
+              {
+                replaceUrl: true,
+              }
+            );
           }
         },
         error: (error) => {

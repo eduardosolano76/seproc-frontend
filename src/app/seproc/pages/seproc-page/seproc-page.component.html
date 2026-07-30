@@ -164,7 +164,8 @@
     </div>
 
     <div class="dependencias-grid">
-      <a *ngFor="let inst of instituciones" [routerLink]="['/seproc/login', inst.abreviacion.toLowerCase()]"
+      <a *ngFor="let inst of instituciones; let i = index" [routerLink]="['/login', inst.abreviacion.toLowerCase()]"
+[style.animation-delay]="((i + 1) * 100) + 'ms'"
         class="dependencia-card">
 
         <img [src]="obtenerLogo(inst)" [alt]="'Logo ' + inst.abreviacion" class="dependencia-logo" />
@@ -195,8 +196,8 @@
           </label>
 
           <input type="text" id="nombreDependencia" formControlName="nombreDependencia" autocomplete="organization"
-            maxlength="200" class="form-control" placeholder="Ej. Instituto Tecnológico de Chilpancingo"
-            [class.input-error]="campoInvalido('nombreDependencia')" (input)="limpiarErrorCampo('nombreDependencia')" />
+            maxlength="200" class="form-control" [class.input-error]="campoInvalido('nombreDependencia')"
+            (input)="limpiarErrorCampo('nombreDependencia')" />
           <small *ngIf="campoInvalido('nombreDependencia')" class="field-error">
             {{ mensajeCampo('nombreDependencia') }}
           </small>
@@ -209,7 +210,7 @@
           </label>
 
           <input type="text" id="abreviacion" formControlName="abreviacion" maxlength="50" autocapitalize="characters"
-            class="form-control" placeholder="Ej. ITCH" [class.input-error]="campoInvalido('abreviacion')"
+            class="form-control" [class.input-error]="campoInvalido('abreviacion')"
             (input)="convertirAbreviacionMayusculas($event)" />
 
           <small *ngIf="campoInvalido('abreviacion')" class="field-error">
@@ -224,8 +225,8 @@
           </label>
 
           <input type="text" id="nombreContacto" formControlName="nombreContacto" autocomplete="name" maxlength="250"
-            class="form-control" placeholder="Ej. Juan Pérez Hernández"
-            [class.input-error]="campoInvalido('nombreContacto')" (input)="limpiarErrorCampo('nombreContacto')" />
+            class="form-control" [class.input-error]="campoInvalido('nombreContacto')"
+            (input)="limpiarErrorCampo('nombreContacto')" />
 
           <small *ngIf="campoInvalido('nombreContacto')" class="field-error">
             {{ mensajeCampo('nombreContacto') }}
@@ -240,8 +241,8 @@
           </label>
 
           <input type="email" id="emailContacto" formControlName="emailContacto" autocomplete="email" maxlength="100"
-            class="form-control" placeholder="correo@dependencia.gob.mx"
-            [class.input-error]="campoInvalido('emailContacto')" (input)="limpiarErrorCampo('emailContacto')" />
+            class="form-control" [class.input-error]="campoInvalido('emailContacto')"
+            (input)="limpiarErrorCampo('emailContacto')" />
 
           <small *ngIf="campoInvalido('emailContacto')" class="field-error">
             {{ mensajeCampo('emailContacto') }}
@@ -255,8 +256,8 @@
           </label>
 
           <input type="tel" id="telefonoContacto" formControlName="telefonoContacto" autocomplete="tel" inputmode="tel"
-            maxlength="20" class="form-control" placeholder="Ej. 7471234567"
-            [class.input-error]="campoInvalido('telefonoContacto')" (input)="limpiarErrorCampo('telefonoContacto')" />
+            maxlength="20" class="form-control" [class.input-error]="campoInvalido('telefonoContacto')"
+            (input)="limpiarErrorCampo('telefonoContacto')" />
 
           <small *ngIf="campoInvalido('telefonoContacto')" class="field-error">
             {{ mensajeCampo('telefonoContacto') }}

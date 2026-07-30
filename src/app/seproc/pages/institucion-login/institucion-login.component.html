@@ -83,10 +83,6 @@
         {{ mensajeError }}
       </p>
 
-      <p *ngIf="mensajeExito" class="form-message success">
-        {{ mensajeExito }}
-      </p>
-
       <button class="btn-primary btn-block" type="submit" [disabled]="enviando">
 
         {{ enviando ? 'Iniciando sesión...' : 'Iniciar sesión' }}
@@ -95,7 +91,7 @@
       <p *ngIf="institucion" class="register-prompt">
         ¿No tienes cuenta?
         <a class="btn-register-link" [routerLink]="[
-          '/seproc/registro',
+          '/registro',
           institucion.abreviacion.toLowerCase()]">
           Regístrate en {{ institucion.abreviacion }}
         </a>

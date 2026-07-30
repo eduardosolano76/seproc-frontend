@@ -14,32 +14,30 @@ import { AdminInstitucionDashboardComponent } from './seproc/pages/admin-institu
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'seproc',
+    redirectTo: 'inicio',
     pathMatch: 'full'
   },
   {
-    path: 'seproc',
+    path: 'inicio',
     component: SeprocPageComponent,
     title: 'SeProc Guerrero'
   },
   
   // Login dinámico por institución
   {
-    path: 'seproc/login/:abreviacion',
+    path: 'login/:abreviacion',
     component: InstitucionLoginComponent,
-    title: 'SEPROC | Iniciar sesión'
   },
 
   // Registro dinámico por institución
   {
-    path: 'seproc/registro/:abreviacion',
+    path: 'registro/:abreviacion',
     component: InstitucionRegistroComponent,
-    title: 'SEPROC | Registro'
   },
 
   // Login del super administrador de SeProc
   {
-    path: 'seproc/admin-seproc/login-seproc',
+    path: 'admin-seproc/login-seproc',
     component: AdminLoginComponent,
     title: 'SeProc Guerrero | Iniciar sesión',
     canActivate: [noAuthGuard]
@@ -47,7 +45,7 @@ export const routes: Routes = [
 
   // Dashboard del super administrador de SeProc
   {
-    path: 'seproc/admin-seproc/dashboard-seproc',
+    path: 'admin-seproc/dashboard-seproc',
     component: AdminDashboardComponent,
     title: 'SeProc Guerrero | Modulo Administrador',
     canActivate: [adminGuard]
@@ -55,12 +53,12 @@ export const routes: Routes = [
 
   // Dashboard del Administrador de la institución
   {
-    path: 'seproc/admin-institucion/dashboard',
+    path: ':abreviacion/admin-institucion/dashboard',
     component: AdminInstitucionDashboardComponent,
     canActivate: [adminInstitucionGuard]
   },
   {
     path: '**',
-    redirectTo: 'seproc'
+    redirectTo: 'inicio'
   },
 ];

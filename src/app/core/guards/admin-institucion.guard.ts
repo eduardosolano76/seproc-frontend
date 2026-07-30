@@ -1,46 +1,82 @@
+// src/app/core/guards/admin-institucion.guard.ts
+
 import { inject } from '@angular/core';
 import {
   CanActivateFn,
+  RedirectCommand,
   Router
 } from '@angular/router';
-import {
-  catchError,
-  map,
-  of
-} from 'rxjs';
+import { catchError, map, of } from 'rxjs';
 
-import { AdminInstitucionService } from '../services/admin-institucion.service';
+import { AdminInstitucionService } from
+  '../services/admin-institucion.service';
 
-export const adminInstitucionGuard: CanActivateFn = () => {
+export const adminInstitucionGuard: CanActivateFn = (route) => {
   const adminService = inject(AdminInstitucionService);
   const router = inject(Router);
 
+  const abreviacionParametro = route.pathFromRoot
+    .map((snapshot) =>
+      snapshot.paramMap.get('abreviacion')
+    )
+    .find((valor) => Boolean(valor));
+
+  const abreviacionRuta = abreviacionParametro
+    ?.trim()
+    .toLowerCase();
+
+  const redirigir = (comandos: readonly any[]) =>
+    new RedirectCommand(
+      router.createUrlTree(comandos),
+      {
+        replaceUrl: true
+      }
+    );
+
   return adminService.obtenerPerfil().pipe(
-    map(perfil => {
+    map((perfil) => {
       const rol = perfil.rolUsuario
         ?.trim()
         .toUpperCase();
 
-      if (rol === 'ADMINISTRADOR') {
-        return true;
+      const abreviacionReal = perfil.abreviacion
+        ?.trim()
+        .toLowerCase();
+
+      if (
+        rol !== 'ADMINISTRADOR' ||
+        !abreviacionReal
+      ) {
+        return redirigir(['/inicio']);
       }
 
-      return router.createUrlTree(['/seproc']);
+      sessionStorage.setItem(
+        'institucionAbreviacion',
+        abreviacionReal
+      );
+
+      if (abreviacionRuta !== abreviacionReal) {
+        return redirigir([
+          '/',
+          abreviacionReal,
+          'admin-institucion',
+          'dashboard'
+        ]);
+      }
+
+      return true;
     }),
     catchError(() => {
-      const abreviacion =
-        sessionStorage.getItem('institucionAbreviacion');
-
-      if (abreviacion) {
+      if (abreviacionRuta) {
         return of(
-          router.createUrlTree([
-            '/seproc/login',
-            abreviacion.toLowerCase()
+          redirigir([
+            '/login',
+            abreviacionRuta
           ])
         );
       }
 
-      return of(router.createUrlTree(['/seproc']));
+      return of(redirigir(['/inicio']));
     })
   );
 };

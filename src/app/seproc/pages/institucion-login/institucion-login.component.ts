@@ -42,7 +42,6 @@ export class InstitucionLoginComponent implements OnInit {
     cargando = false;
     enviando = false;
     mensajeError = '';
-    mensajeExito = '';
     formularioEnviado = false;
 
     readonly loginForm = this.fb.group({
@@ -91,7 +90,7 @@ export class InstitucionLoginComponent implements OnInit {
                         error
                     );
 
-                    this.router.navigate(['/seproc'], {
+                    this.router.navigate(['/inicio'], {
                         replaceUrl: true
                     });
                 }
@@ -101,7 +100,6 @@ export class InstitucionLoginComponent implements OnInit {
     iniciarSesion(): void {
         this.formularioEnviado = true;
         this.mensajeError = '';
-        this.mensajeExito = '';
 
         if (this.loginForm.invalid) {
             return;
@@ -124,21 +122,47 @@ export class InstitucionLoginComponent implements OnInit {
             )
             .subscribe({
                 next: (respuesta) => {
-                    this.mensajeExito = respuesta.mensaje;
 
-                    if (this.abreviacion) {
-                        sessionStorage.setItem(
-                            'institucionAbreviacion',
-                            this.abreviacion
-                        );
+                    const abreviacion = (
+                        this.institucion?.abreviacion ||
+                        this.abreviacion ||
+                        ''
+                    ).trim().toLowerCase();
+
+                    if (!abreviacion) {
+                        this.mensajeError =
+                            'No se pudo identificar la institución.';
+                        return;
                     }
 
-                    const ruta =
-                        respuesta.redirectUrl === '/admin'
-                            ? '/seproc/admin-institucion/dashboard'
-                            : respuesta.redirectUrl;
+                    const esAdministradorInstitucion =
+                        respuesta.redirectUrl === '/admin' ||
+                        /\/admin-institucion\/dashboard\/?$/.test(
+                            respuesta.redirectUrl
+                        );
 
-                    this.router.navigateByUrl(ruta, {
+                    if (esAdministradorInstitucion) {
+                        sessionStorage.setItem(
+                            'institucionAbreviacion',
+                            abreviacion
+                        );
+
+                        this.router.navigate(
+                            [
+                                '/',
+                                abreviacion,
+                                'admin-institucion',
+                                'dashboard'
+                            ],
+                            {
+                                replaceUrl: true
+                            }
+                        );
+
+                        return;
+                    }
+
+                    this.router.navigateByUrl(respuesta.redirectUrl, {
                         replaceUrl: true
                     });
                 },

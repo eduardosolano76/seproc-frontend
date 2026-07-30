@@ -130,7 +130,7 @@ export class InstitucionRegistroComponent implements OnInit {
       this.route.snapshot.paramMap.get('abreviacion');
 
     if (!parametro) {
-      this.router.navigate(['/seproc'], {
+      this.router.navigate(['/inicio'], {
         replaceUrl: true
       });
 
@@ -167,7 +167,7 @@ export class InstitucionRegistroComponent implements OnInit {
             error
           );
 
-          this.router.navigate(['/seproc'], {
+          this.router.navigate(['/inicio'], {
             replaceUrl: true
           });
         }

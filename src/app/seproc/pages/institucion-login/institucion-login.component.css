@@ -19,8 +19,6 @@
   --danger: #c62828;
   --danger-soft: rgba(198, 40, 40, 0.10);
 
-  --success: #176b35;
-  --success-soft: #e8f7ee;
 
   --radius-md: 18px;
   --radius-xl: 26px;
@@ -383,10 +381,6 @@ a {
   background-color: #fdecec;
 }
 
-.form-message.success {
-  color: var(--success);
-  background-color: var(--success-soft);
-}
 
 /* Carga */
 .loading-container {

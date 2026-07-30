@@ -28,6 +28,7 @@ export class AdminLoginComponent {
     private router: Router,
     private cdr: ChangeDetectorRef
   ) { }
+  
   iniciarSesion(): void {
     if (this.loading) {
       return;
@@ -61,7 +62,7 @@ export class AdminLoginComponent {
       .subscribe({
         next: () => {
           this.router.navigate(
-            ['/seproc/admin-seproc/dashboard-seproc'],
+            ['/admin-seproc/dashboard-seproc'],
             {
               replaceUrl: true
             }
