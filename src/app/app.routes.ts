@@ -12,6 +12,11 @@ import { adminInstitucionGuard } from './core/guards/admin-institucion.guard';
 import { AdminInstitucionDashboardComponent } from './seproc/pages/admin-institucion-dashboard/admin-institucion-dashboard.component';
 import { constructorInstitucionGuard } from './core/guards/constructor-institucion.guard';
 import { ConstructorInstitucionDashboardComponent } from './seproc/pages/constructor-institucion-dashboard/constructor-institucion-dashboard.component';
+import { supervisorInstitucionGuard } from
+  './core/guards/supervisor-institucion.guard';
+
+import { SupervisorInstitucionDashboardComponent } from
+  './seproc/pages/supervisor-institucion-dashboard/supervisor-institucion-dashboard';
 
 export const routes: Routes = [
   {
@@ -65,6 +70,13 @@ export const routes: Routes = [
     path: ':abreviacion/constructor-institucion/dashboard',
     component: ConstructorInstitucionDashboardComponent,
     canActivate: [constructorInstitucionGuard],
+  },
+
+  // Dashboard del Supervisor de la institución
+  {
+    path: ':abreviacion/supervisor-institucion/dashboard',
+    component: SupervisorInstitucionDashboardComponent,
+    canActivate: [supervisorInstitucionGuard],
   },
 
   {
