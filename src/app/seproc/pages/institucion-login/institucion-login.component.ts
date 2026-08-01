@@ -162,6 +162,33 @@ export class InstitucionLoginComponent implements OnInit {
                         return;
                     }
 
+                    const esConstructorInstitucion =
+                        respuesta.redirectUrl === '/constructor' ||
+                        /\/constructor-institucion\/dashboard\/?$/.test(
+                            respuesta.redirectUrl
+                        );
+
+                    if (esConstructorInstitucion) {
+                        sessionStorage.setItem(
+                            'institucionAbreviacion',
+                            abreviacion
+                        );
+
+                        this.router.navigate(
+                            [
+                                '/',
+                                abreviacion,
+                                'constructor-institucion',
+                                'dashboard'
+                            ],
+                            {
+                                replaceUrl: true
+                            }
+                        );
+
+                        return;
+                    }
+
                     this.router.navigateByUrl(respuesta.redirectUrl, {
                         replaceUrl: true
                     });

@@ -10,6 +10,8 @@ import { InstitucionLoginComponent } from './seproc/pages/institucion-login/inst
 import { InstitucionRegistroComponent } from './seproc/pages/institucion-registro/institucion-registro.component';
 import { adminInstitucionGuard } from './core/guards/admin-institucion.guard';
 import { AdminInstitucionDashboardComponent } from './seproc/pages/admin-institucion-dashboard/admin-institucion-dashboard.component';
+import { constructorInstitucionGuard } from './core/guards/constructor-institucion.guard';
+import { ConstructorInstitucionDashboardComponent } from './seproc/pages/constructor-institucion-dashboard/constructor-institucion-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -22,7 +24,7 @@ export const routes: Routes = [
     component: SeprocPageComponent,
     title: 'SeProc Guerrero'
   },
-  
+
   // Login dinámico por institución
   {
     path: 'login/:abreviacion',
@@ -57,6 +59,14 @@ export const routes: Routes = [
     component: AdminInstitucionDashboardComponent,
     canActivate: [adminInstitucionGuard]
   },
+
+  // Dashboard del Constructor de la institución
+  {
+    path: ':abreviacion/constructor-institucion/dashboard',
+    component: ConstructorInstitucionDashboardComponent,
+    canActivate: [constructorInstitucionGuard],
+  },
+
   {
     path: '**',
     redirectTo: 'inicio'

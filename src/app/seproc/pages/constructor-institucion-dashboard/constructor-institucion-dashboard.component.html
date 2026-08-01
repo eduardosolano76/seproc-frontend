@@ -1,0 +1,1602 @@
+<!-- src/app/seproc/pages/constructor-institucion-dashboard/ constructor-institucion-dashboard.component.html -->
+
+<div class="layout">
+    <button class="sidebar-backdrop" [class.open]="menuMovilAbierto" type="button" aria-label="Cerrar menú"
+        (click)="menuMovilAbierto = false">
+    </button>
+
+    <aside id="constructorSidebar" class="sidebar" [class.menu-open]="menuMovilAbierto">
+
+        <div class="brand">
+            <div class="brand-logos">
+                <div class="seproc-logo" aria-label="Logo SEPROC">
+                    <div class="logo-mask mask-seproc-icono" role="img" aria-label="Icono SEPROC">
+                    </div>
+
+                    <div class="logo-mask mask-seproc-letras" role="img" aria-label="Letras SEPROC">
+                    </div>
+                </div>
+
+                <div class="brand-divider" aria-hidden="true">
+                </div>
+
+                <div class="institution-logo-container">
+                    <img class="institution-logo" [src]="logoEmpresa" [alt]="
+              'Logo ' +
+              (perfil?.abreviacion || 'de la institución')
+            " (error)="usarLogoAlternativo($event)" />
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav" aria-label="Menú constructor">
+
+            <button class="nav-item" [class.active]="vista === 'proyectos'" type="button"
+                (click)="cambiarVista('proyectos')">
+                <span class="nav-left">
+                    <span class="icon">
+                        <img src="/assets/seproc/proyectos.png" alt="" />
+                    </span>
+
+                    <span class="label">Proyectos</span>
+                </span>
+            </button>
+
+            <button class="nav-item" [class.active]="vista === 'password'" type="button"
+                (click)="cambiarVista('password')">
+                <span class="nav-left">
+                    <span class="icon">
+                        <img src="/assets/seproc/cambiar-contrasena.png" alt="" />
+                    </span>
+
+                    <span class="label">
+                        Cambiar contraseña
+                    </span>
+                </span>
+            </button>
+
+            <button class="nav-item" type="button" (click)="cerrarSesion()">
+                <span class="nav-left">
+                    <span class="icon">
+                        <img src="/assets/seproc/salir.png" alt="" />
+                    </span>
+
+                    <span class="label">Cerrar sesión</span>
+                </span>
+            </button>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <header class="topbar">
+            <button class="hamburger" type="button" aria-label="Abrir menú" aria-controls="constructorSidebar"
+                [attr.aria-expanded]="menuMovilAbierto" (click)="menuMovilAbierto = !menuMovilAbierto">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                    </path>
+                </svg>
+            </button>
+
+            <div class="topbar-context">
+                <span class="topbar-eyebrow">
+                    Modulo Constructor
+                </span>
+            </div>
+
+            <div class="userbox">
+                <div class="hello">
+                    <div class="hello-name">
+                        Hola,
+                        {{ perfil?.nombreUsuario || "Usuario" }}
+                    </div>
+
+                    <div class="hello-role">
+                        Rol: Constructor
+                    </div>
+                </div>
+
+                <input #profileFile type="file" accept="image/png,image/jpeg,image/webp" hidden
+                    (change)="subirFoto($event)" />
+
+                <button class="profile" type="button" title="Opciones de foto" aria-label="Abrir opciones de perfil"
+                    [attr.aria-expanded]="menuPerfilAbierto" (click)="menuPerfilAbierto = !menuPerfilAbierto">
+                    <img [src]="fotoPerfil" alt="Foto de perfil" (error)="usarFotoPredeterminada($event)" />
+                </button>
+
+                <div class="profile-dropdown" [class.open]="menuPerfilAbierto">
+                    <button class="dropdown-item" type="button" (click)="verFoto()">
+                        <img src="/assets/seproc/verFoto.png" alt="" />
+                        <span>Ver foto</span>
+                    </button>
+
+                    <button class="dropdown-item" type="button" (click)="profileFile.click()">
+                        <img src="/assets/seproc/subirFoto.png" alt="" />
+                        <span>Subir foto</span>
+                    </button>
+
+                    <button class="dropdown-item" type="button" (click)="eliminarFoto()">
+                        <img src="/assets/seproc/eliminar.png" alt="" />
+                        <span>Quitar foto</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div *ngIf="mensaje" class="dashboard-message" [class.success]="tipoMensaje === 'success'"
+            [class.error]="tipoMensaje === 'error'">
+            {{ mensaje }}
+        </div>
+
+        <section class="panel panel-scroll">
+            <div *ngIf="
+          vista === 'proyectos' &&
+          vistaProyecto === 'lista'
+        " class="panel-head">
+                <div>
+                    <h2 class="panel-title">Proyectos</h2>
+
+                    <div class="panel-sub">
+                        Consulta tus proyectos y envía una nueva
+                        solicitud.
+                    </div>
+                </div>
+
+                <div class="panel-tools">
+                    <button class="add-btn" type="button" title="Nueva solicitud de proyecto"
+                        aria-label="Nueva solicitud de proyecto" (click)="abrirNuevaSolicitud()">
+                        <span class="add-symbol">+</span>
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="cargandoContenido" class="dashboard-loading">
+                <span class="loading-spinner"></span>
+                <p>Cargando información...</p>
+            </div>
+
+            <ng-container *ngIf="!cargandoContenido">
+                <section *ngIf="vista === 'proyectos'">
+
+                    <!-- Lista de proyectos -->
+                    <ng-container *ngIf="vistaProyecto === 'lista'">
+                        <div class="tabs" role="tablist" aria-label="Estados del proyecto">
+                            <button class="tab" [class.active]="
+                  estadoProyecto === 'ACTIVO'
+                " type="button" (click)="
+                  seleccionarEstadoProyecto('ACTIVO')
+                ">
+                                Activos
+                            </button>
+
+                            <button class="tab" [class.active]="
+                  estadoProyecto === 'INACTIVO'
+                " type="button" (click)="
+                  seleccionarEstadoProyecto('INACTIVO')
+                ">
+                                Inactivos
+                            </button>
+
+                            <button class="tab" [class.active]="
+                  estadoProyecto === 'FINALIZADO'
+                " type="button" (click)="
+                  seleccionarEstadoProyecto('FINALIZADO')
+                ">
+                                Finalizados
+                            </button>
+                        </div>
+
+                        <div *ngIf="proyectosFiltrados.length === 0" class="empty">
+                            Aún no hay proyectos para mostrar.
+                        </div>
+
+                        <div class="cards">
+                            <article *ngFor="
+                  let proyecto of proyectosFiltrados
+                " class="card-sol">
+                                <div class="left">
+                                    <div class="school">
+                                        {{ proyecto.nombreEscuela }}
+                                    </div>
+
+                                    <div class="meta">
+                                        <span class="state-dot" [ngClass]="
+                        claseEstadoGeneral(
+                          proyecto.estadoProyecto
+                        )
+                      ">
+                                        </span>
+
+                                        <span>
+                                            Supervisor:
+                                            {{ proyecto.supervisor }}
+                                        </span>
+
+                                        <span>
+                                            Fecha:
+                                            {{ proyecto.fechaAprobacion }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <button class="btn-detail" type="button" (click)="
+                    abrirProyecto(
+                      proyecto.idProyecto
+                    )
+                  ">
+                                    Ver detalle
+                                </button>
+                            </article>
+                        </div>
+                    </ng-container>
+
+                    <!-- Proceso constructivo -->
+                    <div *ngIf="vistaProyecto === 'proceso'" class="process-mini-shell">
+                        <div class="process-mini-top">
+                            <button class="process-mini-back" type="button" (click)="volverAListaProyectos()">
+                                <img src="/assets/seproc/regresar.png" alt="Regresar" />
+                            </button>
+
+                            <div class="process-mini-chip">
+                                PROCESO CONSTRUCTIVO
+                            </div>
+
+                            <div class="process-mini-spacer"></div>
+                        </div>
+
+                        <div *ngIf="cargandoDetalleProyecto" class="dashboard-loading" style="min-height: 200px">
+                            <span class="loading-spinner"></span>
+                            <p>
+                                Cargando información del proyecto...
+                            </p>
+                        </div>
+
+                        <ng-container *ngIf="
+                !cargandoDetalleProyecto &&
+                proyectoDetalle
+              ">
+                            <div class="process-mini-summary">
+                                <div class="process-mini-left">
+                                    <div class="process-mini-school">
+                                        {{ proyectoDetalle.nombreEscuela }}
+                                    </div>
+
+                                    <div class="process-mini-meta">
+                                        Tipo de obra:
+                                        <span>
+                                            {{ proyectoDetalle.tipoObra }}
+                                        </span>
+                                    </div>
+
+                                    <div class="process-mini-meta">
+                                        Tipo de edificación:
+                                        <span>
+                                            {{
+                                            proyectoDetalle.tipoEdificacion
+                                            }}
+                                        </span>
+                                    </div>
+
+                                    <div class="process-mini-meta">
+                                        Supervisor:
+                                        <span>
+                                            {{
+                                            proyectoDetalle.supervisorAsignado
+                                            }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="process-mini-right">
+                                    <span class="project-status-pill">
+                                        {{
+                                        proyectoDetalle.estadoProyecto
+                                        | titlecase
+                                        }}
+                                    </span>
+
+                                    <button class="btn-secondary" type="button" (click)="
+                      abrirDocumentacionProyecto()
+                    ">
+                                        Documentación inicial
+                                    </button>
+
+                                </div>
+                            </div>
+
+                            <div class="process-mini-legend">
+                                <div class="legend-item">
+                                    <span class="legend-dot status-done">
+                                    </span>
+                                    <span>Aprobado</span>
+                                </div>
+
+                                <div class="legend-item">
+                                    <span class="legend-dot status-current">
+                                    </span>
+                                    <span>En proceso</span>
+                                </div>
+
+                                <div class="legend-item">
+                                    <span class="legend-dot status-locked">
+                                    </span>
+                                    <span>Bloqueado</span>
+                                </div>
+                            </div>
+
+                            <div class="process-mini-list">
+                                <button *ngFor="
+                    let bloque of bloquesProyecto
+                  " class="process-mini-stage" [ngClass]="
+                    'status-' +
+                    claseVisualEtapa(bloque.estado)
+                  " type="button" [disabled]="
+                    claseVisualEtapa(
+                      bloque.estado
+                    ) === 'locked'
+                  " (click)="abrirBloque(bloque)">
+                                    <span class="process-mini-stage-icon">
+                                        <img [src]="
+                        iconoEtapa(bloque.estado)
+                      " alt="" />
+                                    </span>
+
+                                    <span class="process-mini-stage-label">
+                                        {{ bloque.nombre }}
+                                    </span>
+                                </button>
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <!-- Bloque de etapas -->
+                    <div *ngIf="
+              vistaProyecto === 'bloque' &&
+              bloqueActual
+            " class="process-mini-shell">
+                        <div class="process-mini-top">
+                            <button class="process-mini-back" type="button" (click)="vistaProyecto = 'proceso'">
+                                <img src="/assets/seproc/regresar.png" alt="Regresar" />
+                            </button>
+
+                            <div class="process-mini-chip">
+                                {{ bloqueActual.nombre | uppercase }}
+                            </div>
+
+                            <div class="process-mini-spacer"></div>
+                        </div>
+
+                        <div class="process-mini-list">
+                            <button *ngFor="
+                  let etapa of etapasBloque
+                " class="
+                  process-mini-stage
+                  compact-stage
+                " [ngClass]="
+                  'status-' +
+                  claseVisualEtapa(etapa.estado)
+                " type="button" [disabled]="
+                  claseVisualEtapa(
+                    etapa.estado
+                  ) === 'locked'
+                " (click)="abrirEtapa(etapa)">
+                                <span class="process-mini-stage-icon">
+                                    <img [src]="iconoEtapa(etapa.estado)" alt="" />
+                                </span>
+
+                                <span class="process-mini-stage-label">
+                                    {{ etapa.nombre }}
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Evidencias de una etapa -->
+                    <div *ngIf="
+              vistaProyecto === 'etapa' &&
+              etapaActual
+            " class="etapa-mini-shell">
+                        <div class="etapa-mini-top">
+                            <button class="process-mini-back" type="button" (click)="vistaProyecto = 'bloque'">
+                                <img src="/assets/seproc/regresar.png" alt="Regresar" />
+                            </button>
+
+                            <div class="process-mini-chip">
+                                {{ etapaActual.nombre | uppercase }}
+                            </div>
+
+                            <button class="etapa-mini-history" type="button" (click)="abrirHistorialEtapa()">
+                                <img src="/assets/seproc/historial.png" alt="Historial" />
+                            </button>
+                        </div>
+
+                        <div class="etapa-mini-grid" [class.single-column]="
+                !detalleEtapa?.ultimaObservacion
+              ">
+
+                            <div *ngIf="
+                  detalleEtapa?.ultimaObservacion
+                    as observacion
+                " class="etapa-card">
+                                <div class="etapa-card-title">
+                                    Observaciones del supervisor
+                                </div>
+
+                                <div class="historial-user">
+                                    {{ observacion.usuarioNombre }}
+                                </div>
+
+                                <div class="historial-date">
+                                    {{ observacion.fecha }}
+                                </div>
+
+                                <div class="historial-text">
+                                    {{ observacion.mensaje }}
+                                </div>
+                            </div>
+
+                            <div class="etapa-card">
+                                <div class="etapa-card-title">
+                                    Tu trabajo
+                                </div>
+
+                                <ng-container *ngIf="
+                    detalleEtapa?.entregaActual
+                      as entrega
+                  ">
+                                    <div class="submission-info-card">
+                                        <div class="sic-field">
+                                            <span class="sic-label">
+                                                Fecha de subida
+                                            </span>
+
+                                            <span class="sic-value">
+                                                {{ entrega.fechaSubida || "—" }}
+                                            </span>
+                                        </div>
+
+                                        <div class="sic-field">
+                                            <span class="sic-label">
+                                                Versión
+                                            </span>
+
+                                            <span class="sic-value">
+                                                {{ entrega.version || "—" }}
+                                            </span>
+                                        </div>
+
+                                        <div class="sic-field">
+                                            <span class="sic-label">
+                                                Estado
+                                            </span>
+
+                                            <span class="sic-value">
+                                                {{
+                                                formatearEstado(
+                                                entrega.estadoEntrega
+                                                )
+                                                }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="
+                      entrega.archivos.length > 0
+                    " class="teams-file-list">
+                                        <div *ngFor="
+                        let archivo of entrega.archivos
+                      " class="teams-file-item evidence-item">
+                                            <div class="evidence-main">
+                                                <div class="evidence-name-row">
+                                                    <strong>
+                                                        {{ archivo.nombre }}
+                                                    </strong>
+
+                                                    <a [href]="recurso(archivo.url)" target="_blank" rel="noopener">
+                                                        Ver evidencia
+                                                    </a>
+                                                </div>
+
+                                                <ng-container *ngIf="
+                            estadoEntregaActual ===
+                              'BORRADOR';
+                            else notaLectura
+                          ">
+                                                    <div class="evidence-note-row">
+                                                        <input class="evidence-note-input" type="text" placeholder="Agrega una nota para esta imagen" 
+                                                        [ngModel]="
+                                notasArchivos[
+                                  claveArchivo(archivo)
+                                ]
+                              " [ngModelOptions]="{
+                                standalone: true
+                              }" [disabled]="
+                                guardandoNotas[
+                                  claveArchivo(archivo)
+                                ]
+                              " (ngModelChange)="
+                                notasArchivos[
+                                  claveArchivo(archivo)
+                                ] = $event
+                              " (blur)="
+                                guardarNotaArchivo(archivo)
+                              " (keydown.enter)="
+                                guardarNotaArchivo(archivo);
+                                $event.preventDefault()
+                              " />
+
+                                                        <span *ngIf="
+                                guardandoNotas[
+                                  claveArchivo(archivo)
+                                ]
+                              " class="saving-note">
+                                                            Guardando...
+                                                        </span>
+                                                    </div>
+                                                </ng-container>
+
+                                                <ng-template #notaLectura>
+                                                    <span *ngIf="
+                              archivo.nota &&
+                              archivo.nota !== 'SIN_NOTA'
+                            " class="evidence-note-text">
+                                                        {{ archivo.nota }}
+                                                    </span>
+                                                </ng-template>
+                                            </div>
+
+                                            <button *ngIf="
+                          estadoEntregaActual ===
+                          'BORRADOR'
+                        " class="action-btn bad" type="button" (click)="
+                          prepararEliminarEvidencia(
+                            archivo
+                          )
+                        ">
+                                                Quitar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <div *ngIf="
+                    !detalleEtapa?.entregaActual
+                  " class="etapa-empty">
+                                    Aún no has agregado evidencias para
+                                    esta etapa.
+                                </div>
+
+                                <div *ngIf="puedeModificarEvidencias" class="evidence-actions">
+                                    <input #evidenceFile type="file" accept="
+                      image/png,
+                      image/jpeg,
+                      image/webp
+                    " hidden (change)="
+                      seleccionarEvidencia($event)
+                    " />
+
+                                    <button class="btn-secondary" type="button" [disabled]="subiendoEvidencia"
+                                        (click)="evidenceFile.click()">
+                                        {{
+                                        subiendoEvidencia
+                                        ? "Subiendo..."
+                                        : estadoEntregaActual ===
+                                        "CON_OBSERVACIONES"
+                                        ? "Subir corrección"
+                                        : "Agregar imagen"
+                                        }}
+                                    </button>
+
+                                    <button *ngIf="puedeEntregarEtapa" class="btn-primary" type="button"
+                                        (click)="prepararEntregaEtapa()">
+                                        Entregar
+                                    </button>
+                                </div>
+
+                                <div *ngIf="
+                    estadoEntregaActual === 'ENVIADA'
+                  " class="delivery-state-message">
+                                    <strong>En revisión</strong>
+                                    Tu reporte fue enviado. Espera la
+                                    evaluación del supervisor.
+                                </div>
+
+                                <div *ngIf="etapaAprobada" class="delivery-state-message approved">
+                                    <strong>Etapa aprobada</strong>
+                                    El supervisor aprobó esta entrega.
+
+                                    <button class="btn-primary" type="button" [disabled]="descargandoPdf"
+                                        (click)="descargarPdfEtapa()">
+                                        {{
+                                        descargandoPdf
+                                        ? "Generando..."
+                                        : "Descargar en PDF"
+                                        }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Historial de la etapa -->
+                    <div *ngIf="vistaProyecto === 'historial'" class="process-mini-shell">
+                        <div class="process-mini-top">
+                            <button class="process-mini-back" type="button" (click)="vistaProyecto = 'etapa'">
+                                <img src="/assets/seproc/regresar.png" alt="Regresar" />
+                            </button>
+
+                            <div class="process-mini-chip">
+                                HISTORIAL
+                            </div>
+
+                            <div class="process-mini-spacer"></div>
+                        </div>
+
+                        <div *ngIf="historialEtapa.length === 0" class="empty">
+                            No hay historial registrado.
+                        </div>
+
+                        <div class="historial-list">
+                            <article *ngFor="let item of historialEtapa" class="historial-card" [ngClass]="
+                  obtenerClaseTipo(item.tipo)
+                ">
+                                <div class="historial-card-header">
+                                    <div class="historial-user">
+                                        {{ item.usuarioNombre }}
+
+                                        <span class="historial-role">
+                                            {{ item.usuarioRol }}
+                                        </span>
+                                    </div>
+
+                                    <div class="historial-date">
+                                        {{ item.fecha }}
+                                    </div>
+                                </div>
+
+                                <div class="historial-card-body">
+                                    <div class="historial-type">
+                                        {{ formatearEstado(item.tipo) }}
+                                    </div>
+
+                                    <div class="historial-text">
+                                        {{
+                                        item.mensaje ||
+                                        item.descripcion
+                                        }}
+                                    </div>
+
+                                    <a *ngIf="item.urlArchivo" class="historial-file" [href]="recurso(item.urlArchivo)"
+                                        target="_blank" rel="noopener">
+                                        {{
+                                        item.nombreArchivo ||
+                                        "Ver archivo"
+                                        }}
+                                    </a>
+
+                                    <div *ngIf="item.archivos?.length" class="teams-file-list">
+                                        <div *ngFor="
+                        let archivo of item.archivos
+                      " class="teams-file-item">
+                                            <div>
+                                                <strong>
+                                                    {{ archivo.nombre }}
+                                                </strong>
+
+                                                <span *ngIf="
+                            archivo.nota &&
+                            archivo.nota !== 'SIN_NOTA'
+                          ">
+                                                    — {{ archivo.nota }}
+                                                </span>
+                                            </div>
+
+                                            <a [href]="recurso(archivo.url)" target="_blank" rel="noopener">
+                                                Ver imagen
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contraseña -->
+                <section *ngIf="vista === 'password'">
+                    <div class="password-card">
+                        <div class="password-head">
+                            <h3>Cambiar contraseña</h3>
+                        </div>
+
+                        <div class="password-body">
+                            <p class="text-primary">
+                                Los campos con * son obligatorios.
+                            </p>
+
+                            <p class="text-muted">
+                                La contraseña debe tener al menos 8
+                                caracteres, un número y un carácter
+                                especial.
+                            </p>
+
+                            <form class="password-form" [formGroup]="passwordForm" (ngSubmit)="cambiarPassword()">
+                                <div class="form-group">
+                                    <label for="passActualConstructor">
+                                        Contraseña actual*
+                                    </label>
+
+                                    <input id="passActualConstructor" type="password" formControlName="actual"
+                                        [class.input-error]="
+                      campoPasswordInvalido(
+                        'actual'
+                      )
+                    " />
+
+                                    <small *ngIf="
+                      campoPasswordInvalido(
+                        'actual'
+                      )
+                    " class="field-error">
+                                        {{
+                                        mensajeCampoPassword(
+                                        "actual"
+                                        )
+                                        }}
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="passNuevaConstructor">
+                                        Contraseña nueva*
+                                    </label>
+
+                                    <input id="passNuevaConstructor" type="password" formControlName="nueva"
+                                        [class.input-error]="
+                      campoPasswordInvalido('nueva')
+                    " />
+
+                                    <small *ngIf="
+                      campoPasswordInvalido('nueva')
+                    " class="field-error">
+                                        {{
+                                        mensajeCampoPassword("nueva")
+                                        }}
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="passRepetidaConstructor">
+                                        Repite la contraseña nueva*
+                                    </label>
+
+                                    <input id="passRepetidaConstructor" type="password" formControlName="repetida"
+                                        [class.input-error]="
+                      campoPasswordInvalido(
+                        'repetida'
+                      )
+                    " />
+
+                                    <small *ngIf="
+                      campoPasswordInvalido(
+                        'repetida'
+                      )
+                    " class="field-error">
+                                        {{
+                                        mensajeCampoPassword(
+                                        "repetida"
+                                        )
+                                        }}
+                                    </small>
+                                </div>
+
+                                <div class="form-actions-right">
+                                    <button class="btn-primary" type="submit" [disabled]="enviando">
+                                        {{
+                                        enviando
+                                        ? "Cambiando..."
+                                        : "Cambiar"
+                                        }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </ng-container>
+        </section>
+    </main>
+</div>
+
+<!-- Nueva solicitud -->
+<ng-container *ngIf="modalNuevaSolicitudAbierto">
+    <div class="modal-backdrop open" (click)="cerrarNuevaSolicitud()">
+    </div>
+
+    <div class="modal open" role="dialog" aria-modal="true" aria-labelledby="tituloNuevaSolicitud">
+        <div class="modal-card">
+            <div class="dg-head">
+                <span id="tituloNuevaSolicitud" class="dg-chip">
+                    Nueva solicitud de proyecto
+                </span>
+
+                <button class="dg-close" type="button" [disabled]="enviandoSolicitud" (click)="cerrarNuevaSolicitud()">
+                    ✕
+                </button>
+            </div>
+
+            <span class="dg-hint">
+                Los campos con
+                <span class="req">*</span>
+                son obligatorios.
+            </span>
+
+
+            <div *ngIf="cargandoCatalogos" class="dashboard-loading" style="min-height: 220px">
+                <span class="loading-spinner"></span>
+                <p>Cargando catálogos...</p>
+            </div>
+
+            <form *ngIf="!cargandoCatalogos" class="request-form" [formGroup]="solicitudForm"
+                (ngSubmit)="enviarSolicitud()">
+
+                <div class="dg-row dg-1">
+                    <div class="dg-field">
+                        <label class="dg-label" for="nombreEscuela">
+                            Nombre de la escuela
+                            <span class="req">*</span>
+                        </label>
+
+                        <input id="nombreEscuela" class="dg-input" type="text" formControlName="nombreEscuela"
+                            [class.input-error]="
+                campoSolicitudInvalido(
+                  'nombreEscuela'
+                )
+              " />
+
+                        <small *ngIf="
+                campoSolicitudInvalido(
+                  'nombreEscuela'
+                )
+              " class="field-error">
+                            {{
+                            mensajeCampoSolicitud(
+                            "nombreEscuela"
+                            )
+                            }}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="dg-row dg-2">
+                    <div class="dg-field">
+                        <label class="dg-label" for="cct1">
+                            CCT
+                            <span class="req">*</span>
+                        </label>
+
+                        <input id="cct1" class="dg-input" type="text" formControlName="cct1" [class.input-error]="
+                campoSolicitudInvalido('cct1')
+              " />
+
+                        <small *ngIf="
+                campoSolicitudInvalido('cct1')
+              " class="field-error">
+                            {{ mensajeCampoSolicitud("cct1") }}
+                        </small>
+                    </div>
+
+                    <div class="dg-field">
+                        <label class="dg-label" for="cct2">
+                            CCT adicional
+                        </label>
+
+                        <input id="cct2" class="dg-input" type="text" formControlName="cct2" />
+                    </div>
+                </div>
+
+                <div class="dg-row dg-3">
+                    <div class="dg-field">
+                        <label class="dg-label" for="idEstado">
+                            Estado
+                            <span class="req">*</span>
+                        </label>
+
+                        <select id="idEstado" class="dg-select" formControlName="idEstado" [class.input-error]="
+                campoSolicitudInvalido('idEstado')
+              " (change)="cargarMunicipios()">
+                            <option value="" disabled>
+                                Seleccionar
+                            </option>
+
+                            <option *ngFor="let estado of estados" [value]="estado.id">
+                                {{ estado.nombre }}
+                            </option>
+                        </select>
+
+                        <small *ngIf="
+                campoSolicitudInvalido('idEstado')
+              " class="field-error">
+                            {{
+                            mensajeCampoSolicitud("idEstado")
+                            }}
+                        </small>
+                    </div>
+
+                    <div class="dg-field">
+                        <label class="dg-label" for="idMunicipio">
+                            Municipio
+                            <span class="req">*</span>
+                        </label>
+
+                        <select id="idMunicipio" class="dg-select" formControlName="idMunicipio" [class.input-error]="
+                campoSolicitudInvalido(
+                  'idMunicipio'
+                )
+              " (change)="cargarLocalidades()">
+                            <option value="" disabled>
+                                Seleccionar
+                            </option>
+
+                            <option *ngFor="
+                  let municipio of municipios
+                " [value]="municipio.id">
+                                {{ municipio.nombre }}
+                            </option>
+                        </select>
+
+                        <small *ngIf="
+                campoSolicitudInvalido(
+                  'idMunicipio'
+                )
+              " class="field-error">
+                            {{
+                            mensajeCampoSolicitud(
+                            "idMunicipio"
+                            )
+                            }}
+                        </small>
+                    </div>
+
+                    <div class="dg-field">
+                        <label class="dg-label" for="idLocalidad">
+                            Localidad
+                            <span class="req">*</span>
+                        </label>
+
+                        <select id="idLocalidad" class="dg-select" formControlName="idLocalidad" [class.input-error]="
+                campoSolicitudInvalido(
+                  'idLocalidad'
+                )
+              ">
+                            <option value="" disabled>
+                                Seleccionar
+                            </option>
+
+                            <option *ngFor="
+                  let localidad of localidades
+                " [value]="localidad.id">
+                                {{ localidad.nombre }}
+                            </option>
+                        </select>
+
+                        <small *ngIf="
+                campoSolicitudInvalido(
+                  'idLocalidad'
+                )
+              " class="field-error">
+                            {{
+                            mensajeCampoSolicitud(
+                            "idLocalidad"
+                            )
+                            }}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="dg-row dg-2">
+                    <div class="dg-field">
+                        <label class="dg-label" for="calleNumero">
+                            Calle y número
+                            <span class="req">*</span>
+                        </label>
+
+                        <input id="calleNumero" class="dg-input" type="text" formControlName="calleNumero"
+                            [class.input-error]="
+                campoSolicitudInvalido(
+                  'calleNumero'
+                )
+              " />
+
+                        <small *ngIf="
+                campoSolicitudInvalido(
+                  'calleNumero'
+                )
+              " class="field-error">
+                            {{
+                            mensajeCampoSolicitud(
+                            "calleNumero"
+                            )
+                            }}
+                        </small>
+                    </div>
+
+                    <div class="dg-field">
+                        <label class="dg-label" for="cp">
+                            C.P.
+                            <span class="req">*</span>
+                        </label>
+
+                        <input id="cp" class="dg-input" type="text" inputmode="numeric" maxlength="5"
+                            formControlName="cp" [class.input-error]="
+                campoSolicitudInvalido('cp')
+              " />
+
+                        <small *ngIf="
+                campoSolicitudInvalido('cp')
+              " class="field-error">
+                            {{ mensajeCampoSolicitud("cp") }}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="dg-row dg-3">
+                    <div class="dg-field">
+                        <label class="dg-label" for="responsable">
+                            Responsable del inmueble
+                            <span class="req">*</span>
+                        </label>
+
+                        <input id="responsable" class="dg-input" type="text" formControlName="responsable"
+                            [class.input-error]="
+                campoSolicitudInvalido(
+                  'responsable'
+                )
+              " />
+
+                        <small *ngIf="
+                campoSolicitudInvalido(
+                  'responsable'
+                )
+              " class="field-error">
+                            {{
+                            mensajeCampoSolicitud(
+                            "responsable"
+                            )
+                            }}
+                        </small>
+                    </div>
+
+                    <div class="dg-field">
+                        <label class="dg-label" for="contacto">
+                            Contacto
+                            <span class="req">*</span>
+                        </label>
+
+                        <input id="contacto" class="dg-input" type="text" formControlName="contacto"
+                            [class.input-error]="
+                campoSolicitudInvalido(
+                  'contacto'
+                )
+              " />
+
+                        <small *ngIf="
+                campoSolicitudInvalido(
+                  'contacto'
+                )
+              " class="field-error">
+                            {{
+                            mensajeCampoSolicitud("contacto")
+                            }}
+                        </small>
+                    </div>
+
+                    <div class="dg-field">
+                        <label class="dg-label" for="numInmuebles">
+                            No. de inmuebles
+                            <span class="req">*</span>
+                        </label>
+
+                        <input id="numInmuebles" class="dg-input" type="number" min="1" formControlName="numInmuebles"
+                            [class.input-error]="
+                campoSolicitudInvalido(
+                  'numInmuebles'
+                )
+              " />
+
+                        <small *ngIf="
+                campoSolicitudInvalido(
+                  'numInmuebles'
+                )
+              " class="field-error">
+                            {{
+                            mensajeCampoSolicitud(
+                            "numInmuebles"
+                            )
+                            }}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="dg-row dg-3">
+                    <div class="dg-field">
+                        <label class="dg-label" for="tipoObra">
+                            Tipo de obra
+                            <span class="req">*</span>
+                        </label>
+
+                        <select id="tipoObra" class="dg-select" formControlName="tipoObra" [class.input-error]="
+                campoSolicitudInvalido(
+                  'tipoObra'
+                )
+              ">
+                            <option value="" disabled>
+                                Seleccionar
+                            </option>
+
+                            <option *ngFor="let tipo of tiposObra" [value]="tipo">
+                                {{ tipo }}
+                            </option>
+                        </select>
+
+                        <small *ngIf="
+                campoSolicitudInvalido(
+                  'tipoObra'
+                )
+              " class="field-error">
+                            {{
+                            mensajeCampoSolicitud("tipoObra")
+                            }}
+                        </small>
+                    </div>
+
+                    <div class="dg-field">
+                        <label class="dg-label" for="idTipoEdificacion">
+                            Tipo de edificación
+                            <span class="req">*</span>
+                        </label>
+
+                        <select id="idTipoEdificacion" class="dg-select" formControlName="idTipoEdificacion"
+                            [class.input-error]="
+                campoSolicitudInvalido(
+                  'idTipoEdificacion'
+                )
+              ">
+                            <option value="" disabled>
+                                Seleccionar
+                            </option>
+
+                            <option *ngFor="
+                  let tipo of tiposEdificacion
+                " [value]="tipo.id">
+                                {{ tipo.nombre }}
+                            </option>
+                        </select>
+
+                        <small *ngIf="
+                campoSolicitudInvalido(
+                  'idTipoEdificacion'
+                )
+              " class="field-error">
+                            {{
+                            mensajeCampoSolicitud(
+                            "idTipoEdificacion"
+                            )
+                            }}
+                        </small>
+                    </div>
+
+                    <div class="dg-field">
+                        <label class="dg-label" for="numEntreEjes">
+                            No. de entre ejes
+                            <span class="req">*</span>
+                        </label>
+
+                        <input id="numEntreEjes" class="dg-input" type="number" min="1" formControlName="numEntreEjes"
+                            [class.input-error]="
+                campoSolicitudInvalido(
+                  'numEntreEjes'
+                )
+              " />
+
+                        <small *ngIf="
+                campoSolicitudInvalido(
+                  'numEntreEjes'
+                )
+              " class="field-error">
+                            {{
+                            mensajeCampoSolicitud(
+                            "numEntreEjes"
+                            )
+                            }}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="doc-form-section">
+                    <h3>Documentación inicial</h3>
+
+                    <p>
+                        Los documentos son opcionales al enviar la
+                        solicitud. Si aún no los tienes, podrás
+                        subirlos después.
+                    </p>
+
+                    <div *ngFor="let documento of documentosInicialesSolicitud" class="doc-upload-card">
+                        <span class="doc-upload-label">
+                            {{ documento.nombre }}
+                        </span>
+
+                        <span class="doc-upload-control">
+                            <input #archivoSolicitud class="doc-upload-input" type="file" accept="application/pdf,.pdf"
+                                (change)="
+                                seleccionarDocumentoSolicitud(
+                                documento.tipo,
+                                $event
+                                )
+                                " />
+
+                            <button class="doc-upload-button" type="button" [disabled]="enviandoSolicitud"
+                                (click)="archivoSolicitud.click()">
+                                {{
+                                tieneDocumentoSolicitudSeleccionado(
+                                documento.tipo
+                                )
+                                ? "Reemplazar"
+                                : "Elegir archivo"
+                                }}
+                            </button>
+
+                            <span class="doc-upload-name">
+                                {{
+                                nombreDocumentoSeleccionado(
+                                documento.tipo
+                                )
+                                }}
+                            </span>
+
+                            <button *ngIf="
+                tieneDocumentoSolicitudSeleccionado(
+                    documento.tipo
+                )
+            " class="doc-upload-remove" type="button" [disabled]="enviandoSolicitud" (click)="
+                quitarDocumentoSolicitud(
+                    documento.tipo,
+                    archivoSolicitud
+                )
+            ">
+                                Quitar
+                            </button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn-secondary" type="button" [disabled]="enviandoSolicitud"
+                        (click)="cerrarNuevaSolicitud()">
+                        Cancelar
+                    </button>
+
+                    <button class="dg-btn" type="submit" [disabled]="enviandoSolicitud">
+                        {{
+                        enviandoSolicitud
+                        ? "Enviando..."
+                        : "Enviar solicitud"
+                        }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Documentación inicial del proyecto -->
+<ng-container *ngIf="modalDocumentacionAbierto">
+    <div class="modal-backdrop open" (click)="modalDocumentacionAbierto = false">
+    </div>
+
+    <div class="modal open">
+        <div class="modal-card">
+            <div class="dg-head">
+                <span class="dg-chip">
+                    Documentación inicial
+                </span>
+
+                <button class="dg-close" type="button" (click)="modalDocumentacionAbierto = false">
+                    ✕
+                </button>
+            </div>
+
+            <div *ngIf="cargandoModalDocumentacion" class="dashboard-loading" style="min-height: 200px">
+                <span class="loading-spinner"></span>
+                <p>Cargando información...</p>
+            </div>
+
+            <div *ngIf="
+          !cargandoModalDocumentacion &&
+          documentacionProyecto
+        " class="doc-solicitud-list">
+                <div class="doc-solicitud-alert" [class.ok]="documentacionProyecto.completo" [class.warn]="
+            !documentacionProyecto.completo
+          ">
+                    {{ documentacionProyecto.mensaje }}
+                </div>
+
+                <div *ngFor="
+            let documento of
+              documentacionProyecto.documentos
+          " class="doc-solicitud-item">
+                    <div class="doc-solicitud-info">
+                        <strong>
+                            {{ documento.nombreDocumento }}
+                        </strong>
+
+                        <span>
+                            {{
+                            formatearEstado(
+                            documento.estadoDocumento ||
+                            (documento.subido
+                            ? "SUBIDO"
+                            : "PENDIENTE")
+                            )
+                            }}
+                        </span>
+
+                        <small *ngIf="documento.fechaLimite">
+                            Fecha límite:
+                            {{ documento.fechaLimite }}
+                        </small>
+                    </div>
+
+                    <div class="document-actions">
+                        <a *ngIf="documento.archivoUrl" class="btn-secondary" [href]="
+                recurso(documento.archivoUrl)
+              " target="_blank" rel="noopener">
+                            Ver
+                        </a>
+
+                        <input #documentFile type="file" accept="application/pdf,.pdf" hidden (change)="
+                subirDocumentoProyecto(
+                  documento,
+                  $event
+                )
+              " />
+
+                        <button class="action-btn ok" type="button" [disabled]="
+                subiendoDocumento ===
+                claveDocumento(documento)
+              " (click)="documentFile.click()">
+                            {{
+                            subiendoDocumento ===
+                            claveDocumento(documento)
+                            ? "Subiendo..."
+                            : documento.subido
+                            ? "Reemplazar"
+                            : "Subir"
+                            }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Confirmación de entrega o eliminación -->
+<ng-container *ngIf="modalConfirmacionAbierto">
+    <div class="modal-backdrop open" (click)="cancelarConfirmacion()">
+    </div>
+
+    <div class="modal mini open" role="dialog" aria-modal="true">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div class="mini-title">
+                    {{
+                    accionConfirmada === "ENTREGAR_ETAPA"
+                    ? "Entregar reporte"
+                    : "Quitar evidencia"
+                    }}
+                </div>
+            </div>
+
+            <p class="sin-foto-text">
+                {{
+                accionConfirmada === "ENTREGAR_ETAPA"
+                ? "¿Deseas enviar este reporte al supervisor? Mientras esté en revisión ya no podrás modificarlo."
+                : "¿Deseas quitar esta evidencia del borrador?"
+                }}
+            </p>
+
+            <div class="mini-actions">
+                <button class="btn-secondary" type="button" [disabled]="procesandoConfirmacion"
+                    (click)="cancelarConfirmacion()">
+                    Cancelar
+                </button>
+
+                <button class="dg-btn" [class.danger]="
+            accionConfirmada ===
+            'ELIMINAR_EVIDENCIA'
+          " type="button" [disabled]="procesandoConfirmacion" (click)="confirmarAccionEtapa()">
+                    {{
+                    procesandoConfirmacion
+                    ? "Procesando..."
+                    : "Confirmar"
+                    }}
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Sin foto de perfil -->
+<ng-container *ngIf="modalSinFotoAbierto">
+    <div class="modal-backdrop open" (click)="modalSinFotoAbierto = false">
+    </div>
+
+    <div class="modal mini open">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div class="mini-title">
+                    Foto de perfil
+                </div>
+            </div>
+
+            <p class="sin-foto-text">
+                Aún no tienes una foto personalizada.
+            </p>
+
+            <div class="mini-actions">
+                <button class="dg-btn" type="button" (click)="modalSinFotoAbierto = false">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Confirmar eliminación de foto -->
+<ng-container *ngIf="modalEliminarFotoAbierto">
+    <div class="modal-backdrop open" (click)="modalEliminarFotoAbierto = false">
+    </div>
+
+    <div class="modal mini open">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div class="mini-title">Quitar foto</div>
+            </div>
+
+            <p class="sin-foto-text">
+                ¿Quieres eliminar tu foto de perfil?
+            </p>
+
+            <div class="mini-actions">
+                <button class="btn-secondary" type="button" [disabled]="eliminandoFoto" (click)="
+            modalEliminarFotoAbierto = false
+          ">
+                    Cancelar
+                </button>
+
+                <button class="dg-btn danger" type="button" [disabled]="eliminandoFoto"
+                    (click)="confirmarEliminarFoto()">
+                    {{
+                    eliminandoFoto
+                    ? "Quitando..."
+                    : "Quitar foto"
+                    }}
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Resultado de foto -->
+<ng-container *ngIf="modalExitoFotoAbierto">
+    <div class="modal-backdrop open" (click)="modalExitoFotoAbierto = false">
+    </div>
+
+    <div class="modal mini open">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div class="mini-title">
+                    Foto de perfil
+                </div>
+            </div>
+
+            <p class="sin-foto-text">
+                {{ mensajeExitoFoto }}
+            </p>
+
+            <div class="mini-actions">
+                <button class="dg-btn" type="button" (click)="modalExitoFotoAbierto = false">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Resultado de contraseña -->
+<ng-container *ngIf="modalExitoPasswordAbierto">
+    <div class="modal-backdrop open" (click)="modalExitoPasswordAbierto = false">
+    </div>
+
+    <div class="modal mini open">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div class="mini-title">
+                    Cambio de contraseña
+                </div>
+            </div>
+
+            <p class="sin-foto-text">
+                Contraseña actualizada correctamente.
+            </p>
+
+            <div class="mini-actions">
+                <button class="dg-btn" type="button" (click)="
+            modalExitoPasswordAbierto = false
+          ">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Resultado de nueva solicitud -->
+<ng-container *ngIf="modalResultadoSolicitudAbierto">
+    <div class="modal-backdrop open resultado-solicitud-backdrop"></div>
+
+    <div class="modal mini open resultado-solicitud-modal" role="dialog" aria-modal="true"
+        aria-labelledby="tituloResultadoSolicitud" (click)="cerrarResultadoSolicitud()">
+        <div class="modal-card mini-card" (click)="$event.stopPropagation()">
+            <div class="mini-head">
+                <div id="tituloResultadoSolicitud" class="mini-title"
+                    [class.success]="tipoResultadoSolicitud === 'success'"
+                    [class.error]="tipoResultadoSolicitud === 'error'">
+                    {{
+                    tipoResultadoSolicitud === "success"
+                    ? "Solicitud enviada"
+                    : "No fue posible completar la solicitud"
+                    }}
+                </div>
+            </div>
+
+            <p class="sin-foto-text">
+                {{ mensajeModalExito }}
+            </p>
+
+            <div class="mini-actions">
+                <button class="dg-btn" type="button" (click)="cerrarResultadoSolicitud()">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Resultado exitoso de una operación -->
+<ng-container *ngIf="modalExitoAbierto">
+    <div class="modal-backdrop open" (click)="cerrarModalExito()">
+    </div>
+
+    <div class="modal mini open" role="dialog" aria-modal="true" aria-labelledby="tituloModalExito">
+
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div id="tituloModalExito" class="mini-title">
+                    {{ tituloModalExito }}
+                </div>
+            </div>
+
+            <p class="sin-foto-text">
+                {{ mensajeModalExito }}
+            </p>
+
+            <div class="mini-actions">
+                <button class="dg-btn" type="button" (click)="cerrarModalExito()">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
