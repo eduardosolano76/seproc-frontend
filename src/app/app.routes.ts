@@ -19,6 +19,8 @@ import { SupervisorInstitucionDashboardComponent } from
   './seproc/pages/supervisor-institucion-dashboard/supervisor-institucion-dashboard';
 import { centralInstitucionGuard } from './core/guards/central-institucion.guard';
 import { CentralInstitucionDashboardComponent } from './seproc/pages/central-institucion-dashboard/central-institucion-dashboard.component';
+import { direccionInstitucionGuard } from './core/guards/direccion-institucion.guard';
+import { DireccionInstitucionDashboardComponent } from './seproc/pages/direccion-institucion-dashboard/direccion-institucion-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -82,10 +84,17 @@ export const routes: Routes = [
   },
 
   // Dashboard del Central de la institución
-   {
+  {
     path: ':abreviacion/central-institucion/dashboard',
     component: CentralInstitucionDashboardComponent,
     canActivate: [centralInstitucionGuard],
+  },
+
+  // Dashboard de la Dirección de la institución
+  {
+    path: ':abreviacion/direccion-institucion/dashboard',
+    component: DireccionInstitucionDashboardComponent,
+    canActivate: [direccionInstitucionGuard],
   },
 
   {
