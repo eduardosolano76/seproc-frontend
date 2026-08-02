@@ -1,5 +1,4 @@
-/* src/app/seproc/pages/constructor-institucion-dashboard/constructor-institucion-dashboard.component.css */
-
+/* src/app/seproc/pages/central-institucion-dashboard/central-institucion-dashboard.component.css */
 :host {
     --primary: #155093;
     --primary-dark: #103f74;
@@ -82,9 +81,7 @@ img {
     max-width: 100%;
 }
 
-/* ========================================================= 
-                ESTRUCTURA GENERAL 
-========================================================= */
+/* ========================================================= ESTRUCTURA GENERAL ========================================================= */
 .layout {
     position: relative;
     z-index: 1;
@@ -100,9 +97,7 @@ img {
     display: none;
 }
 
-/* ========================================================= 
-                BARRA LATERAL Y MARCA 
-========================================================= */
+/* ========================================================= BARRA LATERAL Y MARCA ========================================================= */
 .sidebar {
     position: relative;
     z-index: 20;
@@ -188,9 +183,7 @@ img {
     object-fit: contain;
 }
 
-/* ========================================================= 
-                NAVEGACIÓN 
-========================================================= */
+/* ========================================================= NAVEGACIÓN ========================================================= */
 .nav {
     flex: 1 1 auto;
     min-height: 0;
@@ -379,9 +372,7 @@ img {
     background: var(--danger-soft);
 }
 
-/* ========================================================= 
-                CONTENIDO Y BARRA SUPERIOR 
-========================================================= */
+/* ========================================================= CONTENIDO Y BARRA SUPERIOR ========================================================= */
 .content {
     flex: 1 1 auto;
     min-width: 0;
@@ -576,9 +567,7 @@ img {
     object-fit: contain;
 }
 
-/* ========================================================= 
-                MENSAJES, CARGA Y PANEL PRINCIPAL 
-========================================================= */
+/* ========================================================= MENSAJES, CARGA Y PANEL PRINCIPAL ========================================================= */
 .dashboard-message {
     flex: 0 0 auto;
     margin: 0;
@@ -712,9 +701,7 @@ img {
     animation: spin 0.8s linear infinite;
 }
 
-/* ========================================================= 
-                PESTAÑAS, LISTADOS Y ESTADOS 
-========================================================= */
+/* ========================================================= PESTAÑAS, LISTADOS Y ESTADOS ========================================================= */
 .tabs {
     margin: 0 0 1.15rem;
     display: flex;
@@ -949,24 +936,7 @@ img {
     box-shadow: none;
 }
 
-/* ========================================================= 
-                TABLAS 
-========================================================= */
-.pendientes-note {
-    margin: 0 0 1rem;
-    padding: 0.85rem 1rem;
-    color: var(--primary-dark);
-    background: var(--primary-soft);
-    border-left: 4px solid var(--primary);
-    border-radius: 12px;
-    font-size: 0.88rem;
-    line-height: 1.55;
-}
-
-.pendientes-wrap {
-    width: 100%;
-}
-
+/* ========================================================= TABLAS ========================================================= */
 .table-wrap {
     width: 100%;
     max-width: 100%;
@@ -1055,9 +1025,7 @@ img {
     box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
-/* ========================================================= 
-                CAMBIO DE CONTRASEÑA 
-========================================================= */
+/* ========================================================= CAMBIO DE CONTRASEÑA ========================================================= */
 .password-card {
     width: min(780px, 100%);
     margin: 0.25rem auto;
@@ -1146,9 +1114,7 @@ img {
     justify-content: flex-end;
 }
 
-/* ========================================================= 
-                PROCESO CONSTRUCTIVO 
-========================================================= */
+/* ========================================================= PROCESO CONSTRUCTIVO ========================================================= */
 .process-mini-shell,
 .etapa-mini-shell {
     width: 100%;
@@ -1263,8 +1229,17 @@ img {
     gap: 0.7rem;
 }
 
-.process-mini-right .process-mini-right .process-mini-track {
+.process-mini-right .process-mini-progress-label,
+.process-mini-right .process-mini-track {
     flex-basis: 100%;
+}
+
+.process-mini-progress-label {
+    margin-top: 0.15rem;
+    color: var(--primary-dark);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: center;
 }
 
 .process-mini-track {
@@ -1370,9 +1345,7 @@ img {
     display: inline-block;
 }
 
-/* ========================================================= 
-                LEYENDA DE PROCESO CONSTRUCTIVO 
-========================================================= */
+/* ========================================================= LEYENDA DE PROCESO CONSTRUCTIVO ========================================================= */
 .process-mini-legend {
     display: flex;
     align-items: center;
@@ -1412,9 +1385,7 @@ img {
     border-color: rgba(0, 0, 0, 0.07);
 }
 
-/* ========================================================= 
-                DETALLE DE ETAPA E HISTORIAL 
-========================================================= */
+/* ========================================================= DETALLE DE ETAPA E HISTORIAL ========================================================= */
 .etapa-mini-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(320px, 0.78fr);
@@ -1645,9 +1616,7 @@ img {
     margin-top: 0.7rem;
 }
 
-/* ========================================================= 
-                MODALES 
-========================================================= */
+/* ========================================================= MODALES ========================================================= */
 .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -1710,7 +1679,8 @@ img {
 }
 
 .mini-head {
-    justify-content: center;
+    justify-content: space-between;
+    display: flex;
 }
 
 .dg-chip {
@@ -1943,22 +1913,15 @@ img {
     opacity: 1;
 }
 
-.resultado-solicitud-backdrop {
+.supervisor-backdrop {
     z-index: 210;
 }
 
-.resultado-solicitud-modal {
+.supervisor-modal {
     z-index: 220;
 }
 
-
-.resultado-solicitud-modal .mini-title.error {
-    color: var(--danger);
-}
-
-/* ========================================================= 
-                DOCUMENTACIÓN 
-========================================================= */
+/* ========================================================= DOCUMENTACIÓN ========================================================= */
 .doc-solicitud-box {
     margin-top: 1rem;
     padding: 1rem;
@@ -1975,35 +1938,7 @@ img {
     text-align: center;
 }
 
-.doc-solicitud-alert {.evidence-item {
-    width: 100%;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.8rem;
-}
-
-.teams-file-item > .evidence-main {
-    flex: 1 1 0;
-    min-width: 0;
-}
-
-.evidence-note-row {
-    width: 100%;
-    display: flex;
-}
-
-.evidence-note-input {
-    flex: 1;
-    width: 100%;
-    min-width: 0;
-    height: 38px;
-    padding: 0 0.75rem;
-    text-align: left;
-}
-
-.evidence-item > .action-btn {
-    flex-shrink: 0;
-}
+.doc-solicitud-alert {
     margin-bottom: 0.75rem;
     padding: 0.7rem 0.8rem;
     border-radius: 12px;
@@ -2095,9 +2030,7 @@ img {
     font-size: 0.87rem;
 }
 
-/* ========================================================= 
-                ACCESIBILIDAD Y ANIMACIONES 
-========================================================= */
+/* ========================================================= ACCESIBILIDAD Y ANIMACIONES ========================================================= */
 button:focus-visible,
 a:focus-visible,
 select:focus-visible,
@@ -2171,9 +2104,7 @@ textarea:focus-visible {
     }
 }
 
-/* ========================================================= 
-                RESPONSIVE 
-========================================================= */
+/* ========================================================= RESPONSIVE ========================================================= */
 @media (max-width: 1180px) {
     .sidebar {
         flex-basis: 264px;
@@ -2208,10 +2139,6 @@ textarea:focus-visible {
         width: 100%;
         min-width: 0;
         justify-content: center;
-    }
-
-    .project-status-pill {
-        width: 100%;
     }
 }
 
@@ -2444,25 +2371,6 @@ textarea:focus-visible {
         padding: 1rem;
         border-radius: var(--radius-lg);
     }
-
-    .pending-responsive-table .role-select,
-    .pending-responsive-table .approve-btn,
-    .pending-responsive-table .reject-btn {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .pending-responsive-table .approve-btn,
-    .pending-responsive-table .reject-btn {
-        justify-self: stretch;
-    }
-
-    .pending-responsive-table .approve-btn:disabled,
-    .pending-responsive-table .reject-btn:disabled,
-    .pending-responsive-table .role-select:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
 }
 
 @media (max-width: 480px) {
@@ -2518,8 +2426,8 @@ textarea:focus-visible {
 
     .tabs {
         flex-wrap: nowrap;
-        overflow-x: visible;
-        padding-bottom: 0;
+        overflow-x: auto;
+        padding-bottom: 0.2rem;
     }
 
     .tab {
@@ -2605,9 +2513,7 @@ textarea:focus-visible {
     }
 }
 
-/* ========================================================= 
-                TABLA RESPONSIVA MOVIL 
-========================================================= */
+/* ========================================================= TABLA RESPONSIVA MOVIL ========================================================= */
 @media (max-width: 640px) {
     .table-wrap:has(.responsive-table) {
         flex: 1 1 0;
@@ -2779,387 +2685,6 @@ textarea:focus-visible {
     }
 }
 
-/* ELEMENTOS EXCLUSIVOS DEL MÓDULO CONSTRUCTOR */
-.add-symbol {
-    color: #ffffff;
-    font-size: 2rem;
-    font-weight: 800;
-    line-height: 1;
-    transform: translateY(-1px);
-}
-
-.project-status-pill {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 36px;
-    padding: 0.45rem 0.8rem;
-    color: var(--text);
-    background: var(--bg);
-    border: 1px solid var(--primary-border);
-    border-radius: var(--radius-pill);
-    font-size: 0.92rem;
-}
-
-.etapa-mini-grid.single-column {
-    grid-template-columns: minmax(0, 1fr);
-}
-
-/* Formulario de solicitud */
-.request-form {
-    width: 100%;
-}
-
-.dg-row {
-    width: 100%;
-    margin-bottom: 0.9rem;
-    display: grid;
-    gap: 0.8rem;
-}
-
-.dg-row.dg-1 {
-    grid-template-columns: minmax(0, 1fr);
-}
-
-.dg-row.dg-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.dg-row.dg-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.dg-field {
-    min-width: 0;
-}
-
-.dg-input {
-    width: 100%;
-    height: 44px;
-    padding: 0 0.9rem;
-    color: var(--text);
-    background: #fafafa;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    outline: none;
-    font-size: 0.9rem;
-    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.dg-input:focus {
-    background: #ffffff;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-soft);
-}
-
-.dg-input.input-error,
-.dg-select.input-error {
-    border-color: var(--danger);
-    box-shadow: 0 0 0 3px var(--danger-soft);
-}
-
-.req {
-    margin-left: 0.16rem;
-    color: var(--danger);
-    font-weight: 800;
-}
-
-.dg-foot {
-    margin-top: 0.9rem;
-    padding-top: 0.8rem;
-    border-top: 1px solid var(--line);
-}
-
-.dg-hint {
-    color: var(--muted);
-    font-size: 0.83rem;
-    line-height: 1.45;
-}
-
-.modal-footer {
-    margin-top: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    gap: 0.65rem;
-}
-
-/* Documentos opcionales al crear la solicitud */
-.doc-form-section {
-    margin-top: 1.15rem;
-    padding: 1rem;
-    background: var(--surface-muted);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-}
-
-.doc-form-section h3 {
-    margin: 0;
-    color: var(--primary-dark);
-    font-size: 1.05rem;
-    font-weight: 750;
-}
-
-.doc-form-section>p {
-    margin: 0.35rem 0 0.9rem;
-    color: var(--muted);
-    font-size: 0.86rem;
-    line-height: 1.5;
-}
-
-.doc-upload-card {
-    margin-top: 0.65rem;
-    padding: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.85rem;
-    background: #ffffff;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.doc-upload-card:hover {
-    border-color: var(--primary-border);
-    box-shadow: 0 0 0 3px var(--primary-soft);
-}
-
-.doc-upload-label {
-    flex: 1;
-    min-width: 0;
-    color: var(--text);
-    font-size: 0.9rem;
-    font-weight: 700;
-}
-
-.doc-upload-control {
-    min-width: 0;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.55rem;
-    flex-wrap: wrap;
-}
-
-.doc-upload-button {
-    flex-shrink: 0;
-    padding: 0.45rem 0.7rem;
-    color: var(--primary-dark);
-    background: var(--primary-soft);
-    border-radius: var(--radius-pill);
-    font-size: 0.85rem;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.doc-upload-button:disabled,
-.doc-upload-remove:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.doc-upload-remove {
-    flex-shrink: 0;
-    padding: 0.45rem 0.7rem;
-    color: var(--danger);
-    background: var(--danger-soft);
-    border: none;
-    border-radius: var(--radius-pill);
-    cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: 700;
-}
-
-.doc-upload-remove:hover:not(:disabled) {
-    color: #ffffff;
-    background: var(--danger);
-}
-
-.doc-upload-button:hover:not(:disabled) {
-    color: #ffffff;
-    background: var(--primary-dark);
-}
-
-.doc-upload-name {
-    max-width: 250px;
-    overflow: hidden;
-    color: var(--muted);
-    font-size: 0.82rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.doc-upload-input {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    white-space: nowrap;
-}
-
-/* Evidencias de avance */
-.evidence-item {
-    align-items: flex-start;
-}
-
-.teams-file-item>.evidence-main {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.55rem;
-}
-
-.evidence-name-row {
-    min-width: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-}
-
-.evidence-name-row strong {
-    min-width: 0;
-    overflow-wrap: anywhere;
-}
-
-.evidence-name-row a {
-    flex-shrink: 0;
-}
-
-.evidence-note-row {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
-}
-
-.evidence-note-input {
-    flex: 1;
-    min-width: 0;
-    height: 38px;
-    padding: 0 0.75rem;
-    color: var(--text);
-    background: #ffffff;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    outline: none;
-    font-size: 0.84rem;
-}
-
-.evidence-note-input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-soft);
-}
-
-.evidence-note-input:disabled {
-    color: var(--muted);
-    background: var(--surface-muted);
-}
-
-.saving-note {
-    flex-shrink: 0;
-    color: var(--primary);
-    font-size: 0.76rem;
-    font-weight: 700;
-}
-
-.evidence-note-text {
-    color: var(--muted);
-    font-size: 0.84rem;
-    line-height: 1.45;
-}
-
-.evidence-actions {
-    margin-top: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-}
-
-.delivery-state-message {
-    margin-top: 1rem;
-    padding: 0.85rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.45rem;
-    color: var(--primary-dark);
-    background: var(--primary-soft);
-    border: 1px solid var(--primary-border);
-    border-radius: 14px;
-    font-size: 0.86rem;
-    line-height: 1.5;
-    text-align: center;
-}
-
-.delivery-state-message.approved {
-    color: var(--success);
-    background: var(--success-soft);
-    border-color: rgba(23, 107, 53, 0.2);
-}
-
-.delivery-state-message .btn-primary {
-    margin-top: 0.45rem;
-}
-
-@media (max-width: 768px) {
-    .dg-row.dg-3 {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .doc-upload-card {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .doc-upload-control {
-        width: 100%;
-        justify-content: flex-start;
-    }
-
-    .doc-upload-name {
-        max-width: min(58vw, 310px);
-    }
-}
-
-@media (max-width: 640px) {
-    .dg-row.dg-2 {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .evidence-name-row,
-    .evidence-note-row {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .evidence-note-input {
-        flex: none;
-        width: 100%;
-    }
-
-    .evidence-actions,
-    .modal-footer {
-        align-items: stretch;
-        flex-direction: column-reverse;
-    }
-
-    .evidence-actions .btn-primary,
-    .evidence-actions .btn-secondary,
-    .modal-footer .btn-secondary,
-    .modal-footer .dg-btn {
-        width: 100%;
-    }
-}
-
 .estado-dropdown-wrap .profile-dropdown {
     left: 50% !important;
     right: auto;
@@ -3169,58 +2694,3 @@ textarea:focus-visible {
 .estado-dropdown-wrap .profile-dropdown.open {
     transform: translate(-50%, 0);
 }
-
-/* Scroll interno para el historial */
-.panel.panel-scroll {
-    min-height: 0;
-    overflow: hidden;
-}
-
-.panel.panel-scroll > section {
-    flex: 1 1 0;
-    min-height: 0;
-    overflow: hidden;
-}
-
-.process-mini-shell {
-    flex: 1 1 0;
-    min-height: 0;
-    overflow: hidden;
-}
-
-.process-mini-top {
-    flex: 0 0 auto;
-}
-
-.historial-list {
-    flex: 1 1 0;
-    min-height: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-    overscroll-behavior-y: contain;
-    scrollbar-gutter: stable;
-    -webkit-overflow-scrolling: touch;
-}
-
-.historial-card {
-    flex: 0 0 auto;
-}
-
-/* Diseño del scroll */
-.historial-list::-webkit-scrollbar {
-    width: 8px;
-}
-
-.historial-list::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.historial-list::-webkit-scrollbar-thumb {
-    background: rgba(21, 80, 147, 0.42);
-    border-radius: 999px;
-}
-
-.historial-list::-webkit-scrollbar-thumb:hover {
-    background: rgba(21, 80, 147, 0.62);
-}
-

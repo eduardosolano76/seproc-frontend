@@ -17,6 +17,8 @@ import { supervisorInstitucionGuard } from
 
 import { SupervisorInstitucionDashboardComponent } from
   './seproc/pages/supervisor-institucion-dashboard/supervisor-institucion-dashboard';
+import { centralInstitucionGuard } from './core/guards/central-institucion.guard';
+import { CentralInstitucionDashboardComponent } from './seproc/pages/central-institucion-dashboard/central-institucion-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -77,6 +79,13 @@ export const routes: Routes = [
     path: ':abreviacion/supervisor-institucion/dashboard',
     component: SupervisorInstitucionDashboardComponent,
     canActivate: [supervisorInstitucionGuard],
+  },
+
+  // Dashboard del Central de la institución
+   {
+    path: ':abreviacion/central-institucion/dashboard',
+    component: CentralInstitucionDashboardComponent,
+    canActivate: [centralInstitucionGuard],
   },
 
   {

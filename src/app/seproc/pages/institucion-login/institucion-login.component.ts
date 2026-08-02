@@ -216,6 +216,33 @@ export class InstitucionLoginComponent implements OnInit {
                         return;
                     }
 
+                    const esCentralInstitucion =
+                        respuesta.redirectUrl === '/central' ||
+                        /\/central-institucion\/dashboard\/?$/.test(
+                            respuesta.redirectUrl
+                        );
+
+                    if (esCentralInstitucion) {
+                        sessionStorage.setItem(
+                            'institucionAbreviacion',
+                            abreviacion
+                        );
+
+                        this.router.navigate(
+                            [
+                                '/',
+                                abreviacion,
+                                'central-institucion',
+                                'dashboard'
+                            ],
+                            {
+                                replaceUrl: true
+                            }
+                        );
+
+                        return;
+                    }
+
                     this.router.navigateByUrl(respuesta.redirectUrl, {
                         replaceUrl: true
                     });

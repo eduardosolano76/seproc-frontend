@@ -1,0 +1,1297 @@
+<!-- src/app/seproc/pages/central-institucion-dashboard/central-institucion-dashboard.component.html -->
+
+<div class="layout">
+    <button class="sidebar-backdrop" [class.open]="menuMovilAbierto" type="button" aria-label="Cerrar menú"
+        (click)="menuMovilAbierto = false"></button>
+
+    <aside id="centralSidebar" class="sidebar" [class.menu-open]="menuMovilAbierto">
+
+        <!--Logo de la institución -->
+        <div class="brand">
+            <div class="brand-logos">
+                <div class="seproc-logo" aria-label="Logo SEPROC">
+                    <div class="logo-mask mask-seproc-icono" role="img" aria-label="Icono SEPROC"></div>
+
+                    <div class="logo-mask mask-seproc-letras" role="img" aria-label="Letras SEPROC"></div>
+                </div>
+
+                <div class="brand-divider" aria-hidden="true"></div>
+
+                <div class="institution-logo-container">
+                    <img [src]="logoEmpresa" [alt]="'Logo ' + (perfil?.abreviacion || 'de la institución')"
+                        class="institution-logo" (error)="usarLogoAlternativo($event)" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú de navegación -->
+        <nav class="nav" aria-label="Menú central">
+
+            <!--Solicitudes de proyectos -->
+            <button class="nav-item" [class.active]="vista === 'solicitudes'" type="button"
+                (click)="cambiarVista('solicitudes')">
+                <span class="nav-left">
+                    <span class="icon">
+                        <img src="/assets/seproc/solicitud.png" alt="" />
+                    </span>
+                    <span class="label">Solicitudes de proyectos</span>
+                </span>
+            </button>
+
+            <!-- Proyectos -->
+            <button class="nav-item" [class.active]="vista === 'proyectos'" type="button"
+                (click)="cambiarVista('proyectos')">
+                <span class="nav-left">
+                    <span class="icon">
+                        <img src="/assets/seproc/proyectos.png" alt="" />
+                    </span>
+                    <span class="label">Proyectos</span>
+                </span>
+            </button>
+
+            <!-- Usuarios -->
+            <button class="nav-item" [class.active]="esVistaUsuarios()" [attr.data-open]="menuUsuariosAbierto"
+                type="button" (click)="menuUsuariosAbierto = !menuUsuariosAbierto">
+                <span class="nav-left">
+                    <span class="icon">
+                        <img src="/assets/seproc/usuarios.png" alt="" />
+                    </span>
+                    <span class="label">Usuarios</span>
+                </span>
+
+                <span class="chev">
+                    <img src="/assets/seproc/desplegable.png" alt="" />
+                </span>
+            </button>
+
+            <!-- Submenú de usuarios -->
+            <div class="submenu" [class.open]="menuUsuariosAbierto">
+                <button class="sub-item" [class.active]="vista === 'usuarios-supervisores'" type="button"
+                    (click)="cambiarVista('usuarios-supervisores')">
+                    Supervisores
+                </button>
+
+                <button class="sub-item" [class.active]="vista === 'usuarios-constructores'" type="button"
+                    (click)="cambiarVista('usuarios-constructores')">
+                    Constructores
+                </button>
+
+                <button class="sub-item" [class.active]="vista === 'usuarios-directores'" type="button"
+                    (click)="cambiarVista('usuarios-directores')">
+                    Directores
+                </button>
+
+            </div>
+
+            <button class="nav-item" [class.active]="vista === 'password'" type="button"
+                (click)="cambiarVista('password')">
+                <span class="nav-left">
+                    <span class="icon">
+                        <img src="/assets/seproc/cambiar-contrasena.png" alt="" />
+                    </span>
+                    <span class="label">Cambiar contraseña</span>
+                </span>
+            </button>
+
+            <button class="nav-item" type="button" (click)="cerrarSesion()">
+                <span class="nav-left">
+                    <span class="icon">
+                        <img src="/assets/seproc/salir.png" alt="" />
+                    </span>
+                    <span class="label">Cerrar sesión</span>
+                </span>
+            </button>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <header class="topbar">
+            <button class="hamburger" type="button" aria-label="Abrir menú" aria-controls="centralSidebar"
+                [attr.aria-expanded]="menuMovilAbierto" (click)="menuMovilAbierto = !menuMovilAbierto">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                    </path>
+                </svg>
+            </button>
+
+            <div class="topbar-context">
+                <span class="topbar-eyebrow">Módulo Central</span>
+            </div>
+
+            <div class="userbox">
+                <div class="hello">
+                    <div class="hello-name">
+                        Hola, {{ perfil?.nombreUsuario || "Usuario" }}
+                    </div>
+
+                    <div class="hello-role">
+                        Rol: {{ perfil?.rolUsuario || "Central" | titlecase }}
+                    </div>
+                </div>
+
+                <input #profileFile type="file" accept="image/png,image/jpeg,image/webp" hidden
+                    (change)="subirFoto($event)" />
+
+                <button class="profile" type="button" title="Opciones de foto" aria-label="Abrir opciones de perfil"
+                    [attr.aria-expanded]="menuPerfilAbierto" (click)="menuPerfilAbierto = !menuPerfilAbierto">
+                    <img [src]="fotoPerfil" alt="Foto de perfil" (error)="usarFotoPredeterminada($event)" />
+                </button>
+
+                <div class="profile-dropdown" [class.open]="menuPerfilAbierto">
+                    <button class="dropdown-item" type="button" (click)="verFoto()">
+                        <img src="/assets/seproc/verFoto.png" alt="" />
+                        <span>Ver foto</span>
+                    </button>
+
+                    <button class="dropdown-item" type="button" (click)="profileFile.click()">
+                        <img src="/assets/seproc/subirFoto.png" alt="" />
+                        <span>Subir foto</span>
+                    </button>
+
+                    <button class="dropdown-item" type="button" (click)="eliminarFoto()">
+                        <img src="/assets/seproc/eliminar.png" alt="" />
+                        <span>Quitar foto</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div *ngIf="mensaje" class="dashboard-message" [class.success]="tipoMensaje === 'success'"
+            [class.error]="tipoMensaje === 'error'">
+            {{ mensaje }}
+        </div>
+
+        <section class="panel panel-scroll">
+            <div *ngIf="
+          vista !== 'password' &&
+          (vista !== 'proyectos' || vistaProyecto === 'lista')
+        " class="panel-head">
+                <div>
+                    <h2 class="panel-title">{{ tituloSeccion }}</h2>
+
+                    <div class="panel-sub">{{ subtituloSeccion }}</div>
+                </div>
+
+                <div class="panel-tools">
+                    <button *ngIf="esVistaUsuarios()" class="add-btn" type="button" title="Agregar usuario"
+                        (click)="abrirCrearUsuario()">
+                        <img src="/assets/seproc/agregar-usuario.png" alt="Agregar usuario" />
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="cargandoContenido" class="dashboard-loading">
+                <span class="loading-spinner"></span>
+                <p>Cargando información...</p>
+            </div>
+
+            <ng-container *ngIf="!cargandoContenido">
+
+                <!-- Solicitudes -->
+                <section *ngIf="vista === 'solicitudes'">
+                    <div class="tabs">
+                        <button class="tab" [class.active]="estadoSolicitud === 'PENDIENTE'" type="button"
+                            (click)="seleccionarEstadoSolicitud('PENDIENTE')">
+                            Pendientes
+                        </button>
+
+                        <button class="tab" [class.active]="estadoSolicitud === 'APROBADA'" type="button"
+                            (click)="seleccionarEstadoSolicitud('APROBADA')">
+                            Aprobadas
+                        </button>
+
+                        <button class="tab" [class.active]="estadoSolicitud === 'RECHAZADA'" type="button"
+                            (click)="seleccionarEstadoSolicitud('RECHAZADA')">
+                            Rechazadas
+                        </button>
+                    </div>
+
+                    <div *ngIf="solicitudesFiltradas.length === 0" class="empty">
+                        Aún no hay solicitudes para mostrar.
+                    </div>
+
+                    <div class="cards">
+                        <article *ngFor="let solicitud of solicitudesFiltradas" class="card-sol">
+                            <div class="left">
+                                <div class="school">{{ solicitud.nombreEscuela }}</div>
+
+                                <div class="meta">
+                                    <span class="state-dot" [ngClass]="claseEstadoGeneral(solicitud.estadoSolicitud)">
+                                    </span>
+
+                                    <span> Constructor: {{ solicitud.constructor }} </span>
+
+                                    <span> Fecha: {{ solicitud.fechaSolicitud }} </span>
+                                </div>
+                            </div>
+
+                            <button class="btn-detail" type="button" (click)="abrirSolicitud(solicitud.idSolicitud)">
+                                Ver detalle
+                            </button>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- Proyectos -->
+                <section *ngIf="vista === 'proyectos'">
+                    <ng-container *ngIf="vistaProyecto === 'lista'">
+                        <div class="tabs">
+                            <button class="tab" [class.active]="estadoProyecto === 'ACTIVO'" type="button"
+                                (click)="seleccionarEstadoProyecto('ACTIVO')">
+                                Activos
+                            </button>
+
+                            <button class="tab" [class.active]="estadoProyecto === 'INACTIVO'" type="button"
+                                (click)="seleccionarEstadoProyecto('INACTIVO')">
+                                Inactivos
+                            </button>
+
+                            <button class="tab" [class.active]="estadoProyecto === 'FINALIZADO'" type="button"
+                                (click)="seleccionarEstadoProyecto('FINALIZADO')">
+                                Finalizados
+                            </button>
+                        </div>
+
+                        <div *ngIf="proyectosFiltrados.length === 0" class="empty">
+                            Aún no hay proyectos para mostrar.
+                        </div>
+
+                        <div class="cards">
+                            <article *ngFor="let proyecto of proyectosFiltrados" class="card-sol">
+                                <div class="left">
+                                    <div class="school">{{ proyecto.nombreEscuela }}</div>
+
+                                    <div class="meta">
+                                        <span class="state-dot" [ngClass]="claseEstadoGeneral(proyecto.estadoProyecto)">
+                                        </span>
+
+                                        <span> Constructor: {{ proyecto.constructor }} </span>
+
+                                        <span> Supervisor: {{ proyecto.supervisor }} </span>
+
+                                        <span> Fecha: {{ proyecto.fechaAprobacion }} </span>
+                                    </div>
+                                </div>
+
+                                <button class="btn-detail" type="button" (click)="abrirProyecto(proyecto.idProyecto)">
+                                    Ver detalle
+                                </button>
+                            </article>
+                        </div>
+                    </ng-container>
+
+                    <!-- Proceso constructivo -->
+                    <div *ngIf="vistaProyecto === 'proceso'" class="process-mini-shell">
+                        <div class="process-mini-top">
+                            <button class="process-mini-back" type="button" (click)="vistaProyecto = 'lista'">
+                                <img src="/assets/seproc/regresar.png" alt="Regresar" />
+                            </button>
+
+                            <div class="process-mini-chip">PROCESO CONSTRUCTIVO</div>
+
+                            <div class="process-mini-spacer"></div>
+                        </div>
+
+                        <!-- Spinner interno -->
+                        <div *ngIf="cargandoDetalleProyecto" class="dashboard-loading" style="min-height: 200px;">
+                            <span class="loading-spinner"></span>
+                            <p>Cargando información del proyecto...</p>
+                        </div>
+
+                        <ng-container *ngIf="!cargandoDetalleProyecto && proyectoDetalle">
+                            <div class="process-mini-summary">
+                                <div class="process-mini-left">
+                                    <div class="process-mini-school">
+                                        {{ proyectoDetalle.nombreEscuela }}
+                                    </div>
+
+                                    <div class="process-mini-meta">
+                                        Tipo de obra:
+                                        <span>{{ proyectoDetalle.tipoObra }}</span>
+                                    </div>
+
+                                    <div class="process-mini-meta">
+                                        Tipo de edificación:
+                                        <span> {{ proyectoDetalle.tipoEdificacion }} </span>
+                                    </div>
+
+                                    <div class="process-mini-meta">
+                                        Constructor:
+                                        <span> {{ proyectoDetalle.quienEnvia }} </span>
+                                    </div>
+
+                                    <div class="process-mini-meta">
+                                        Supervisor:
+                                        <span> {{ proyectoDetalle.supervisorAsignado }} </span>
+                                    </div>
+                                </div>
+
+                                <div class="process-mini-right">
+                                    <div class="estado-dropdown-wrap">
+                                        <button class="role-select text-left" style="cursor: pointer;" type="button"
+                                            (click)="menuEstadoAbierto = !menuEstadoAbierto">
+                                            {{ proyectoDetalle.estadoProyecto | titlecase }}
+                                        </button>
+
+                                        <div class="profile-dropdown" [class.open]="menuEstadoAbierto"
+                                            style="top: 100%; left: 0; min-width: 120px;">
+                                            <button class="dropdown-item" type="button"
+                                                (click)="seleccionarNuevoEstado('ACTIVO')">
+                                                <span>Activo</span>
+                                            </button>
+                                            <button class="dropdown-item" type="button"
+                                                (click)="seleccionarNuevoEstado('INACTIVO')">
+                                                <span>Inactivo</span>
+                                            </button>
+                                            <button class="dropdown-item" type="button"
+                                                (click)="seleccionarNuevoEstado('FINALIZADO')">
+                                                <span>Finalizado</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn-secondary" type="button" (click)="abrirDocumentacionProyecto()">
+                                        Documentación inicial
+                                    </button>
+
+                                    <!--
+                <div class="process-mini-progress-label">
+                  Avance: {{ avanceProyecto }}%
+                </div>
+                 -->
+
+                                    <!--
+                <div class="process-mini-track">
+                  <div class="process-mini-fill" [style.width.%]="avanceProyecto"></div>
+                </div>
+                 -->
+
+                                </div>
+
+                            </div>
+
+                            <!-- Leyenda de colores -->
+                            <div class="process-mini-legend">
+                                <div class="legend-item">
+                                    <span class="legend-dot status-done"></span>
+                                    <span>Aprobado</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-dot status-current"></span>
+                                    <span>En proceso</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-dot status-locked"></span>
+                                    <span>Bloqueado</span>
+                                </div>
+                            </div>
+
+                            <div class="process-mini-list">
+                                <button *ngFor="let bloque of bloquesProyecto" class="process-mini-stage"
+                                    [ngClass]="'status-' + claseVisualEtapa(bloque.estado)" type="button"
+                                    [disabled]="claseVisualEtapa(bloque.estado) === 'locked'"
+                                    (click)="abrirBloque(bloque)">
+                                    <span class="process-mini-stage-icon">
+                                        <img [src]="iconoEtapa(bloque.estado)" alt="" />
+                                    </span>
+
+                                    <span class="process-mini-stage-label">
+                                        {{ bloque.nombre }}
+                                    </span>
+                                </button>
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <!-- Bloque -->
+                    <div *ngIf="vistaProyecto === 'bloque' && bloqueActual" class="process-mini-shell">
+                        <div class="process-mini-top">
+                            <button class="process-mini-back" type="button" (click)="vistaProyecto = 'proceso'">
+                                <img src="/assets/seproc/regresar.png" alt="Regresar" />
+                            </button>
+
+                            <div class="process-mini-chip">{{ bloqueActual.nombre | uppercase }}</div>
+
+                            <div class="process-mini-spacer"></div>
+                        </div>
+
+                        <div class="process-mini-list">
+                            <button *ngFor="let etapa of etapasBloque" class="process-mini-stage compact-stage"
+                                [ngClass]="'status-' + claseVisualEtapa(etapa.estado)" type="button"
+                                [disabled]="claseVisualEtapa(etapa.estado) === 'locked'" (click)="abrirEtapa(etapa)">
+                                <span class="process-mini-stage-icon">
+                                    <img [src]="iconoEtapa(etapa.estado)" alt="" />
+                                </span>
+
+                                <span class="process-mini-stage-label">
+                                    {{ etapa.nombre }}
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Detalle de etapa -->
+                    <div *ngIf="vistaProyecto === 'etapa' && etapaActual" class="etapa-mini-shell">
+                        <div class="etapa-mini-top">
+                            <button class="process-mini-back" type="button" (click)="vistaProyecto = 'bloque'">
+                                <img src="/assets/seproc/regresar.png" alt="Regresar" />
+                            </button>
+
+                            <div class="process-mini-chip">
+                                {{ etapaActual.nombre | uppercase }}
+                            </div>
+
+                            <button class="etapa-mini-history" type="button" (click)="abrirHistorialEtapa()">
+                                <img src="/assets/seproc/historial.png" alt="Historial" />
+                            </button>
+                        </div>
+
+                        <div class="etapa-mini-grid">
+                            <div class="etapa-card">
+                                <div class="etapa-card-title">Observaciones del supervisor</div>
+
+                                <ng-container *ngIf="
+                    detalleEtapa?.ultimaObservacion as observacion;
+                    else sinObservaciones
+                  ">
+                                    <div class="historial-user">
+                                        {{ observacion.usuarioNombre }}
+                                    </div>
+
+                                    <div class="historial-date">{{ observacion.fecha }}</div>
+
+                                    <div class="historial-text">{{ observacion.mensaje }}</div>
+                                </ng-container>
+
+                                <ng-template #sinObservaciones>
+                                    <div class="etapa-empty">
+                                        Sin observaciones por el momento.
+                                    </div>
+                                </ng-template>
+                            </div>
+
+                            <div class="etapa-card">
+                                <div class="etapa-card-title">Trabajo del constructor</div>
+
+                                <ng-container *ngIf="
+                    detalleEtapa?.entregaActual as entrega;
+                    else sinEntrega
+                  ">
+                                    <div class="submission-info-card">
+                                        <div class="sic-field">
+                                            <span class="sic-label"> Entregado por </span>
+                                            <span class="sic-value">
+                                                {{ entrega.usuarioNombre }}
+                                            </span>
+                                        </div>
+
+                                        <div class="sic-field">
+                                            <span class="sic-label"> Fecha de subida </span>
+                                            <span class="sic-value"> {{ entrega.fechaSubida }} </span>
+                                        </div>
+
+                                        <div class="sic-field">
+                                            <span class="sic-label"> Versión </span>
+                                            <span class="sic-value"> {{ entrega.version }} </span>
+                                        </div>
+
+                                        <div class="sic-field">
+                                            <span class="sic-label"> Estado </span>
+                                            <span class="sic-value">
+                                                {{ entrega.estadoEntrega | titlecase }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="teams-file-list">
+                                        <div *ngFor="let archivo of entrega.archivos" class="teams-file-item">
+                                            <div>
+                                                <strong>{{ archivo.nombre }}</strong>
+                                                <span *ngIf="archivo.nota"> — {{ archivo.nota }} </span>
+                                            </div>
+
+                                            <a [href]="recurso(archivo.url)" target="_blank" rel="noopener">
+                                                Ver evidencia
+                                            </a>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <ng-template #sinEntrega>
+                                    <div class="etapa-empty">
+                                        Aún no hay entrega para esta etapa.
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Historial -->
+                    <div *ngIf="vistaProyecto === 'historial'" class="process-mini-shell">
+                        <div class="process-mini-top">
+                            <button class="process-mini-back" type="button" (click)="vistaProyecto = 'etapa'">
+                                <img src="/assets/seproc/regresar.png" alt="Regresar" />
+                            </button>
+
+                            <div class="process-mini-chip">HISTORIAL</div>
+
+                            <div class="process-mini-spacer"></div>
+                        </div>
+
+                        <div *ngIf="historialEtapa.length === 0" class="empty">
+                            No hay historial registrado.
+                        </div>
+
+                        <div class="historial-list">
+                            <article *ngFor="let item of historialEtapa" class="historial-card"
+                                [ngClass]="obtenerClaseTipo(item.tipo)">
+                                <div class="historial-card-header">
+                                    <div class="historial-user">
+                                        {{ item.usuarioNombre }}
+                                        <span class="historial-role"> {{ item.usuarioRol }} </span>
+                                    </div>
+
+                                    <div class="historial-date">{{ item.fecha }}</div>
+                                </div>
+
+                                <div class="historial-card-body">
+                                    <div class="historial-type">{{ item.tipo | titlecase }}</div>
+
+                                    <div class="historial-text">
+                                        {{ item.mensaje || item.descripcion }}
+                                    </div>
+
+                                    <a *ngIf="item.urlArchivo" class="historial-file" [href]="recurso(item.urlArchivo)"
+                                        target="_blank" rel="noopener">
+                                        {{ item.nombreArchivo || "Ver archivo" }}
+                                    </a>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Usuarios -->
+                <section *ngIf="esVistaUsuarios()">
+                    <div *ngIf="usuariosFiltrados.length === 0" class="empty">
+                        No se ha registrado ningún usuario.
+                    </div>
+
+                    <div *ngIf="usuariosFiltrados.length > 0" class="table-wrap">
+                        <table class="table responsive-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr *ngFor="let usuario of usuariosFiltrados" class="user-row"
+                                    (click)="abrirEditarUsuario(usuario.idUsuario)">
+                                    <td data-label="Nombre">{{ usuario.nombre }} {{ usuario.apellido }}</td>
+                                    <td data-label="Username">{{ usuario.username }}</td>
+                                    <td data-label="Email">{{ usuario.email }}</td>
+                                    <td data-label="Rol">{{ usuario.rolNombre | titlecase }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Contraseña -->
+                <section *ngIf="vista === 'password'">
+                    <div class="password-card">
+                        <div class="password-head">
+                            <h3>Cambiar contraseña</h3>
+                        </div>
+
+                        <div class="password-body">
+                            <p class="text-primary">Los campos con * son obligatorios.</p>
+
+                            <p class="text-muted">
+                                La contraseña debe tener al menos 8 caracteres, un número y un
+                                carácter especial.
+                            </p>
+
+                            <form class="password-form" [formGroup]="passwordForm" (ngSubmit)="cambiarPassword()">
+                                <div class="form-group">
+                                    <label for="passActual">Contraseña actual*</label>
+
+                                    <input id="passActual" type="password" formControlName="actual"
+                                        [class.input-error]="campoPasswordInvalido('actual')" />
+
+                                    <small *ngIf="campoPasswordInvalido('actual')" class="field-error">
+                                        {{ mensajeCampoPassword("actual") }}
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="passNueva">Contraseña nueva*</label>
+
+                                    <input id="passNueva" type="password" formControlName="nueva"
+                                        [class.input-error]="campoPasswordInvalido('nueva')" />
+
+                                    <small *ngIf="campoPasswordInvalido('nueva')" class="field-error">
+                                        {{ mensajeCampoPassword("nueva") }}
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="passRepetida">
+                                        Repite la contraseña nueva*
+                                    </label>
+
+                                    <input id="passRepetida" type="password" formControlName="repetida"
+                                        [class.input-error]="campoPasswordInvalido('repetida')" />
+
+                                    <small *ngIf="campoPasswordInvalido('repetida')" class="field-error">
+                                        {{ mensajeCampoPassword("repetida") }}
+                                    </small>
+                                </div>
+
+                                <div class="form-actions-right">
+                                    <button class="btn-primary" type="submit" [disabled]="enviando">
+                                        {{ enviando ? "Cambiando..." : "Cambiar" }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </ng-container>
+        </section>
+    </main>
+</div>
+
+<!-- Detalle de solicitud -->
+<ng-container *ngIf="modalSolicitudAbierto">
+    <div class="modal-backdrop open" (click)="modalSolicitudAbierto = false"></div>
+
+    <div class="modal open">
+        <div class="modal-card">
+
+            <div class="dg-head">
+                <span class="dg-chip"> Detalle de solicitud </span>
+
+                <button class="dg-close" type="button" (click)="modalSolicitudAbierto = false">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Spinner dentro del modal -->
+            <div *ngIf="cargandoModalSolicitud" class="dashboard-loading" style="min-height: 200px;">
+                <span class="loading-spinner"></span>
+                <p>Cargando información...</p>
+            </div>
+
+            <ng-container *ngIf="!cargandoModalSolicitud && solicitudDetalle">
+                <div class="detalle-top">
+                    <div class="badge-state">{{ solicitudDetalle.estadoSolicitud | titlecase }}</div>
+
+                    <div class="detalle-meta">
+                        <div>Solicitud #{{ solicitudDetalle.idSolicitud }}</div>
+                        <div>Fecha: {{ solicitudDetalle.fechaSolicitud }}</div>
+                    </div>
+                </div>
+
+                <div class="detalle-body">
+                    <div class="ro-grid ro-1">
+                        <div class="ro-field">
+                            <label class="ro-label"> Nombre de la escuela </label>
+                            <input class="ro-input" [value]="solicitudDetalle.nombreEscuela" readonly />
+                        </div>
+                    </div>
+
+                    <div class="ro-grid ro-2">
+                        <div class="ro-field">
+                            <label class="ro-label">CCT</label>
+                            <input class="ro-input" [value]="solicitudDetalle.cct1" readonly />
+                        </div>
+
+                        <div class="ro-field">
+                            <label class="ro-label">CCT opcional</label>
+                            <input class="ro-input" [value]="solicitudDetalle.cct2 || ''" readonly />
+                        </div>
+                    </div>
+
+                    <div class="ro-grid ro-3">
+                        <div class="ro-field">
+                            <label class="ro-label">Estado</label>
+                            <input class="ro-input" [value]="solicitudDetalle.estado" readonly />
+                        </div>
+
+                        <div class="ro-field">
+                            <label class="ro-label">Municipio</label>
+                            <input class="ro-input" [value]="solicitudDetalle.municipio" readonly />
+                        </div>
+
+                        <div class="ro-field">
+                            <label class="ro-label">Localidad</label>
+                            <input class="ro-input" [value]="solicitudDetalle.ciudad" readonly />
+                        </div>
+                    </div>
+
+                    <div class="ro-grid ro-2">
+                        <div class="ro-field">
+                            <label class="ro-label"> Calle y número </label>
+                            <input class="ro-input" [value]="solicitudDetalle.calleNumero" readonly />
+                        </div>
+
+                        <div class="ro-field">
+                            <label class="ro-label">C.P.</label>
+                            <input class="ro-input" [value]="solicitudDetalle.cp" readonly />
+                        </div>
+                    </div>
+
+                    <div class="ro-grid ro-3">
+                        <div class="ro-field">
+                            <label class="ro-label"> Responsable del inmueble </label>
+                            <input class="ro-input" [value]="solicitudDetalle.responsableInmueble" readonly />
+                        </div>
+
+                        <div class="ro-field">
+                            <label class="ro-label">Contacto</label>
+                            <input class="ro-input" [value]="solicitudDetalle.contacto" readonly />
+                        </div>
+
+                        <div class="ro-field">
+                            <label class="ro-label">Quién envía</label>
+                            <input class="ro-input" [value]="solicitudDetalle.quienEnvia" readonly />
+                        </div>
+                    </div>
+
+                    <div class="ro-grid ro-3">
+                        <div class="ro-field">
+                            <label class="ro-label"> Inmuebles a evaluar </label>
+                            <input class="ro-input" [value]="solicitudDetalle.numInmueblesEvaluar" readonly />
+                        </div>
+
+                        <div class="ro-field">
+                            <label class="ro-label"> Número entre ejes </label>
+                            <input class="ro-input" [value]="solicitudDetalle.numEntreEjes" readonly />
+                        </div>
+
+                        <div class="ro-field">
+                            <label class="ro-label">Tipo de obra</label>
+                            <input class="ro-input" [value]="solicitudDetalle.tipoObra" readonly />
+                        </div>
+                    </div>
+
+                    <div class="ro-grid ro-1">
+                        <div class="ro-field">
+                            <label class="ro-label"> Tipo de edificación </label>
+                            <input class="ro-input" [value]="solicitudDetalle.tipoEdificacion" readonly />
+                        </div>
+                    </div>
+
+                    <div *ngIf="documentacionSolicitud" class="doc-solicitud-box">
+                        <h3>Documentación inicial</h3>
+
+                        <div class="doc-solicitud-alert" [class.ok]="documentacionSolicitud.completo"
+                            [class.warn]="!documentacionSolicitud.completo">
+                            {{ documentacionSolicitud.mensaje }}
+                        </div>
+
+                        <div class="doc-solicitud-list">
+                            <div *ngFor="let documento of documentacionSolicitud.documentos" class="doc-solicitud-item">
+                                <div class="doc-solicitud-info">
+                                    <strong> {{ documento.nombreDocumento }} </strong>
+                                    <span>
+                                        {{
+                                        (documento.estadoDocumento ||
+                                        (documento.archivoUrl || documento.subido ? "Subido" : "Pendiente")) |
+                                        titlecase
+                                        }}
+                                    </span>
+                                    <small>Fecha límite: {{ documento.fechaLimite || "—" }}</small>
+                                </div>
+
+                                <a *ngIf="documento.archivoUrl" class="doc-solicitud-link"
+                                    [href]="recurso(documento.archivoUrl)" target="_blank" rel="noopener">
+                                    Ver documento
+                                </a>
+
+                                <span *ngIf="!documento.archivoUrl" class="doc-solicitud-pending">
+                                    Sin archivo
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="solicitudDetalle.estadoSolicitud === 'PENDIENTE'" class="action-row">
+                    <button class="action-btn ok" type="button" (click)="prepararAprobacionSolicitud()">
+                        Aprobar
+                    </button>
+
+                    <button class="action-btn bad" type="button" (click)="prepararRechazoSolicitud()">
+                        Rechazar
+                    </button>
+                </div>
+            </ng-container>
+
+        </div>
+    </div>
+</ng-container>
+
+<!-- Seleccionar supervisor -->
+<ng-container *ngIf="modalSupervisorAbierto">
+    <div class="modal-backdrop open supervisor-backdrop" (click)="modalSupervisorAbierto = false">
+    </div>
+
+
+    <div class="modal mini open supervisor-modal">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div class="mini-title">Seleccione al supervisor</div>
+
+                <button class="dg-close" type="button" (click)="modalSupervisorAbierto = false">
+                    ✕
+                </button>
+            </div>
+
+            <label class="dg-label"> Supervisor* </label>
+
+            <select class="dg-select" [(ngModel)]="supervisorSeleccionado">
+                <option [ngValue]="null">Seleccionar</option>
+
+                <option *ngFor="let supervisor of supervisores" [ngValue]="supervisor.id">
+                    {{ supervisor.nombre }}
+                </option>
+            </select>
+
+            <div class="mini-actions">
+                <button class="dg-btn" type="button" [disabled]="enviando" (click)="confirmarAprobacionSolicitud()">
+                    {{ enviando ? "Aprobando..." : "Confirmar" }}
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Motivo del rechazo -->
+<ng-container *ngIf="modalRechazoAbierto">
+    <div class="modal-backdrop open" (click)="modalRechazoAbierto = false"></div>
+
+    <div class="modal mini open">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div class="mini-title">Motivo del rechazo</div>
+
+                <button class="dg-close" type="button" (click)="modalRechazoAbierto = false">
+                    ✕
+                </button>
+            </div>
+
+            <label class="dg-label"> Escribe el motivo* </label>
+
+            <textarea class="dg-textarea" rows="5" [(ngModel)]="motivoRechazo" placeholder="Escribe aquí...">
+      </textarea>
+
+            <div class="mini-actions">
+                <button class="dg-btn danger" type="button" [disabled]="enviando" (click)="confirmarRechazoSolicitud()">
+                    Confirmar rechazo
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Usuario -->
+<ng-container *ngIf="modalUsuarioAbierto">
+    <div class="modal-backdrop open" (click)="modalUsuarioAbierto = false"></div>
+
+    <div class="modal open">
+        <form class="modal-card" [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()">
+            <div class="dg-head">
+                <span class="dg-chip">
+                    {{
+                    modoUsuario === "CREAR" ? "Agregar usuario" : "Detalle de usuario"
+                    }}
+                </span>
+
+                <button class="dg-close" type="button" (click)="modalUsuarioAbierto = false">
+                    ✕
+                </button>
+            </div>
+
+            <div *ngIf="mensajeErrorUsuario" class="dashboard-message error usuario-modal-error" role="alert">
+                {{ mensajeErrorUsuario }}
+            </div>
+
+            <div class="ro-grid ro-2">
+                <div class="ro-field">
+                    <label for="usuarioNombre" class="ro-label">
+                        Nombre
+                    </label>
+
+                    <input id="usuarioNombre" class="ro-input" type="text" formControlName="nombre"
+                        [class.input-error]="campoUsuarioInvalido('nombre')" />
+
+                    <small *ngIf="campoUsuarioInvalido('nombre')" class="field-error">
+                        {{ mensajeCampoUsuario('nombre') }}
+                    </small>
+                </div>
+
+                <div class="ro-field">
+                    <label for="usuarioApellido" class="ro-label">
+                        Apellido
+                    </label>
+
+                    <input id="usuarioApellido" class="ro-input" type="text" formControlName="apellido"
+                        [class.input-error]="campoUsuarioInvalido('apellido')" />
+
+                    <small *ngIf="campoUsuarioInvalido('apellido')" class="field-error">
+                        {{ mensajeCampoUsuario('apellido') }}
+                    </small>
+                </div>
+            </div>
+
+            <div class="ro-grid ro-2">
+                <div class="ro-field">
+                    <label for="usuarioUsername" class="ro-label">
+                        Usuario
+                    </label>
+
+                    <input id="usuarioUsername" class="ro-input" type="text" formControlName="username"
+                        [class.input-error]="campoUsuarioInvalido('username')" />
+
+                    <small *ngIf="campoUsuarioInvalido('username')" class="field-error">
+                        {{ mensajeCampoUsuario('username') }}
+                    </small>
+                </div>
+
+                <div class="ro-field">
+                    <label for="usuarioEmail" class="ro-label">
+                        Correo
+                    </label>
+
+                    <input id="usuarioEmail" class="ro-input" type="email" formControlName="email"
+                        [class.input-error]="campoUsuarioInvalido('email')" />
+
+                    <small *ngIf="campoUsuarioInvalido('email')" class="field-error">
+                        {{ mensajeCampoUsuario('email') }}
+                    </small>
+                </div>
+            </div>
+
+            <div class="ro-grid ro-2">
+                <div class="ro-field">
+                    <label for="usuarioRol" class="ro-label">
+                        Rol
+                    </label>
+
+                    <input id="usuarioRol" class="ro-input rol-capitalizado" type="text" formControlName="rolNombre"
+                        readonly />
+                </div>
+
+                <div class="ro-field">
+                    <label for="usuarioPassword" class="ro-label">
+                        {{
+                        modoUsuario === "CREAR"
+                        ? "Contraseña"
+                        : "Nueva contraseña (opcional)"
+                        }}
+                    </label>
+
+                    <div class="password-wrap">
+                        <input id="usuarioPassword" class="ro-input" [type]="passwordVisible ? 'text' : 'password'"
+                            formControlName="password" [class.input-error]="campoUsuarioInvalido('password')" />
+
+                        <button *ngIf="usuarioForm.controls.password.value" class="toggle-pass" type="button"
+                            (click)="passwordVisible = !passwordVisible">
+
+                            <img [src]="
+            passwordVisible
+              ? '/assets/seproc/ojo.png'
+              : '/assets/seproc/ojo-cerrado.png'
+          " alt="Mostrar contraseña" />
+                        </button>
+                    </div>
+
+                    <small *ngIf="campoUsuarioInvalido('password')" class="field-error">
+                        {{ mensajeCampoUsuario('password') }}
+                    </small>
+                </div>
+            </div>
+
+            <div class="action-row">
+                <button class="action-btn ok" type="submit" [disabled]="enviando">
+                    {{ modoUsuario === "CREAR" ? "Crear usuario" : "Guardar cambios" }}
+                </button>
+
+                <button *ngIf="modoUsuario === 'EDITAR'" class="action-btn bad" type="button" [disabled]="enviando"
+                    (click)="eliminarUsuario()">
+                    Eliminar usuario
+                </button>
+            </div>
+        </form>
+    </div>
+</ng-container>
+
+<!-- Sin foto de perfil -->
+<ng-container *ngIf="modalSinFotoAbierto">
+    <div class="modal-backdrop open" (click)="modalSinFotoAbierto = false"></div>
+
+    <div class="modal mini open" role="dialog" aria-modal="true" aria-labelledby="tituloSinFoto"
+        aria-describedby="mensajeSinFoto">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div id="tituloSinFoto" class="mini-title">
+                    Foto de perfil
+                </div>
+            </div>
+
+            <p id="mensajeSinFoto" class="sin-foto-text">
+                Aún no tienes una foto personalizada.
+            </p>
+
+            <div class="mini-actions">
+                <button class="dg-btn" type="button" (click)="modalSinFotoAbierto = false">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Confirmar eliminación de foto -->
+<ng-container *ngIf="modalEliminarFotoAbierto">
+    <div class="modal-backdrop open" (click)="modalEliminarFotoAbierto = false"></div>
+
+    <div class="modal mini open" role="dialog" aria-modal="true" aria-labelledby="tituloEliminarFoto"
+        aria-describedby="mensajeEliminarFoto">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div id="tituloEliminarFoto" class="mini-title">
+                    Quitar foto
+                </div>
+            </div>
+
+            <p id="mensajeEliminarFoto" class="sin-foto-text">
+                ¿Quieres eliminar tu foto de perfil?
+            </p>
+
+            <div class="mini-actions">
+                <button class="dg-btn" type="button" [disabled]="eliminandoFoto"
+                    (click)="modalEliminarFotoAbierto = false">
+                    Cancelar
+                </button>
+
+                <button class="dg-btn danger" type="button" [disabled]="eliminandoFoto"
+                    (click)="confirmarEliminarFoto()">
+                    {{ eliminandoFoto ? "Quitando..." : "Quitar foto" }}
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Modal de exito para foto de perfil -->
+<ng-container *ngIf="modalExitoFotoAbierto">
+    <div class="modal-backdrop open" (click)="modalExitoFotoAbierto = false"></div>
+
+    <div class="modal mini open" role="dialog" aria-modal="true" aria-labelledby="tituloExitoFoto"
+        aria-describedby="mensajeExitoFoto">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div id="tituloExitoFoto" class="mini-title">
+                    Foto de perfil
+                </div>
+            </div>
+
+            <p id="mensajeExitoFoto" class="sin-foto-text">
+                {{ mensajeExitoFoto }}
+            </p>
+
+            <div class="mini-actions">
+                <button class="dg-btn" type="button" (click)="modalExitoFotoAbierto = false">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Confirmar cambio de estado de proyecto -->
+<ng-container *ngIf="modalConfirmarEstadoAbierto">
+    <div class="modal-backdrop open" (click)="modalConfirmarEstadoAbierto = false"></div>
+
+    <div class="modal mini open" role="dialog" aria-modal="true" aria-labelledby="tituloConfirmarEstado"
+        aria-describedby="mensajeConfirmarEstado">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div id="tituloConfirmarEstado" class="mini-title">
+                    Cambiar estado
+                </div>
+            </div>
+
+            <p id="mensajeConfirmarEstado" class="sin-foto-text">
+                ¿Estás seguro que deseas cambiar el estado a <strong>{{ estadoPendienteCambio | titlecase }}</strong>?
+            </p>
+
+            <div class="mini-actions">
+
+                <button class="btn-secondary" type="button" [disabled]="cambiandoEstado"
+                    (click)="modalConfirmarEstadoAbierto = false">
+                    Cancelar
+                </button>
+
+                <button class="dg-btn" type="button" [disabled]="cambiandoEstado" (click)="confirmarCambioEstado()">
+                    {{ cambiandoEstado ? "Guardando..." : "Confirmar" }}
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Documentación del proyecto -->
+<ng-container *ngIf="modalDocumentacionAbierto">
+    <div class="modal-backdrop open" (click)="modalDocumentacionAbierto = false"></div>
+
+    <div class="modal open">
+        <div class="modal-card">
+            <div class="dg-head">
+                <span class="dg-chip"> Documentación inicial </span>
+
+                <button class="dg-close" type="button" (click)="modalDocumentacionAbierto = false">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Spinner dentro del modal -->
+            <div *ngIf="cargandoModalDocumentacion" class="dashboard-loading" style="min-height: 200px;">
+                <span class="loading-spinner"></span>
+                <p>Cargando información...</p>
+            </div>
+
+            <div *ngIf="!cargandoModalDocumentacion && documentacionProyecto" class="doc-solicitud-list">
+                <div class="doc-solicitud-alert" [class.ok]="documentacionProyecto.completo"
+                    [class.warn]="!documentacionProyecto.completo">
+                    {{ documentacionProyecto.mensaje }}
+                </div>
+
+                <div *ngFor="let documento of documentacionProyecto.documentos" class="doc-solicitud-item">
+                    <div class="doc-solicitud-info">
+                        <strong> {{ documento.nombreDocumento }} </strong>
+
+                        <span>
+                            {{
+                            (documento.estadoDocumento ||
+                            (documento.subido ? "Subido" : "Pendiente")) |
+                            titlecase
+                            }}
+                        </span>
+                    </div>
+
+                    <div class="document-actions">
+                        <a *ngIf="documento.archivoUrl" class="btn-secondary" [href]="recurso(documento.archivoUrl)"
+                            target="_blank" rel="noopener">
+                            Ver
+                        </a>
+
+                        <button *ngIf="documento.subido" class="action-btn" type="button"
+                            (click)="solicitarCorreccion(documento)">
+                            Solicitar corrección
+                        </button>
+
+                        <button *ngIf="documento.subido" class="action-btn ok" type="button"
+                            (click)="aprobarDocumento(documento)">
+                            Aprobar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Modal de éxito al cambiar estado de proyecto -->
+<ng-container *ngIf="modalExitoEstadoAbierto">
+    <div class="modal-backdrop open" (click)="modalExitoEstadoAbierto = false"></div>
+
+    <div class="modal mini open" role="dialog" aria-modal="true" aria-labelledby="tituloExitoEstado"
+        aria-describedby="mensajeExitoEstado">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div id="tituloExitoEstado" class="mini-title">
+                    Cambio de estado
+                </div>
+            </div>
+
+            <p id="mensajeExitoEstado" class="sin-foto-text" style="text-align: center;">
+                Estado del proyecto actualizado.
+            </p>
+
+            <div class="mini-actions">
+                <button class="dg-btn" type="button" (click)="modalExitoEstadoAbierto = false">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Confirmar eliminación de usuario -->
+<ng-container *ngIf="modalEliminarUsuarioAbierto">
+    <div class="modal-backdrop open" (click)="cancelarEliminacionUsuario()"></div>
+
+    <div class="modal mini open" role="dialog" aria-modal="true" aria-labelledby="tituloEliminarUsuario"
+        aria-describedby="mensajeEliminarUsuario">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div id="tituloEliminarUsuario" class="mini-title">
+                    Eliminar usuario
+                </div>
+            </div>
+
+            <p id="mensajeEliminarUsuario" class="sin-foto-text">
+                ¿Seguro que deseas eliminar a
+                {{ usuarioForm.controls.nombre.value }}
+                {{ usuarioForm.controls.apellido.value }}?
+                Esta acción no se puede deshacer.
+            </p>
+
+            <div class="mini-actions">
+                <button class="dg-btn" type="button" [disabled]="eliminandoUsuario"
+                    (click)="cancelarEliminacionUsuario()">
+                    Cancelar
+                </button>
+
+                <button class="dg-btn danger" type="button" [disabled]="eliminandoUsuario"
+                    (click)="confirmarEliminarUsuario()">
+                    {{ eliminandoUsuario ? "Eliminando..." : "Eliminar usuario" }}
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Resultado de la eliminación -->
+<ng-container *ngIf="modalExitoUsuarioAbierto">
+    <div class="modal-backdrop open" (click)="modalExitoUsuarioAbierto = false"></div>
+
+    <div class="modal mini open" role="dialog" aria-modal="true" aria-labelledby="tituloExitoUsuario"
+        aria-describedby="mensajeExitoUsuario">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div id="tituloExitoUsuario" class="mini-title">
+                    {{ tituloExitoUsuario }}
+                </div>
+            </div>
+
+            <p id="mensajeExitoUsuario" class="sin-foto-text">
+                {{ mensajeExitoUsuario }}
+            </p>
+
+            <div class="mini-actions">
+                <button class="dg-btn" type="button" (click)="modalExitoUsuarioAbierto = false">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
