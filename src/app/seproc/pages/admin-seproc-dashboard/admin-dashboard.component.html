@@ -1,159 +1,185 @@
-<!-- src/app/seproc/pages/admin-dashboard/admin-dashboard.component.html -->
-
 <div class="layout">
 
-  <aside class="sidebar" [class.menu-open]="menuOpen">
+  <!-- Fondo del menú móvil -->
+  <button class="sidebar-backdrop" [class.open]="menuOpen" type="button" aria-label="Cerrar menú"
+    (click)="menuOpen = false">
+  </button>
 
+  <!-- Barra lateral -->
+  <aside id="superAdminSidebar" class="sidebar" [class.menu-open]="menuOpen">
+
+    <!-- Logotipo -->
     <div class="brand">
-      <div class="logo">
-        <div class="logo-azul"></div>
+      <div class="brand-logos">
+
+        <div class="seproc-logo" aria-label="Logo SEPROC">
+          <div class="logo-mask mask-seproc-icono" role="img" aria-label="Icono SEPROC">
+          </div>
+
+          <div class="logo-mask mask-seproc-letras" role="img" aria-label="Letras SEPROC">
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="mobile-top">
-      <button
-        class="hamburger"
-        type="button"
-        aria-label="Abrir menú"
-        (click)="menuOpen = !menuOpen">
-        ☰
-      </button>
-    </div>
-
+    <!-- Navegación -->
     <nav class="nav" aria-label="Menú Súper Administrador">
 
-      <a class="nav-item active">
+      <button class="nav-item active" type="button" aria-current="page" (click)="menuOpen = false">
+
         <span class="nav-left">
-          <span class="icon">⏳</span>
-          <span class="label">Solicitudes de acceso</span>
+          <span class="icon">
+            <img src="/assets/seproc/usuario_pendiente.png" alt="" />
+          </span>
+
+          <span class="label">
+            Solicitudes de acceso
+          </span>
         </span>
-      </a>
+      </button>
 
       <button class="nav-item" type="button" (click)="logout()">
         <span class="nav-left">
-          <span class="icon">↪</span>
-          <span class="label">Cerrar sesión</span>
+          <span class="icon">
+            <img src="/assets/seproc/salir.png" alt="" />
+          </span>
+
+          <span class="label">
+            Cerrar sesión
+          </span>
         </span>
       </button>
-
     </nav>
   </aside>
 
+  <!-- Contenido -->
   <main class="content">
 
+    <!-- Barra superior -->
     <header class="topbar">
+      <button class="hamburger" type="button" aria-label="Abrir menú" aria-controls="superAdminSidebar"
+        [attr.aria-expanded]="menuOpen" (click)="menuOpen = !menuOpen">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+          </path>
+        </svg>
+      </button>
 
-      <div class="search" role="search">
-        <span class="s-icon" aria-hidden="true">🔎</span>
-
-        <input
-          type="search"
-          placeholder="Buscar institución..."
-          autocomplete="off"
-          [(ngModel)]="busqueda"
-        />
+      <div class="topbar-context">
+        <span class="topbar-eyebrow">
+          Módulo Súper Administrador
+        </span>
       </div>
 
       <div class="userbox">
         <div class="hello">
           <div class="hello-name">
-            Hola, <span>{{ nombreUsuario }}</span>
+            Hola, {{ nombreUsuario || 'Usuario' }}
           </div>
 
           <div class="hello-role">
-            <span>{{ rolUsuario }}</span>
+            Rol: {{ rolUsuario || 'Súper Administrador' }}
           </div>
         </div>
 
-        <button class="profile" type="button" title="Perfil">
+        <button class="profile" type="button" title="Perfil" aria-label="Perfil del Súper Administrador">
           <span>SA</span>
         </button>
       </div>
-
     </header>
 
-    <section class="panel panel-scroll" aria-label="Sección principal">
+    <!-- Mensaje de éxito -->
+    <div *ngIf="mensajeExito" class="dashboard-message success">
+
+      <span aria-hidden="true">✓</span>
+      {{ mensajeExito }}
+    </div>
+
+    <!-- Panel principal -->
+    <section class="panel" aria-label="Solicitudes de acceso">
 
       <div class="panel-head">
-        <div>
-          <h2 class="panel-title">Nuevas solicitudes</h2>
+
+        <div class="panel-heading">
+          <h2 class="panel-title">
+            Nuevas solicitudes
+          </h2>
 
           <div class="panel-sub">
             Escuelas o dependencias que han solicitado utilizar el sistema SeProc.
           </div>
         </div>
+
       </div>
 
-      <div id="panelContent">
-
+      <div id="panelContent" class="panel-body">
         <div class="tabs" role="tablist" aria-label="Filtros de solicitudes">
-          <button class="tab active" type="button">Pendientes</button>
+          <button class="tab active" type="button" role="tab" aria-selected="true">
+
+            Pendientes
+          </button>
         </div>
 
-        <div class="success-alert" *ngIf="mensajeExito">
-          ✅ {{ mensajeExito }}
+        <!-- Cargando -->
+        <div class="dashboard-loading" *ngIf="cargando">
+
+          <span class="loading-spinner"></span>
+          <p>Cargando solicitudes...</p>
         </div>
 
-        <div class="cards">
-
-          <div class="empty" *ngIf="!cargando && pendientesFiltradas.length === 0">
+        <!-- Lista -->
+        <div class="cards" *ngIf="!cargando">
+          <div class="empty" *ngIf="pendientesFiltradas.length === 0">
             No hay nuevas solicitudes pendientes por el momento.
           </div>
-
-          <div class="empty" *ngIf="cargando">
-            Cargando solicitudes...
-          </div>
-
-          <div class="card-sol" *ngFor="let sol of pendientesFiltradas">
-
+          <article class="card-sol" *ngFor="let sol of pendientesFiltradas">
             <div class="left">
-              <span class="school">
+              <div class="school">
                 {{ sol.nombreDependencia }}
-              </span>
+              </div>
 
               <div class="meta">
-                <span class="state-dot dot-pendiente"></span>
-                <span>PENDIENTE</span>
-                <span class="separator">|</span>
 
-                <strong>Contacto:</strong>
-                <span>{{ sol.nombreContacto }}</span>
+                <span class="status">
+                  <span class="state-dot dot-pendiente"></span>
+                  PENDIENTE
+                </span>
 
-                <span class="separator">|</span>
+                <span class="separator" aria-hidden="true">|</span>
 
-                <strong>Email:</strong>
-                <span>{{ sol.emailContacto }}</span>
+                <span>
+                  <strong>Contacto:</strong>
+                  {{ sol.nombreContacto }}
+                </span>
 
-                <span class="separator">|</span>
+                <span class="separator" aria-hidden="true">|</span>
 
-                <strong>Tel:</strong>
-                <span>{{ sol.telefonoContacto }}</span>
+                <span>
+                  <strong>Email:</strong>
+                  {{ sol.emailContacto }}
+                </span>
+
+                <span class="separator" aria-hidden="true">|</span>
+
+                <span>
+                  <strong>Tel:</strong>
+                  {{ sol.telefonoContacto }}
+                </span>
               </div>
             </div>
 
             <div class="actions">
-              <button
-                type="button"
-                class="approve-btn"
-                (click)="aprobar(sol.idSolicitud)">
+              <button type="button" class="approve-btn" (click)="aprobar(sol.idSolicitud)">
                 Aprobar
               </button>
 
-              <button
-                type="button"
-                class="reject-btn"
-                (click)="rechazar(sol.idSolicitud)">
+              <button type="button" class="reject-btn" (click)="rechazar(sol.idSolicitud)">
                 Rechazar
               </button>
             </div>
-
-          </div>
-
+          </article>
         </div>
       </div>
-
     </section>
-
   </main>
-
 </div>
