@@ -111,6 +111,7 @@ export class AdminInstitucionDashboardComponent implements OnInit {
 
   cargandoContenido = false;
   cargandoModalSolicitud = false;
+  cargandoSupervisores = false;
   cargandoModalDocumentacion = false;
   cargandoDetalleProyecto = false;
   enviando = false;
@@ -406,21 +407,38 @@ export class AdminInstitucionDashboardComponent implements OnInit {
   }
 
   prepararAprobacionSolicitud(): void {
-    if (!this.solicitudDetalle) {
+    if (
+      !this.solicitudDetalle ||
+      this.cargandoSupervisores
+    ) {
       return;
     }
 
+    this.supervisores = [];
+    this.supervisorSeleccionado = null;
+    this.modalSupervisorAbierto = true;
+    this.cargandoSupervisores = true;
+
+    this.cdr.detectChanges();
+
     this.adminService
       .obtenerSupervisores()
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        finalize(() => {
+          this.cargandoSupervisores = false;
+          this.cdr.detectChanges();
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
         next: (supervisores) => {
           this.supervisores = supervisores;
-          this.supervisorSeleccionado = null;
-          this.modalSupervisorAbierto = true;
+          this.cdr.detectChanges();
         },
         error: (error) => {
+          this.modalSupervisorAbierto = false;
           this.mostrarError(error);
+          this.cdr.detectChanges();
         },
       });
   }

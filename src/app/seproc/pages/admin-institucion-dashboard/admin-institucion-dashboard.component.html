@@ -895,7 +895,8 @@
         </div>
 
         <div *ngIf="solicitudDetalle.estadoSolicitud === 'PENDIENTE'" class="action-row">
-          <button class="action-btn ok" type="button" (click)="prepararAprobacionSolicitud()">
+          <button class="action-btn ok" type="button" [disabled]="cargandoSupervisores || enviando"
+            (click)="prepararAprobacionSolicitud()">
             Aprobar
           </button>
 
@@ -911,60 +912,127 @@
 
 <!-- Seleccionar supervisor -->
 <ng-container *ngIf="modalSupervisorAbierto">
-  <div class="modal-backdrop open" (click)="modalSupervisorAbierto = false"></div>
 
-  <div class="modal mini open">
+  <div class="modal-backdrop open modal-backdrop-secondary" (click)="
+      !cargandoSupervisores &&
+      !enviando &&
+      (modalSupervisorAbierto = false)
+    ">
+  </div>
+
+  <div class="modal mini open modal-secondary" role="dialog" aria-modal="true" aria-labelledby="tituloSupervisor">
+
     <div class="modal-card mini-card">
-      <div class="mini-head">
-        <div class="mini-title">Seleccione al supervisor</div>
 
-        <button class="dg-close" type="button" (click)="modalSupervisorAbierto = false">
+      <div class="mini-head">
+        <div id="tituloSupervisor" class="mini-title">
+          Seleccione al supervisor
+        </div>
+
+        <button class="dg-close" type="button" [disabled]="cargandoSupervisores || enviando"
+          (click)="modalSupervisorAbierto = false">
           ✕
         </button>
       </div>
 
-      <label class="dg-label"> Supervisor* </label>
+      <div *ngIf="cargandoSupervisores" class="dashboard-loading supervisor-loading">
 
-      <select class="dg-select" [(ngModel)]="supervisorSeleccionado">
-        <option [ngValue]="null">Seleccionar</option>
+        <span class="loading-spinner"></span>
 
-        <option *ngFor="let supervisor of supervisores" [ngValue]="supervisor.id">
-          {{ supervisor.nombre }}
-        </option>
-      </select>
-
-      <div class="mini-actions">
-        <button class="dg-btn" type="button" [disabled]="enviando" (click)="confirmarAprobacionSolicitud()">
-          {{ enviando ? "Aprobando..." : "Confirmar" }}
-        </button>
+        <p>
+          Cargando supervisores...
+        </p>
       </div>
+
+      <ng-container *ngIf="!cargandoSupervisores">
+
+        <label class="dg-label" for="supervisorSolicitud">
+          Supervisor*
+        </label>
+
+        <select id="supervisorSolicitud" class="dg-select" [(ngModel)]="supervisorSeleccionado" [disabled]="enviando">
+
+          <option [ngValue]="null">
+            Seleccionar
+          </option>
+
+          <option *ngFor="let supervisor of supervisores" [ngValue]="supervisor.id">
+
+            {{ supervisor.nombre }}
+          </option>
+        </select>
+
+        <p *ngIf="supervisores.length === 0" class="sin-foto-text supervisor-empty">
+
+          No hay supervisores disponibles.
+        </p>
+
+        <div class="mini-actions">
+          <button class="btn-secondary" type="button" [disabled]="enviando" (click)="modalSupervisorAbierto = false">
+
+            Cancelar
+          </button>
+
+          <button class="dg-btn" type="button" [disabled]="
+              enviando ||
+              !supervisorSeleccionado
+            " (click)="confirmarAprobacionSolicitud()">
+
+            {{
+            enviando
+            ? "Aprobando..."
+            : "Confirmar"
+            }}
+          </button>
+        </div>
+
+      </ng-container>
     </div>
   </div>
 </ng-container>
 
 <!-- Motivo del rechazo -->
 <ng-container *ngIf="modalRechazoAbierto">
-  <div class="modal-backdrop open" (click)="modalRechazoAbierto = false"></div>
 
-  <div class="modal mini open">
+  <div class="modal-backdrop open modal-backdrop-secondary" (click)="
+      !enviando &&
+      (modalRechazoAbierto = false)
+    ">
+  </div>
+
+  <div class="modal mini open modal-secondary" role="dialog" aria-modal="true" aria-labelledby="tituloMotivoRechazo">
+
     <div class="modal-card mini-card">
-      <div class="mini-head">
-        <div class="mini-title">Motivo del rechazo</div>
 
-        <button class="dg-close" type="button" (click)="modalRechazoAbierto = false">
+      <div class="mini-head">
+        <div id="tituloMotivoRechazo" class="mini-title">
+          Motivo del rechazo
+        </div>
+
+        <button class="dg-close" type="button" [disabled]="enviando" (click)="modalRechazoAbierto = false">
           ✕
         </button>
       </div>
 
-      <label class="dg-label"> Escribe el motivo* </label>
+      <label class="dg-label" for="motivoRechazoSolicitud">
+        Escribe el motivo*
+      </label>
 
-      <textarea class="dg-textarea" rows="5" [(ngModel)]="motivoRechazo" placeholder="Escribe aquí...">
+      <textarea id="motivoRechazoSolicitud" class="dg-textarea" rows="5" [(ngModel)]="motivoRechazo"
+        [disabled]="enviando" placeholder="Escribe aquí...">
       </textarea>
 
       <div class="mini-actions">
-        <button class="dg-btn danger" type="button" [disabled]="enviando" (click)="confirmarRechazoSolicitud()">
+
+        <button class="btn-secondary" type="button" [disabled]="enviando" (click)="modalRechazoAbierto = false">
+          Cancelar
+        </button>
+
+        <button class="dg-btn danger" type="button" [disabled]="enviando || !motivoRechazo.trim()"
+          (click)="confirmarRechazoSolicitud()">
           Confirmar rechazo
         </button>
+
       </div>
     </div>
   </div>
