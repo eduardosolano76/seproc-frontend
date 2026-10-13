@@ -79,6 +79,8 @@ export interface EntregaEtapaConstructor {
 export interface DetalleEtapaConstructor {
     ultimaObservacion?: ObservacionEtapaConstructor | null;
     entregaActual?: EntregaEtapaConstructor | null;
+    notaRecomendacion?: string | null;
+    notaImagenUrl?: string | null;
 }
 
 export interface HistorialEtapaConstructor {

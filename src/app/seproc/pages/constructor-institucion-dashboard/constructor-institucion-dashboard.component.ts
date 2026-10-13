@@ -215,6 +215,7 @@ export class ConstructorInstitucionDashboardComponent
 
     modalSinFotoAbierto = false;
     modalEliminarFotoAbierto = false;
+    modalSugerenciasAbierto = false;
     eliminandoFoto = false;
     modalExitoFotoAbierto = false;
     mensajeExitoFoto = '';
@@ -652,6 +653,14 @@ export class ConstructorInstitucionDashboardComponent
                     this.mostrarError(error);
                 },
             });
+    }
+    
+    abrirSugerencias(): void {
+        this.modalSugerenciasAbierto = true;
+    }
+
+    cerrarSugerencias(): void {
+        this.modalSugerenciasAbierto = false;
     }
 
     seleccionarEvidencia(event: Event): void {

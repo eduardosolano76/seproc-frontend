@@ -404,9 +404,14 @@
                                 {{ etapaActual.nombre | uppercase }}
                             </div>
 
-                            <button class="etapa-mini-history" type="button" (click)="abrirHistorialEtapa()">
-                                <img src="/assets/seproc/historial.png" alt="Historial" />
-                            </button>
+                            <div class="etapa-mini-actions">
+                                <button class="etapa-mini-sugerencias" type="button" (click)="abrirSugerencias()">
+                                    Sugerencias
+                                </button>
+                                <button class="etapa-mini-history" type="button" (click)="abrirHistorialEtapa()">
+                                    <img src="/assets/seproc/historial.png" alt="Historial" />
+                                </button>
+                            </div>
                         </div>
 
                         <div class="etapa-mini-grid" [class.single-column]="
@@ -1482,6 +1487,33 @@
                     ? "Quitando..."
                     : "Quitar foto"
                     }}
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Sugerencias de la etapa -->
+<ng-container *ngIf="modalSugerenciasAbierto">
+    <div class="modal-backdrop open" (click)="cerrarSugerencias()">
+    </div>
+
+    <div class="modal mini open">
+        <div class="modal-card mini-card">
+            <div class="mini-head">
+                <div class="mini-title">Sugerencias</div>
+            </div>
+
+            <p class="sin-foto-text">
+                {{ detalleEtapa?.notaRecomendacion || 'Aún no hay sugerencias cargadas para esta etapa.' }}
+            </p>
+
+                                <img *ngIf="detalleEtapa?.notaImagenUrl" class="sugerencia-imagen"
+                        [src]="detalleEtapa?.notaImagenUrl" alt="Imagen de sugerencia" />
+
+            <div class="mini-actions">
+                <button class="btn-secondary" type="button" (click)="cerrarSugerencias()">
+                    Cerrar
                 </button>
             </div>
         </div>
