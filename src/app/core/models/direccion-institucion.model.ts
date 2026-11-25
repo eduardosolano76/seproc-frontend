@@ -39,6 +39,7 @@ export interface ProyectoDireccionDetalle {
     supervisorAsignado: string;
     soloLectura: boolean;
     estadosEtapa: Record<string, string>;
+    vistasPreviaBloques?: Record<string, string | null>;
 }
 
 export interface ArchivoEvidenciaDireccion {

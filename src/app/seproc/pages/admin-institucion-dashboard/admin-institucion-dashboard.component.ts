@@ -51,7 +51,20 @@ interface BloqueVisual {
   clave: 'preliminares' | 'cimentacion' | 'estructura' | 'acabados';
   nombre: string;
   estado: string;
+    imagenUrl?: string | null;
 }
+
+const REGEX_NOMBRE_USUARIO =
+  /^[\p{L}\p{M}]+(?:[ '’][\p{L}\p{M}]+)*$/u;
+
+const REGEX_USERNAME_USUARIO =
+  /^[A-Za-z][A-Za-z0-9]*(?:[._-][A-Za-z0-9]+)*$/;
+
+const REGEX_EMAIL_USUARIO =
+  /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,63}$/;
+
+const REGEX_PASSWORD_USUARIO =
+  /^(?=.*\p{Ll})(?=.*\p{Lu})(?=.*[0-9])(?=.*[^\p{L}\p{N}\s])\S+$/u;
 
 type CampoUsuario =
   | 'nombre'
@@ -194,10 +207,10 @@ export class AdminInstitucionDashboardComponent implements OnInit {
   modalExitoPasswordAbierto = false;
 
   readonly usuarioForm = this.fb.group({
-    nombre: ['', Validators.required],
-    apellido: ['', Validators.required],
-    username: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
+    nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100), Validators.pattern(REGEX_NOMBRE_USUARIO)]],
+    apellido: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100), Validators.pattern(REGEX_NOMBRE_USUARIO)]],
+    username: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50), Validators.pattern(REGEX_USERNAME_USUARIO)]],
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(100), Validators.pattern(REGEX_EMAIL_USUARIO)]],
     password: [''],
     rolNombre: ['', Validators.required],
   });
@@ -209,7 +222,8 @@ export class AdminInstitucionDashboardComponent implements OnInit {
       [
         Validators.required,
         Validators.minLength(8),
-        Validators.pattern(/^(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/),
+        Validators.maxLength(64),
+                Validators.pattern(REGEX_PASSWORD_USUARIO),
       ],
     ],
     repetida: ['', Validators.required],
@@ -576,7 +590,33 @@ export class AdminInstitucionDashboardComponent implements OnInit {
       });
   }
 
-  get bloquesProyecto(): BloqueVisual[] {
+    vistaPreviaAbierta: { nombre: string; imagenUrl?: string | null } | null = null;
+
+    abrirVistaPrevia(bloque: { nombre: string; imagenUrl?: string | null }): void {
+        this.vistaPreviaAbierta = bloque;
+    }
+
+    cerrarVistaPrevia(): void {
+        this.vistaPreviaAbierta = null;
+    }
+
+    claveBloqueSeleccionado = 'preliminares';
+
+    get bloqueSeleccionado(): BloqueVisual | null {
+        const bloques = this.bloquesProyecto;
+
+        return (
+            bloques.find((b) => b.clave === this.claveBloqueSeleccionado) ??
+            bloques[0] ??
+            null
+        );
+    }
+
+    seleccionarBloque(bloque: { clave: string }): void {
+        this.claveBloqueSeleccionado = bloque.clave;
+    }
+
+    get bloquesProyecto(): BloqueVisual[] {
     if (!this.proyectoDetalle) {
       return [];
     }
@@ -610,6 +650,7 @@ export class AdminInstitucionDashboardComponent implements OnInit {
 
     return bloques.map((bloque) => ({
       clave: bloque.clave,
+            imagenUrl: this.proyectoDetalle?.vistasPreviaBloques?.[bloque.clave] ?? null,
       nombre: bloque.nombre,
       estado: this.resolverEstadoGrupo(bloque.etapas.map((etapa) => etapa.clave)),
     }));
@@ -1091,7 +1132,10 @@ export class AdminInstitucionDashboardComponent implements OnInit {
     this.mensajeErrorUsuario = '';
 
     this.usuarioForm.controls.password.setValidators([
-      Validators.required
+      Validators.required,
+      Validators.minLength(8),
+      Validators.maxLength(64),
+      Validators.pattern(REGEX_PASSWORD_USUARIO)
     ]);
 
     this.usuarioForm.controls.password.updateValueAndValidity({
@@ -1198,6 +1242,36 @@ export class AdminInstitucionDashboardComponent implements OnInit {
       });
   }
 
+  private readonly CARACTERES_NO_PERMITIDOS_USUARIO: Record<'nombre' | 'apellido' | 'username' | 'email', RegExp> = {
+    nombre: /[^\p{L}\p{M} '’]/gu,
+    apellido: /[^\p{L}\p{M} '’]/gu,
+    username: /[^A-Za-z0-9._-]/g,
+    email: /[^A-Za-z0-9@._%+-]/g
+  };
+
+  // Se ejecuta en cada tecla: quita los caracteres que no corresponden al campo
+  filtrarCampoUsuario(campo: 'nombre' | 'apellido' | 'username' | 'email', event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let valor = input.value.replace(this.CARACTERES_NO_PERMITIDOS_USUARIO[campo], '');
+
+    if (campo === 'nombre' || campo === 'apellido') {
+      valor = valor.replace(/ {2,}/g, ' ');
+    }
+
+    this.usuarioForm.controls[campo].setValue(valor);
+  }
+
+  // Se ejecuta al salir del campo: quita espacios al inicio, al final y dobles
+  recortarCampoUsuario(campo: 'nombre' | 'apellido' | 'username' | 'email'): void {
+    const control = this.usuarioForm.controls[campo];
+    const actual = control.value ?? '';
+    const limpio = actual.trim().replace(/ {2,}/g, ' ');
+
+    if (limpio !== actual) {
+      control.setValue(limpio);
+    }
+  }
+
   campoUsuarioInvalido(campo: CampoUsuario): boolean {
     const control = this.usuarioForm.controls[campo];
 
@@ -1216,6 +1290,27 @@ export class AdminInstitucionDashboardComponent implements OnInit {
 
     if (control.hasError('required')) {
       return 'Este campo es obligatorio.';
+    }
+
+    if (
+      control.hasError('minlength') ||
+      control.hasError('maxlength') ||
+      control.hasError('pattern')
+    ) {
+      switch (campo) {
+        case 'nombre':
+        case 'apellido':
+          return 'Solo letras, espacios y apóstrofes (de 2 a 100 caracteres).';
+
+        case 'username':
+          return 'De 4 a 50 caracteres. Debe iniciar con letra y puede usar letras, números, punto, guion y guion bajo.';
+
+        case 'email':
+          return 'Escribe un correo electrónico válido.';
+
+        case 'password':
+          return 'Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo, sin espacios.';
+      }
     }
 
     if (control.hasError('email')) {
@@ -1490,7 +1585,7 @@ export class AdminInstitucionDashboardComponent implements OnInit {
       tieneTexto &&
       (control.hasError('minlength') || control.hasError('pattern'))
     ) {
-      return 'Debe tener al menos 8 caracteres, un número y un carácter especial.';
+      return 'Debe tener de 8 a 64 caracteres, con mayúscula, minúscula, número y símbolo, sin espacios.';
     }
 
     if (this.intentoCambiarPassword && control.hasError('required')) {

@@ -48,6 +48,7 @@ export interface ProyectoSupervisorDetalle {
     puedeComentar: boolean;
     puedeAprobar: boolean;
     estadosEtapa: Record<string, string>;
+    vistasPreviaBloques?: Record<string, string | null>;
 }
 
 export interface ArchivoEvidenciaSupervisor {
@@ -72,6 +73,8 @@ export interface EntregaEtapaSupervisor {
 }
 
 export interface DetalleEtapaSupervisor {
+    notaRecomendacion?: string | null;
+    notaImagenUrl?: string | null;
     ultimaObservacion?: ObservacionEtapaSupervisor | null;
     entregaActual?: EntregaEtapaSupervisor | null;
 }

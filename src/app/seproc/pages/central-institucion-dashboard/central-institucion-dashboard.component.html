@@ -386,11 +386,12 @@
                                 </div>
                             </div>
 
+                            <div class="bloques-layout">
                             <div class="process-mini-list">
-                                <button *ngFor="let bloque of bloquesProyecto" class="process-mini-stage"
+                                <button *ngFor="let bloque of bloquesProyecto" [class.seleccionada]="bloque.clave === claveBloqueSeleccionado" class="process-mini-stage"
                                     [ngClass]="'status-' + claseVisualEtapa(bloque.estado)" type="button"
-                                    [disabled]="claseVisualEtapa(bloque.estado) === 'locked'"
-                                    (click)="abrirBloque(bloque)">
+                                    (click)="seleccionarBloque(bloque)"
+                                    (dblclick)="claseVisualEtapa(bloque.estado) !== 'locked' && abrirBloque(bloque)">
                                     <span class="process-mini-stage-icon">
                                         <img [src]="iconoEtapa(bloque.estado)" alt="" />
                                     </span>
@@ -400,6 +401,24 @@
                                     </span>
                                 </button>
                             </div>
+
+                            <aside class="bloque-preview-panel" *ngIf="bloqueSeleccionado as sel">
+                                <button *ngIf="sel.imagenUrl; else sinVistaPrevia" type="button"
+                                    class="bloque-preview-imagen" title="Clic para ampliar" (click)="abrirVistaPrevia(sel)">
+                                    <img [src]="sel.imagenUrl || ''" [alt]="'Vista previa de ' + sel.nombre" />
+                                </button>
+
+                                <ng-template #sinVistaPrevia>
+                                    <div class="bloque-preview-vacio">Sin vista previa disponible</div>
+                                </ng-template>
+
+                                <div class="bloque-preview-nombre">{{ sel.nombre }}</div>
+
+                                <small *ngIf="claseVisualEtapa(sel.estado) === 'locked'" class="bloque-preview-aviso">
+                                    Esta etapa aún está bloqueada.
+                                </small>
+                            </aside>
+                        </div>
                         </ng-container>
                     </div>
 
@@ -612,8 +631,7 @@
                             <p class="text-primary">Los campos con * son obligatorios.</p>
 
                             <p class="text-muted">
-                                La contraseña debe tener al menos 8 caracteres, un número y un
-                                carácter especial.
+                                La contraseña debe tener de 8 a 64 caracteres, con mayúscula, minúscula, número y símbolo, sin espacios.
                             </p>
 
                             <form class="password-form" [formGroup]="passwordForm" (ngSubmit)="cambiarPassword()">
@@ -928,7 +946,7 @@
                         Nombre
                     </label>
 
-                    <input id="usuarioNombre" class="ro-input" type="text" formControlName="nombre"
+                    <input id="usuarioNombre" class="ro-input" type="text" formControlName="nombre" maxlength="100" (input)="filtrarCampoUsuario('nombre', $event)" (blur)="recortarCampoUsuario('nombre')"
                         [class.input-error]="campoUsuarioInvalido('nombre')" />
 
                     <small *ngIf="campoUsuarioInvalido('nombre')" class="field-error">
@@ -941,7 +959,7 @@
                         Apellido
                     </label>
 
-                    <input id="usuarioApellido" class="ro-input" type="text" formControlName="apellido"
+                    <input id="usuarioApellido" class="ro-input" type="text" formControlName="apellido" maxlength="100" (input)="filtrarCampoUsuario('apellido', $event)" (blur)="recortarCampoUsuario('apellido')"
                         [class.input-error]="campoUsuarioInvalido('apellido')" />
 
                     <small *ngIf="campoUsuarioInvalido('apellido')" class="field-error">
@@ -956,7 +974,7 @@
                         Usuario
                     </label>
 
-                    <input id="usuarioUsername" class="ro-input" type="text" formControlName="username"
+                    <input id="usuarioUsername" class="ro-input" type="text" formControlName="username" maxlength="50" (input)="filtrarCampoUsuario('username', $event)" (blur)="recortarCampoUsuario('username')"
                         [class.input-error]="campoUsuarioInvalido('username')" />
 
                     <small *ngIf="campoUsuarioInvalido('username')" class="field-error">
@@ -969,7 +987,7 @@
                         Correo
                     </label>
 
-                    <input id="usuarioEmail" class="ro-input" type="email" formControlName="email"
+                    <input id="usuarioEmail" class="ro-input" type="email" formControlName="email" maxlength="100" (input)="filtrarCampoUsuario('email', $event)" (blur)="recortarCampoUsuario('email')"
                         [class.input-error]="campoUsuarioInvalido('email')" />
 
                     <small *ngIf="campoUsuarioInvalido('email')" class="field-error">
@@ -1290,6 +1308,29 @@
             <div class="mini-actions">
                 <button class="dg-btn" type="button" (click)="modalExitoUsuarioAbierto = false">
                     Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Vista previa de la etapa -->
+<ng-container *ngIf="vistaPreviaAbierta">
+    <div class="modal-backdrop open" (click)="cerrarVistaPrevia()">
+    </div>
+
+    <div class="modal mini open">
+        <div class="modal-card mini-card vista-previa-card">
+            <div class="mini-head">
+                <div class="mini-title">Vista previa: {{ vistaPreviaAbierta.nombre }}</div>
+            </div>
+
+            <img class="vista-previa-grande" [src]="vistaPreviaAbierta.imagenUrl || ''"
+                [alt]="'Vista previa de ' + vistaPreviaAbierta.nombre" />
+
+            <div class="mini-actions">
+                <button class="btn-secondary" type="button" (click)="cerrarVistaPrevia()">
+                    Cerrar
                 </button>
             </div>
         </div>

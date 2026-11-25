@@ -203,6 +203,42 @@ export class SeprocPageComponent implements OnInit {
       });
   }
 
+  // Caracteres que NO se aceptan al escribir en cada campo
+  private readonly CARACTERES_NO_PERMITIDOS: Record<CampoSolicitud, RegExp> = {
+    nombreDependencia: /[^\p{L}\p{M}\p{N} .,'’&()\/#º°:-]/gu,
+    abreviacion: /[^A-Za-z0-9-]/g,
+    nombreContacto: /[^\p{L}\p{M} '’]/gu,
+    emailContacto: /[^A-Za-z0-9@._%+-]/g,
+    telefonoContacto: /[^0-9+ ()-]/g
+  };
+
+  // Se ejecuta en cada tecla: quita lo que no corresponde al campo
+  filtrarCampo(campo: CampoSolicitud, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let valor = input.value.replace(this.CARACTERES_NO_PERMITIDOS[campo], '');
+
+    if (campo !== 'emailContacto') {
+      valor = valor.replace(/ {2,}/g, ' ');
+    }
+
+    if (campo === 'abreviacion') {
+      valor = valor.toUpperCase();
+    }
+
+    this.solicitudForm.controls[campo].setValue(valor);
+    this.limpiarErrorCampo(campo);
+  }
+
+  // Se ejecuta al salir del campo: quita espacios al inicio, al final y dobles
+  recortarCampo(campo: CampoSolicitud): void {
+    const control = this.solicitudForm.controls[campo];
+    const limpio = control.value.trim().replace(/ {2,}/g, ' ');
+
+    if (limpio !== control.value) {
+      control.setValue(limpio);
+    }
+  }
+
   campoInvalido(campo: CampoSolicitud): boolean {
     const control =
       this.solicitudForm.controls[campo];

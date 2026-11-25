@@ -328,19 +328,15 @@
                                 </div>
                             </div>
 
+                            <div class="bloques-layout">
                             <div class="process-mini-list">
-                                <button *ngFor="
-                    let bloque of bloquesProyecto
-                  " class="process-mini-stage" [ngClass]="
+                                <button *ngFor="let bloque of bloquesProyecto" [class.seleccionada]="bloque.clave === claveBloqueSeleccionado" class="process-mini-stage" [ngClass]="
                     'status-' +
                     claseVisualEtapa(
                       bloque.estado
                     )
-                  " type="button" [disabled]="
-                    claseVisualEtapa(
-                      bloque.estado
-                    ) === 'locked'
-                  " (click)="abrirBloque(bloque)">
+                  " type="button" (click)="seleccionarBloque(bloque)"
+                                    (dblclick)="claseVisualEtapa(bloque.estado) !== 'locked' && abrirBloque(bloque)">
                                     <span class="process-mini-stage-icon">
                                         <img [src]="
                         iconoEtapa(
@@ -354,6 +350,24 @@
                                     </span>
                                 </button>
                             </div>
+
+                            <aside class="bloque-preview-panel" *ngIf="bloqueSeleccionado as sel">
+                                <button *ngIf="sel.imagenUrl; else sinVistaPrevia" type="button"
+                                    class="bloque-preview-imagen" title="Clic para ampliar" (click)="abrirVistaPrevia(sel)">
+                                    <img [src]="sel.imagenUrl || ''" [alt]="'Vista previa de ' + sel.nombre" />
+                                </button>
+
+                                <ng-template #sinVistaPrevia>
+                                    <div class="bloque-preview-vacio">Sin vista previa disponible</div>
+                                </ng-template>
+
+                                <div class="bloque-preview-nombre">{{ sel.nombre }}</div>
+
+                                <small *ngIf="claseVisualEtapa(sel.estado) === 'locked'" class="bloque-preview-aviso">
+                                    Esta etapa aún está bloqueada.
+                                </small>
+                            </aside>
+                        </div>
                         </ng-container>
                     </div>
 
@@ -625,9 +639,7 @@
                             </p>
 
                             <p class="text-muted">
-                                La contraseña debe tener al menos
-                                8 caracteres, un número y un
-                                carácter especial.
+                                La contraseña debe tener de 8 a 64 caracteres, con mayúscula, minúscula, número y símbolo, sin espacios.
                             </p>
 
                             <form class="password-form" [formGroup]="passwordForm" (ngSubmit)="cambiarPassword()">
@@ -899,6 +911,29 @@
             modalExitoPasswordAbierto = false
           ">
                     Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Vista previa de la etapa -->
+<ng-container *ngIf="vistaPreviaAbierta">
+    <div class="modal-backdrop open" (click)="cerrarVistaPrevia()">
+    </div>
+
+    <div class="modal mini open">
+        <div class="modal-card mini-card vista-previa-card">
+            <div class="mini-head">
+                <div class="mini-title">Vista previa: {{ vistaPreviaAbierta.nombre }}</div>
+            </div>
+
+            <img class="vista-previa-grande" [src]="vistaPreviaAbierta.imagenUrl || ''"
+                [alt]="'Vista previa de ' + vistaPreviaAbierta.nombre" />
+
+            <div class="mini-actions">
+                <button class="btn-secondary" type="button" (click)="cerrarVistaPrevia()">
+                    Cerrar
                 </button>
             </div>
         </div>

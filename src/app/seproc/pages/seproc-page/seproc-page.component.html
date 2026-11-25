@@ -181,6 +181,13 @@
   <div id="view-solicitar" class="view-section" [class.hidden]="activeView !== 'solicitar'">
 
     <div class="auth-card" style="margin: 0 auto">
+      <button type="button" class="btn-volver" (click)="switchView('home')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Volver
+      </button>
+
       <div class="auth-header">
         <h2>Solicitud de acceso</h2>
         <p>Ingresa los datos de tu dependencia para iniciar el proceso de afiliación.</p>
@@ -197,7 +204,7 @@
 
           <input type="text" id="nombreDependencia" formControlName="nombreDependencia" autocomplete="organization"
             maxlength="200" class="form-control" [class.input-error]="campoInvalido('nombreDependencia')"
-            (input)="limpiarErrorCampo('nombreDependencia')" />
+            (input)="filtrarCampo('nombreDependencia', $event)" (blur)="recortarCampo('nombreDependencia')" />
           <small *ngIf="campoInvalido('nombreDependencia')" class="field-error">
             {{ mensajeCampo('nombreDependencia') }}
           </small>
@@ -211,7 +218,7 @@
 
           <input type="text" id="abreviacion" formControlName="abreviacion" maxlength="50" autocapitalize="characters"
             class="form-control" [class.input-error]="campoInvalido('abreviacion')"
-            (input)="convertirAbreviacionMayusculas($event)" />
+            (input)="filtrarCampo('abreviacion', $event)" (blur)="recortarCampo('abreviacion')" />
 
           <small *ngIf="campoInvalido('abreviacion')" class="field-error">
             {{ mensajeCampo('abreviacion') }}
@@ -226,7 +233,7 @@
 
           <input type="text" id="nombreContacto" formControlName="nombreContacto" autocomplete="name" maxlength="250"
             class="form-control" [class.input-error]="campoInvalido('nombreContacto')"
-            (input)="limpiarErrorCampo('nombreContacto')" />
+            (input)="filtrarCampo('nombreContacto', $event)" (blur)="recortarCampo('nombreContacto')" />
 
           <small *ngIf="campoInvalido('nombreContacto')" class="field-error">
             {{ mensajeCampo('nombreContacto') }}
@@ -242,7 +249,7 @@
 
           <input type="email" id="emailContacto" formControlName="emailContacto" autocomplete="email" maxlength="100"
             class="form-control" [class.input-error]="campoInvalido('emailContacto')"
-            (input)="limpiarErrorCampo('emailContacto')" />
+            (input)="filtrarCampo('emailContacto', $event)" (blur)="recortarCampo('emailContacto')" />
 
           <small *ngIf="campoInvalido('emailContacto')" class="field-error">
             {{ mensajeCampo('emailContacto') }}
@@ -257,7 +264,7 @@
 
           <input type="tel" id="telefonoContacto" formControlName="telefonoContacto" autocomplete="tel" inputmode="tel"
             maxlength="20" class="form-control" [class.input-error]="campoInvalido('telefonoContacto')"
-            (input)="limpiarErrorCampo('telefonoContacto')" />
+            (input)="filtrarCampo('telefonoContacto', $event)" (blur)="recortarCampo('telefonoContacto')" />
 
           <small *ngIf="campoInvalido('telefonoContacto')" class="field-error">
             {{ mensajeCampo('telefonoContacto') }}

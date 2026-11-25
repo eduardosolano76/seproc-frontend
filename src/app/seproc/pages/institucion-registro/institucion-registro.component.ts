@@ -301,6 +301,37 @@ export class InstitucionRegistroComponent implements OnInit {
     return '';
   }
 
+  private readonly CARACTERES_NO_PERMITIDOS: Record<CampoRegistro, RegExp> = {
+    nombre: /[^\p{L}\p{M} '’]/gu,
+    apellido: /[^\p{L}\p{M} '’]/gu,
+    email: /[^A-Za-z0-9@._%+-]/g,
+    username: /[^A-Za-z0-9._-]/g,
+    password: /\s/g
+  };
+
+  // Se ejecuta en cada tecla: quita los caracteres que no corresponden al campo
+  filtrarCampo(campo: CampoRegistro, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let valor = input.value.replace(this.CARACTERES_NO_PERMITIDOS[campo], '');
+
+    if (campo === 'nombre' || campo === 'apellido') {
+      valor = valor.replace(/ {2,}/g, ' ');
+    }
+
+    this.registroForm.controls[campo].setValue(valor);
+    this.limpiarErrorCampo(campo);
+  }
+
+  // Se ejecuta al salir del campo: quita espacios al inicio, al final y dobles
+  recortarCampo(campo: 'nombre' | 'apellido'): void {
+    const control = this.registroForm.controls[campo];
+    const limpio = control.value.trim().replace(/ {2,}/g, ' ');
+
+    if (limpio !== control.value) {
+      control.setValue(limpio);
+    }
+  }
+
   limpiarErrorCampo(campo: CampoRegistro): void {
     if (this.erroresCampos[campo]) {
       delete this.erroresCampos[campo];

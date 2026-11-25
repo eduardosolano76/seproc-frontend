@@ -56,6 +56,7 @@ interface BloqueVisual {
     | 'acabados';
     nombre: string;
     estado: string;
+    imagenUrl?: string | null;
 }
 
 type CampoPassword =
@@ -63,6 +64,9 @@ type CampoPassword =
     | 'nueva'
     | 'repetida';
 
+
+const REGEX_PASSWORD_USUARIO =
+  /^(?=.*\p{Ll})(?=.*\p{Lu})(?=.*[0-9])(?=.*[^\p{L}\p{N}\s])\S+$/u;
 
 @Component({
     selector: 'app-supervisor-institucion-dashboard',
@@ -175,6 +179,7 @@ export class SupervisorInstitucionDashboardComponent
     modalDocumentacionAbierto = false;
 
     modalSinFotoAbierto = false;
+    modalAyudasAbierto = false;
     modalEliminarFotoAbierto = false;
     eliminandoFoto = false;
     modalExitoFotoAbierto = false;
@@ -200,9 +205,8 @@ export class SupervisorInstitucionDashboardComponent
             [
                 Validators.required,
                 Validators.minLength(8),
-                Validators.pattern(
-                    /^(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/
-                ),
+                Validators.maxLength(64),
+                Validators.pattern(REGEX_PASSWORD_USUARIO),
             ],
         ],
         repetida: [
@@ -455,6 +459,32 @@ export class SupervisorInstitucionDashboardComponent
         this.cargarProyectos();
     }
 
+    vistaPreviaAbierta: { nombre: string; imagenUrl?: string | null } | null = null;
+
+    abrirVistaPrevia(bloque: { nombre: string; imagenUrl?: string | null }): void {
+        this.vistaPreviaAbierta = bloque;
+    }
+
+    cerrarVistaPrevia(): void {
+        this.vistaPreviaAbierta = null;
+    }
+
+    claveBloqueSeleccionado = 'preliminares';
+
+    get bloqueSeleccionado(): BloqueVisual | null {
+        const bloques = this.bloquesProyecto;
+
+        return (
+            bloques.find((b) => b.clave === this.claveBloqueSeleccionado) ??
+            bloques[0] ??
+            null
+        );
+    }
+
+    seleccionarBloque(bloque: { clave: string }): void {
+        this.claveBloqueSeleccionado = bloque.clave;
+    }
+
     get bloquesProyecto():
         BloqueVisual[] {
 
@@ -498,6 +528,7 @@ export class SupervisorInstitucionDashboardComponent
         return bloques.map(
             (bloque) => ({
                 clave: bloque.clave,
+            imagenUrl: this.proyectoDetalle?.vistasPreviaBloques?.[bloque.clave] ?? null,
                 nombre: bloque.nombre,
                 estado:
                     this.resolverEstadoGrupo(
@@ -587,6 +618,14 @@ export class SupervisorInstitucionDashboardComponent
                     this.mostrarError(error);
                 },
             });
+    }
+
+    abrirAyudas(): void {
+        this.modalAyudasAbierto = true;
+    }
+
+    cerrarAyudas(): void {
+        this.modalAyudasAbierto = false;
     }
 
     abrirHistorialEtapa(): void {
@@ -1404,7 +1443,7 @@ export class SupervisorInstitucionDashboardComponent
                 control.hasError('pattern')
             )
         ) {
-            return 'Debe tener al menos 8 caracteres, un número y un carácter especial.';
+            return 'Debe tener de 8 a 64 caracteres, con mayúscula, minúscula, número y símbolo, sin espacios.';
         }
 
         if (

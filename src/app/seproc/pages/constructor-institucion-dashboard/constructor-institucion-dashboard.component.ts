@@ -63,6 +63,7 @@ interface BloqueVisual {
     | 'acabados';
     nombre: string;
     estado: string;
+    imagenUrl?: string | null;
 }
 
 type CampoPassword =
@@ -70,9 +71,33 @@ type CampoPassword =
     | 'nueva'
     | 'repetida';
 
+const REGEX_NOMBRE_ESCUELA =
+    /^[\p{L}\p{M}\p{N}](?:[\p{L}\p{M}\p{N} .,'’"“”&()\/#º°:-]*[\p{L}\p{M}\p{N}).º°"”])?$/u;
+
+const REGEX_CCT = /^\d{2}[A-Z]{3}\d{4}[A-Z]$/;
+
+const REGEX_CALLE_NUMERO =
+    /^[\p{L}\p{M}\p{N}][\p{L}\p{M}\p{N} .,#\/°º'’()-]*$/u;
+
+const REGEX_RESPONSABLE =
+    /^[\p{L}\p{M}][\p{L}\p{M} .'’-]*[\p{L}\p{M}.]$/u;
+
+const REGEX_CONTACTO =
+    /^(?:(?:\+52[ -]?)?(?:[0-9]{10}|[0-9]{3}[ -][0-9]{3}[ -][0-9]{4}|\([0-9]{3}\)[ -]?[0-9]{3}[ -][0-9]{4})|[^\s@]+@[^\s@]+\.[A-Za-z]{2,63})$/;
+
+type CampoTextoSolicitud =
+    | 'nombreEscuela'
+    | 'cct1'
+    | 'cct2'
+    | 'calleNumero'
+    | 'cp'
+    | 'responsable'
+    | 'contacto';
+
 type CampoSolicitud =
     | 'nombreEscuela'
     | 'cct1'
+    | 'cct2'
     | 'idEstado'
     | 'idMunicipio'
     | 'idLocalidad'
@@ -88,6 +113,9 @@ type CampoSolicitud =
 type AccionConfirmada =
     | 'ENTREGAR_ETAPA'
     | 'ELIMINAR_EVIDENCIA';
+
+const REGEX_PASSWORD_USUARIO =
+  /^(?=.*\p{Ll})(?=.*\p{Lu})(?=.*[0-9])(?=.*[^\p{L}\p{N}\s])\S+$/u;
 
 @Component({
     selector: 'app-constructor-institucion-dashboard',
@@ -215,7 +243,7 @@ export class ConstructorInstitucionDashboardComponent
 
     modalSinFotoAbierto = false;
     modalEliminarFotoAbierto = false;
-    modalSugerenciasAbierto = false;
+    modalAyudasAbierto = false;
     eliminandoFoto = false;
     modalExitoFotoAbierto = false;
     mensajeExitoFoto = '';
@@ -230,13 +258,13 @@ export class ConstructorInstitucionDashboardComponent
     mensajeModalExito = '';
 
     readonly solicitudForm = this.fb.group({
-        nombreEscuela: ['', Validators.required],
-        cct1: ['', Validators.required],
-        cct2: [''],
+        nombreEscuela: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(200), Validators.pattern(REGEX_NOMBRE_ESCUELA)]],
+        cct1: ['', [Validators.required, Validators.pattern(REGEX_CCT)]],
+        cct2: ['', [Validators.pattern(REGEX_CCT)]],
         idEstado: ['', Validators.required],
         idMunicipio: ['', Validators.required],
         idLocalidad: ['', Validators.required],
-        calleNumero: ['', Validators.required],
+        calleNumero: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(200), Validators.pattern(REGEX_CALLE_NUMERO)]],
         cp: [
             '',
             [
@@ -244,22 +272,10 @@ export class ConstructorInstitucionDashboardComponent
                 Validators.pattern(/^\d{5}$/),
             ],
         ],
-        responsable: ['', Validators.required],
-        contacto: ['', Validators.required],
-        numInmuebles: [
-            1,
-            [
-                Validators.required,
-                Validators.min(1),
-            ],
-        ],
-        numEntreEjes: [
-            1,
-            [
-                Validators.required,
-                Validators.min(1),
-            ],
-        ],
+        responsable: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(150), Validators.pattern(REGEX_RESPONSABLE)]],
+        contacto: ['', [Validators.required, Validators.maxLength(150), Validators.pattern(REGEX_CONTACTO)]],
+        numInmuebles: [1, [Validators.required, Validators.min(1), Validators.max(999), Validators.pattern(/^\d+$/)]],
+        numEntreEjes: [1, [Validators.required, Validators.min(1), Validators.max(999), Validators.pattern(/^\d+$/)]],
         idTipoEdificacion: ['', Validators.required],
         tipoObra: ['', Validators.required],
     });
@@ -271,9 +287,8 @@ export class ConstructorInstitucionDashboardComponent
             [
                 Validators.required,
                 Validators.minLength(8),
-                Validators.pattern(
-                    /^(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
-                ),
+                Validators.maxLength(64),
+                Validators.pattern(REGEX_PASSWORD_USUARIO),
             ],
         ],
         repetida: ['', Validators.required],
@@ -498,6 +513,32 @@ export class ConstructorInstitucionDashboardComponent
         this.historialEtapa = [];
     }
 
+    vistaPreviaAbierta: { nombre: string; imagenUrl?: string | null } | null = null;
+
+    abrirVistaPrevia(bloque: { nombre: string; imagenUrl?: string | null }): void {
+        this.vistaPreviaAbierta = bloque;
+    }
+
+    cerrarVistaPrevia(): void {
+        this.vistaPreviaAbierta = null;
+    }
+
+    claveBloqueSeleccionado = 'preliminares';
+
+    get bloqueSeleccionado(): BloqueVisual | null {
+        const bloques = this.bloquesProyecto;
+
+        return (
+            bloques.find((b) => b.clave === this.claveBloqueSeleccionado) ??
+            bloques[0] ??
+            null
+        );
+    }
+
+    seleccionarBloque(bloque: { clave: string }): void {
+        this.claveBloqueSeleccionado = bloque.clave;
+    }
+
     get bloquesProyecto(): BloqueVisual[] {
         if (!this.proyectoDetalle) {
             return [];
@@ -532,6 +573,7 @@ export class ConstructorInstitucionDashboardComponent
 
         return bloques.map((bloque) => ({
             clave: bloque.clave,
+            imagenUrl: this.proyectoDetalle?.vistasPreviaBloques?.[bloque.clave] ?? null,
             nombre: bloque.nombre,
             estado: this.resolverEstadoGrupo(
                 bloque.etapas.map((etapa) => etapa.clave),
@@ -655,12 +697,12 @@ export class ConstructorInstitucionDashboardComponent
             });
     }
     
-    abrirSugerencias(): void {
-        this.modalSugerenciasAbierto = true;
+    abrirAyudas(): void {
+        this.modalAyudasAbierto = true;
     }
 
-    cerrarSugerencias(): void {
-        this.modalSugerenciasAbierto = false;
+    cerrarAyudas(): void {
+        this.modalAyudasAbierto = false;
     }
 
     seleccionarEvidencia(event: Event): void {
@@ -953,6 +995,13 @@ export class ConstructorInstitucionDashboardComponent
             'ENVIADA',
             'APROBADA',
         ].includes(this.estadoEntregaActual);
+    }
+
+    get puedeEditarBorrador(): boolean {
+        return (
+            !!this.proyectoDetalle?.puedeSubir &&
+            this.estadoEntregaActual === 'BORRADOR'
+        );
     }
 
     get puedeEntregarEtapa(): boolean {
@@ -1258,6 +1307,50 @@ export class ConstructorInstitucionDashboardComponent
         this.cdr.markForCheck();
     }
 
+    private readonly CARACTERES_NO_PERMITIDOS_SOLICITUD: Record<CampoTextoSolicitud, RegExp> = {
+        nombreEscuela: /[^\p{L}\p{M}\p{N} .,'’"“”&()\/#º°:-]/gu,
+        cct1: /[^A-Za-z0-9]/g,
+        cct2: /[^A-Za-z0-9]/g,
+        calleNumero: /[^\p{L}\p{M}\p{N} .,#\/°º'’()-]/gu,
+        cp: /[^0-9]/g,
+        responsable: /[^\p{L}\p{M} .'’-]/gu,
+        contacto: /[^A-Za-z0-9@._%+() -]/g,
+    };
+
+    // Se ejecuta en cada tecla: quita los caracteres que no corresponden al campo
+    filtrarCampoSolicitud(campo: CampoTextoSolicitud, event: Event): void {
+        const input = event.target as HTMLInputElement;
+        let valor = input.value.replace(this.CARACTERES_NO_PERMITIDOS_SOLICITUD[campo], '');
+
+        if (campo !== 'cct1' && campo !== 'cct2' && campo !== 'cp') {
+            valor = valor.replace(/ {2,}/g, ' ');
+        }
+
+        if (campo === 'cct1' || campo === 'cct2') {
+            valor = valor.toUpperCase();
+        }
+
+        this.solicitudForm.controls[campo].setValue(valor);
+    }
+
+    // Se ejecuta al salir del campo: quita espacios al inicio, al final y dobles
+    recortarCampoSolicitud(campo: CampoTextoSolicitud): void {
+        const control = this.solicitudForm.controls[campo];
+        const actual = control.value ?? '';
+        const limpio = actual.trim().replace(/ {2,}/g, ' ');
+
+        if (limpio !== actual) {
+            control.setValue(limpio);
+        }
+    }
+
+    // En los campos numéricos no se permiten e, +, -, punto ni coma
+    bloquearNoEntero(event: KeyboardEvent): void {
+        if (['e', 'E', '+', '-', '.', ','].includes(event.key)) {
+            event.preventDefault();
+        }
+    }
+
     campoSolicitudInvalido(campo: CampoSolicitud): boolean {
         const control = this.solicitudForm.controls[campo];
 
@@ -1277,12 +1370,46 @@ export class ConstructorInstitucionDashboardComponent
             return 'Este campo es obligatorio.';
         }
 
-        if (control.hasError('pattern')) {
-            return 'El código postal debe tener 5 dígitos.';
+        if (
+            control.hasError('pattern') ||
+            control.hasError('minlength') ||
+            control.hasError('maxlength')
+        ) {
+            switch (campo) {
+                case 'nombreEscuela':
+                    return 'Escribe el nombre de la escuela (de 3 a 200 caracteres). Solo letras, números, espacios y signos como . , & ( ) / # - ".';
+
+                case 'cct1':
+                case 'cct2':
+                    return 'La CCT debe tener 10 caracteres, por ejemplo 12DPR0001A (2 números, 3 letras, 4 números y 1 letra).';
+
+                case 'calleNumero':
+                    return 'Escribe la calle y el número (de 3 a 200 caracteres). Solo letras, números y signos como . , # / -';
+
+                case 'cp':
+                    return 'El código postal debe tener 5 dígitos.';
+
+                case 'responsable':
+                    return 'Escribe el nombre de la persona responsable (de 3 a 150 caracteres). Solo letras, espacios, puntos, apóstrofes y guiones.';
+
+                case 'contacto':
+                    return 'Escribe un teléfono de 10 dígitos (por ejemplo 7471234567) o un correo electrónico válido.';
+
+                case 'numInmuebles':
+                case 'numEntreEjes':
+                    return 'Escribe un número entero entre 1 y 999.';
+
+                default:
+                    return 'El valor no es válido.';
+            }
         }
 
         if (control.hasError('min')) {
             return 'El valor mínimo es 1.';
+        }
+
+        if (control.hasError('max')) {
+            return 'El valor máximo es 999.';
         }
 
         return '';
@@ -1835,7 +1962,7 @@ export class ConstructorInstitucionDashboardComponent
                 control.hasError('pattern')
             )
         ) {
-            return 'Debe tener al menos 8 caracteres, un número y un carácter especial.';
+            return 'Debe tener de 8 a 64 caracteres, con mayúscula, minúscula, número y símbolo, sin espacios.';
         }
 
         if (

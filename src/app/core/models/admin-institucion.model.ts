@@ -93,6 +93,7 @@ export interface ProyectoDetalle extends DetalleInmueble {
   puedeComentar: boolean;
   puedeAprobar: boolean;
   estadosEtapa: Record<string, string>;
+  vistasPreviaBloques?: Record<string, string | null>;
 }
 
 export interface ArchivoEvidencia {
